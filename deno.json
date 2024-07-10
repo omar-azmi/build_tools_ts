@@ -13,13 +13,8 @@
 	},
 	"exports": {
 		".": "./src/mod.ts",
-		"./async_signal": "./src/async_signal.ts",
-		"./context": "./src/context.ts",
 		"./funcdefs": "./src/funcdefs.ts",
-		"./record_signal": "./src/record_signal.ts",
-		"./signal": "./src/signal.ts",
-		"./typedefs": "./src/typedefs.ts",
-		"./jsx-runtime": "./src/jsx-runtime/mod.ts"
+		"./typedefs": "./src/typedefs.ts"
 	},
 	"publish": {
 		"exclude": [
@@ -65,22 +60,18 @@
 			"typedoc-plugin-missing-exports": "^2.2.0"
 		},
 		"keywords": [
-			"events",
-			"modular",
-			"typescript",
-			"reactive",
-			"state-management",
-			"effects",
-			"data-flow",
-			"signals",
-			"reactive-programming",
-			"reactivity",
-			"topological-sort",
-			"dag",
-			"directed-acyclic-graph"
+			"build-tools",
+			"build-scripts",
+			"deno-to-npm",
+			"typedoc",
+			"doc-generator",
+			"esbuild",
+			"bundler",
+			"bundle-script",
+			"typescript"
 		]
 	},
-	"node_packageManager": "npm",
+	"nodePackageManager": "npm",
 	"tasks": {
 		"build-dist": "deno run -A ./build_dist.ts",
 		"build-docs": "deno run -A ./build_docs.ts",
@@ -88,6 +79,6 @@
 		"build-npm-dist": "cd \"./npm/\" && npm run build-dist",
 		"clean": "deno run -A ./clean.ts",
 		"test": "deno test -A",
-		"publish-jsr": "deno publish --allow-slow-types"
+		"publish-jsr": "deno publish --allow-slow-types --allow-dirty"
 	}
 }
