@@ -26,6 +26,11 @@ import {
 } from "jsr:@std/path@0.225.2"
 
 
+const glob_pattern_regex = new RegExp("[*?]")
+
+/** test if a specified path is potentially a glob pattern */
+export const pathIsGlobPattern = (path: string) => glob_pattern_regex.test(path)
+
 /** convert windows directory slash "\" to unix directory slash "/" */
 const pathToUnixPath = (path: string) => path.replaceAll(/\\+/g, "/")
 
