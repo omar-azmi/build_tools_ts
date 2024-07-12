@@ -13,6 +13,8 @@
 	},
 	"exports": {
 		".": "./src/mod.ts",
+		"./cli/npm": "./src/cli/npm.ts",
+		"./npm": "./src/npm.ts",
 		"./funcdefs": "./src/funcdefs.ts",
 		"./typedefs": "./src/typedefs.ts"
 	},
@@ -51,7 +53,7 @@
 		"strict": true,
 		"allowJs": true
 	},
-	"package_json": {
+	"packageJson": {
 		"dependencies": {},
 		"devDependencies": {
 			"typescript": "^5.0.0",
