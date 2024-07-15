@@ -84,3 +84,66 @@ export const createTsConfigJson = async (deno_json_path: string = default_deno_j
 		compilerOptions,
 	} as any
 }
+
+/** trim the leading slashes at the begining of a string. */
+export const trimStartSlashes = (str: string): string => {
+	return str.replace(/^\/+/, "")
+}
+
+/** trim the trailing slashes at the end of a string. */
+export const trimEndSlashes = (str: string): string => {
+	return str.replace(/\/+$/, "")
+}
+
+/** trim leading and trailing slashes, at the begining and end of a string. */
+export const trimSlashes = (str: string): string => {
+	return trimEndSlashes(trimStartSlashes(str))
+}
+
+/** trim leading and trailing slashes, at the begining and end of a string. */
+export const trimDotSlashes = (str: string): string => {
+	return trimEndSlashes(str.replace(/^(\.?\/)+/, ""))
+}
+
+/** join path segments with slashes in between. */
+export const joinSlash = (...segments: string[]): string => {
+	return segments
+		.map(trimDotSlashes)
+		.reduce((output, subpath) => (output + "/" + subpath), "")
+}
+
+/** convert potential git-repository url to a proper repository url.
+ * 
+ * example:
+ * | input                                                 | output (URL.href)                             |
+ * |-------------------------------------------------------|-----------------------------------------------|
+ * | `git+https://github.com/omar-azmi/build_tools_ts.git` | `https://github.com/omar-azmi/build_tools_ts` |
+ * | `https://github.com/omar-azmi/build_tools_ts.git`     | `https://github.com/omar-azmi/build_tools_ts` |
+ * | `git+https://github.com/omar-azmi/build_tools_ts`     | `https://github.com/omar-azmi/build_tools_ts` |
+ * | `https://github.com/omar-azmi/build_tools_ts`         | `https://github.com/omar-azmi/build_tools_ts` |
+*/
+export const gitRepositoryToUrl = (repo_git_url: string): URL => {
+	return new URL(repo_git_url
+		.replace(/^git\+/, "")
+		.replace(/.git$/, "")
+	)
+}
+
+/** convert potential git-repository url to a proper github pages url.
+ * 
+ * example:
+ * | input                                                 | output (URL.href)                             |
+ * |-------------------------------------------------------|-----------------------------------------------|
+ * | `git+https://github.com/omar-azmi/build_tools_ts.git` | `https://oamr-azmi.github.io/build_tools_ts` |
+ * | `https://github.com/omar-azmi/build_tools_ts.git`     | `https://oamr-azmi.github.io/build_tools_ts` |
+ * | `git+https://github.com/omar-azmi/build_tools_ts`     | `https://oamr-azmi.github.io/build_tools_ts` |
+ * | `https://github.com/omar-azmi/build_tools_ts`         | `https://oamr-azmi.github.io/build_tools_ts` |
+*/
+export const gitRepositoryToPagesUrl = (repo_git_url: string): URL => {
+	const
+		repo_url = gitRepositoryToUrl(repo_git_url),
+		[user_name, repo_name] = trimSlashes(repo_url.pathname).split("/")
+	repo_url.hostname = `${user_name}.github.io`
+	repo_url.pathname = repo_name
+	return repo_url
+}
