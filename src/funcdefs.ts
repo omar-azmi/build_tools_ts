@@ -1,6 +1,12 @@
+/** this module contains common utility functions used by this package.
+ * 
+ * @module
+*/
+
+
 import type { MaybePromise, PackageJson } from "./deps.ts"
-import { memorize, resolveUri } from "./deps.ts"
-import type { DenoJson, TsConfigJson } from "./typedefs.ts"
+import { copyDir, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveUri } from "./deps.ts"
+import type { BaseBuildConfig, DenoJson, TsConfigJson } from "./typedefs.ts"
 
 const default_deno_json_path = "./deno.json" as const
 
@@ -132,8 +138,8 @@ export const gitRepositoryToUrl = (repo_git_url: string): URL => {
 /** convert potential git-repository url to a proper github pages url.
  * 
  * example:
- * | input                                                 | output (URL.href)                             |
- * |-------------------------------------------------------|-----------------------------------------------|
+ * | input                                                 | output (URL.href)                            |
+ * |-------------------------------------------------------|----------------------------------------------|
  * | `git+https://github.com/omar-azmi/build_tools_ts.git` | `https://oamr-azmi.github.io/build_tools_ts` |
  * | `https://github.com/omar-azmi/build_tools_ts.git`     | `https://oamr-azmi.github.io/build_tools_ts` |
  * | `git+https://github.com/omar-azmi/build_tools_ts`     | `https://oamr-azmi.github.io/build_tools_ts` |
@@ -146,4 +152,60 @@ export const gitRepositoryToPagesUrl = (repo_git_url: string): URL => {
 	repo_url.hostname = `${user_name}.github.io`
 	repo_url.pathname = repo_name
 	return repo_url
+}
+
+export const copyAndCreateFiles = async (config: BaseBuildConfig) => {
+	const
+		{ dir, deno, copy = [], text = [], log = "basic", dryrun = false }: BaseBuildConfig = config,
+		abs_deno_dir = pathResolve(deno, "../"),
+		log_is_verbose = log === "verbose",
+		log_is_basic = log_is_verbose || log === "basic"
+
+
+	// copying other files
+	if (log_is_basic) { console.log("[in-fs] copy additional files from you deno directory over to the npm-build directory") }
+	await Promise.all(copy.map(async ([src, dst]): Promise<void> => {
+		const
+			is_single_file = (
+				src.endsWith("/")
+				|| dst.endsWith("/")
+				|| pathIsGlobPattern(src)
+			) ? false : true,
+			abs_src = pathResolve(abs_deno_dir, src),
+			abs_dst = pathResolve(dir, dst)
+		if (is_single_file) {
+			if (log_is_verbose) { console.log("[in-fs] copying a file", `from: "${abs_src}"`, `to: "${abs_dst}"`) }
+			if (!dryrun) { await Deno.copyFile(abs_src, abs_dst) }
+		}
+		else {
+			console.assert(abs_dst.endsWith("/"), `
+provided destination folder ("${abs_dst}") path does not end with a trailing slash ("/").
+folder paths MUST end with a slash, and folders and glob-patterns can only be copied over to another folder.
+`)
+			if (!dryrun) { await ensureDir(abs_dst) }
+			for await (const src_dir_entry of expandGlob(src, { root: abs_deno_dir })) {
+				const
+					abs_src = src_dir_entry.path,
+					is_file = src_dir_entry.isFile,
+					is_folder = src_dir_entry.isDirectory,
+					basename = src_dir_entry.name,
+					abs_dst = is_folder
+						? pathResolve(dir, dst)
+						: pathResolve(dir, dst, basename)
+				if (is_file && !dryrun) { await ensureFile(abs_dst) }
+				if (is_folder && !dryrun) { await ensureDir(abs_dst) }
+				// TODO: how should I handle system links? (i.e. if `isSymlink` was true)
+				if (log_is_verbose) { console.log("[in-fs] copying", `from: "${abs_src}"`, `to: "${abs_dst}"`) }
+				if (!dryrun) { await copyDir(abs_src, abs_dst, { overwrite: true }) }
+			}
+		}
+	}))
+
+	// writing text files
+	if (log_is_basic) { console.log("[in-fs] writing additional text files to your npm-build directory") }
+	for (const [dst_path, text_data, options] of text) {
+		const abs_dst = pathResolve(dir, dst_path)
+		if (log_is_verbose) { console.log("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options) }
+		if (!dryrun) { await Deno.writeTextFile(abs_dst, text_data, options) }
+	}
 }
