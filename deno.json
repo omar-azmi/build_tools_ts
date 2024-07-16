@@ -1,7 +1,7 @@
 {
 	"name": "@oazmi/build-tools",
 	"version": "0.1.1",
-	"description": "a topological order respecting signals library inspired by SolidJS",
+	"description": "general deno build tool scripts which I practically use in all of my typescript repos",
 	"author": "Omar Azmi",
 	"license": "Anti-Competition License",
 	"repository": {
@@ -13,7 +13,9 @@
 	},
 	"exports": {
 		".": "./src/mod.ts",
+		"./cli/docs": "./src/cli/docs.ts",
 		"./cli/npm": "./src/cli/npm.ts",
+		"./docs": "./src/docs.ts",
 		"./npm": "./src/npm.ts",
 		"./funcdefs": "./src/funcdefs.ts",
 		"./typedefs": "./src/typedefs.ts"
