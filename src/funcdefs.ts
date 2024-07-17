@@ -163,7 +163,7 @@ export const copyAndCreateFiles = async (config: BaseBuildConfig) => {
 
 
 	// copying other files
-	if (log_is_basic) { console.log("[in-fs] copy additional files from you deno directory over to the npm-build directory") }
+	if (log_is_basic) { console.log("[in-fs] copying additional files from you deno directory over to the build directory") }
 	await Promise.all(copy.map(async ([src, dst]): Promise<void> => {
 		const
 			is_single_file = (
@@ -202,7 +202,7 @@ folder paths MUST end with a slash, and folders and glob-patterns can only be co
 	}))
 
 	// writing text files
-	if (log_is_basic) { console.log("[in-fs] writing additional text files to your npm-build directory") }
+	if (log_is_basic) { console.log("[in-fs] writing additional text files to your build directory") }
 	for (const [dst_path, text_data, options] of text) {
 		const abs_dst = pathResolve(dir, dst_path)
 		if (log_is_verbose) { console.log("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options) }

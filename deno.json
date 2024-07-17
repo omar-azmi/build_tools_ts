@@ -13,6 +13,7 @@
 	},
 	"exports": {
 		".": "./src/mod.ts",
+		"./cli/": "./src/cli/mod.ts",
 		"./cli/docs": "./src/cli/docs.ts",
 		"./cli/npm": "./src/cli/npm.ts",
 		"./docs": "./src/docs.ts",
