@@ -34,7 +34,8 @@
 	"test": {
 		"include": [
 			"./test/",
-			"./src/mod.ts"
+			"./src/mod.ts",
+			"./src/cli/mod.ts"
 		]
 	},
 	"fmt": {
@@ -79,8 +80,8 @@
 	},
 	"tasks": {
 		"build-dist": "deno run -A ./build_dist.ts",
-		"build-docs": "deno run -A ./build_docs.ts",
-		"build-npm": "deno run -A ./build_npm.ts",
+		"build-docs": "deno run -A ./src/cli/docs.ts",
+		"build-npm": "deno run -A ./src/cli/npm.ts",
 		"build-npm-dist": "cd \"./npm/\" && npm run build-dist",
 		"clean": "deno run -A ./clean.ts",
 		"test": "deno test -A",
