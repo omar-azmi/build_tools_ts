@@ -11,7 +11,10 @@ import type { BaseBuildConfig, DenoJson, TsConfigJson } from "./typedefs.ts"
 const default_deno_json_path = "./deno.json" as const
 
 const getDenoJson_FromUri = async (deno_json_path_uri: string) => {
-	return (await import(deno_json_path_uri, { with: { type: "json" } })).default
+	// unfortunately, dynamic imports can only be published in jsr if we enable the `--allow-dirty` flag,
+	// which would then plumet this package's "no-slow-types" score to `0/5`, which I cannot accept.
+	// return (await import(deno_json_path_uri, { with: { type: "json" } })).default
+	return await (await fetch(deno_json_path_uri)).json()
 }
 const getDenoJson_FromUri_Memorized = memorize(getDenoJson_FromUri)
 
@@ -154,9 +157,9 @@ export const gitRepositoryToPagesUrl = (repo_git_url: string): URL => {
 	return repo_url
 }
 
-export const copyAndCreateFiles = async (config: BaseBuildConfig) => {
+export const copyAndCreateFiles = async (config: BaseBuildConfig): Promise<void> => {
 	const
-		{ dir, deno, copy = [], text = [], log = "basic", dryrun = false }: BaseBuildConfig = config,
+		{ dir, deno, copy = [], text = [], log, dryrun = false }: BaseBuildConfig = config,
 		abs_deno_dir = pathResolve(deno, "../"),
 		log_is_verbose = log === "verbose",
 		log_is_basic = log_is_verbose || log === "basic"

@@ -64,7 +64,6 @@ export const buildNpm = async (build_config: Partial<BuildNpmConfig> = {}): Prom
 	const {
 		name: library_name = "library",
 		exports,
-		nodePackageManager,
 	} = await getDenoJson(deno)
 
 	const mainEntrypoint = typeof exports === "string" ? exports : exports["."]
@@ -99,7 +98,6 @@ export const buildNpm = async (build_config: Partial<BuildNpmConfig> = {}): Prom
 			})),
 			outDir: dir,
 			shims: { deno: "dev" },
-			packageManager: nodePackageManager,
 			package: package_json,
 			compilerOptions: { ...tsconfig_json.compilerOptions, target: "Latest" },
 			typeCheck: false,

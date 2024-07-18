@@ -13,7 +13,7 @@
 	},
 	"exports": {
 		".": "./src/mod.ts",
-		"./cli/": "./src/cli/mod.ts",
+		"./cli": "./src/cli/mod.ts",
 		"./cli/docs": "./src/cli/docs.ts",
 		"./cli/npm": "./src/cli/npm.ts",
 		"./docs": "./src/docs.ts",
@@ -60,9 +60,10 @@
 		"dependencies": {},
 		"devDependencies": {
 			"typescript": "^5.0.0",
-			"esbuild": "^0.20.1",
-			"typedoc": "^0.25.9",
-			"typedoc-plugin-missing-exports": "^2.2.0"
+			"esbuild": "^0.23.0",
+			"typedoc": "^0.26.4",
+			"typedoc-plugin-missing-exports": "^3.0.0",
+			"typedoc-plugin-mermaid": "^1.12.0"
 		},
 		"keywords": [
 			"build-tools",
@@ -76,7 +77,6 @@
 			"typescript"
 		]
 	},
-	"nodePackageManager": "npm",
 	"tasks": {
 		"build-dist": "deno run -A ./build_dist.ts",
 		"build-docs": "deno run -A ./build_docs.ts",
@@ -84,6 +84,6 @@
 		"build-npm-dist": "cd \"./npm/\" && npm run build-dist",
 		"clean": "deno run -A ./clean.ts",
 		"test": "deno test -A",
-		"publish-jsr": "deno publish --allow-slow-types --allow-dirty"
+		"publish-jsr": "deno publish"
 	}
 }

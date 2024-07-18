@@ -82,7 +82,7 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		log_is_verbose = log === "verbose",
 		log_is_basic = log_is_verbose || log === "basic"
 
-	if (log_is_verbose) { console.log("current docs-build configuration is:", { dir, deno, copy, text, typedoc, log, dryrun }) }
+	if (log_is_verbose) { console.log("current docs-build configuration is:", { dir, deno, site, preserveTemporary, copy, text, typedoc, css, log, dryrun }) }
 
 	// first we generate the "package.json" and "tsconfig.json" files (in the directory of "deno.json"), which are required by "npm:typedoc" to function in deno environment.
 	if (log_is_verbose) { console.log("[in-memory] creating a \"package.json\" file from your \"deno.json\" file") }

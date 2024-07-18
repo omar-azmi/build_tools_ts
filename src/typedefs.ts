@@ -9,8 +9,7 @@ export type { PackageJson, dntBuildOptions } from "./deps.ts"
 
 /** this is the json schema used for the "deno.json" configuration file. <br>
  * it has been extended to require the `name` and `version` entries, as they are required by "package.json" when converting a deno project to a node project. <br>
- * in addition, the non-standard `repository` and `bugs` optional entries have been added, since they're also useful when publishing your package on "npmjs.com". <br>
- * finally, you can configure your deno-to-node project conversion parameters using the newly added `packageJson` and `nodePackageManager` entries.
+ * in addition, the non-standard `repository` and `bugs` optional entries have been added, since they're also useful when publishing your package on "npmjs.com".
  * 
  * the json schema was originally taken from [deno's official config schema file](https://github.com/denoland/deno/blob/v1.44.4/cli/schemas/config-file.v1.json),
  * and then converted to typescript via an [online converter](https://app.quicktype.io/).
@@ -27,7 +26,6 @@ export interface DenoJson extends DenoConfigurationFileSchema {
 		url: string
 	}
 	packageJson?: Partial<PackageJson>
-	nodePackageManager?: "npm" | "pnpm" | string
 }
 
 /** you must have a main export (i.e. `key = "."`) in your "deno.json", when converting your deno project to a node project via the provided `jsr:@oazmi/build-tools/npm` conversion tool. */

@@ -23,8 +23,16 @@ export interface CliArgs {
 	/** {@inheritdoc BuildNpmConfig.dryrun} */
 	dryrun?: BuildNpmConfig["dryrun"]
 
-	/** should `npm install` be invoked after the node project's creation? */
-	install?: NonNullable<BuildNpmConfig["dnt"]>["skipNpmInstall"]
+	/** should `npm install` be invoked after the node project's creation?
+	 * you could also specify the binary-name of the node-installer, such as `pnpm`, `npm`, `yarn`,
+	 * or provide the binary's path if it is not available in the system-path, such as `~/.pnpm/pnpm` or `/usr/bin/npm`.
+	 * - if you do specify the binary name, then the generated package will be installed.
+	 * - if you specify this option as a `true` boolean, then the installation will default to using `npm` for installation.
+	 * - if the you don't provide the `install` option, or leave it `false`, then no package installation will occur.
+	 * 
+	 * @defaultValue `false`
+	*/
+	install?: NonNullable<BuildNpmConfig["dnt"]>["skipNpmInstall"] | NonNullable<BuildNpmConfig["dnt"]>["packageManager"]
 
 	/** a path to an npm-build configuration json file that provides additional modifiable parameters.
 	 * see {@link CliConfigJson} for more details on the available extended configurations.
@@ -61,7 +69,9 @@ const config_file: CliConfigJson = config_path
 	? JSON.parse(await Deno.readTextFile(config_path))
 	: {}
 const { install, log = false, ...combined_config } = { ...config_file.buildNpm, ...rest_cli_args }
-if (install) { (combined_config.dnt ??= {}).skipNpmInstall = false }
+const dnt = (combined_config.dnt ??= {})
+dnt.skipNpmInstall ??= (install ? false : true)
+if (typeof install === "string") { dnt.packageManager = install }
 
 const config: Partial<BuildNpmConfig> = {
 	...combined_config,
