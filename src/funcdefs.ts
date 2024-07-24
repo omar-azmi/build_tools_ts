@@ -5,7 +5,7 @@
 
 
 import type { MaybePromise, PackageJson } from "./deps.ts"
-import { copyDir, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveUri } from "./deps.ts"
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveUri } from "./deps.ts"
 import type { BaseBuildConfig, DenoJson, TsConfigJson } from "./typedefs.ts"
 
 const default_deno_json_path = "./deno.json" as const
@@ -204,11 +204,25 @@ folder paths MUST end with a slash, and folders and glob-patterns can only be co
 		}
 	}))
 
-	// writing text files
-	if (log_is_basic) { console.log("[in-fs] writing additional text files to your build directory") }
-	for (const [dst_path, text_data, options] of text) {
-		const abs_dst = pathResolve(dir, dst_path)
-		if (log_is_verbose) { console.log("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options) }
-		if (!dryrun) { await Deno.writeTextFile(abs_dst, text_data, options) }
+	// writing text or binary files
+	if (log_is_basic) { console.log("[in-fs] writing additional text/binary files to your build directory") }
+	for (let [dst_path, text_data, options] of text) {
+		const
+			abs_dst = pathResolve(dir, dst_path),
+			data_is_stream = (text_data as ReadableStream<any>).getReader ? true : false
+		let is_text = typeof text_data === "string" ? true : false
+		if (data_is_stream) {
+			const { kind, stream } = (await detectReadableStreamType(text_data as ReadableStream<string | Uint8Array>))
+			// the `detectReadableStreamType` function consumes the original stream, and so we must replace our stream with a returned untouched cloned-stream
+			text_data = stream as (ReadableStream<string> | ReadableStream<Uint8Array>)
+			is_text = kind === "string"
+		}
+		if (is_text) {
+			if (log_is_verbose) { console.log("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options) }
+			if (!dryrun) { await Deno.writeTextFile(abs_dst, text_data as string | ReadableStream<string>, options) }
+		} else {
+			if (log_is_verbose) { console.log("[in-fs] writing binary", `to: "${abs_dst}"`, "with the configuration:", options) }
+			if (!dryrun) { await Deno.writeFile(abs_dst, text_data as Uint8Array | ReadableStream<Uint8Array>, options) }
+		}
 	}
 }

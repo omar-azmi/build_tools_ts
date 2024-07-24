@@ -11,7 +11,7 @@ Under the hood, it relies on:
 ## Building Typescript Documentation
 
 ### Through the CLI
-To generate documentation for your typescript project throught the shell, simply run:
+To generate documentation for your typescript project through the shell, simply run:
 ```shell
 deno run -A "jsr:@oazmi/build-tools/cli/docs"
 ```
@@ -43,13 +43,13 @@ docs_artifacts.cleanup()
 ## Transforming Deno project to Node project
 
 ### Through the CLI
-To transform your deno project to a node-based project throught the shell, simply run:
+To transform your deno project to a node-based project through the shell, simply run:
 ```shell
-deno run -A "jsr:@oazmi/build-tools/cli/npm --install"
+deno run -A "jsr:@oazmi/build-tools/cli/npm" --install
 ```
 
 ### Through Scripting
-To transform to a node-based project throught scripting (and get an understanding of the configurable options), follow the example:
+To transform to a node-based project through scripting (and get an understanding of the configurable options), follow the example:
 
 ```ts
 import { buildNpm, defaultBuildNpmConfig, type BuildNpmConfig } from "jsr:@oazmi/build-tools/npm"

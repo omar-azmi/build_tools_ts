@@ -3,9 +3,9 @@
  * @module
 */
 
-import type { PackageJson, dntBuildOptions } from "./deps.ts"
+import type { DntBuildOptions, PackageJson } from "./deps.ts"
 import type { DenoConfigurationFileSchema } from "./types/deno_json.ts"
-export type { PackageJson, dntBuildOptions } from "./deps.ts"
+export type { DntBuildOptions, PackageJson } from "./deps.ts"
 
 /** this is the json schema used for the "deno.json" configuration file. <br>
  * it has been extended to require the `name` and `version` entries, as they are required by "package.json" when converting a deno project to a node project. <br>
@@ -36,7 +36,7 @@ export interface ExportsWithMain {
 
 /** the json schema for a "tsconfig.json" typescript configuration file. */
 export interface TsConfigJson {
-	compilerOptions: dntBuildOptions["compilerOptions"]
+	compilerOptions: DntBuildOptions["compilerOptions"]
 }
 
 /** any artifacts created by a process in this package, can be cleaned up (deleted) later on by calling the {@link cleanup} function. */
@@ -78,10 +78,18 @@ export interface BaseBuildConfig {
 	*/
 	copy?: Array<[source: string, destination: string]>
 
-	/** write (or append) additional text files to the output {@link dir | `build`} directory, at the specified relative destination.
+	/** write (or append) additional text or binary files to the output {@link dir | `build`} directory, at the specified relative destination.
 	 * use the 3rd `options` item to specify text {@link Deno.WriteFileOptions | writing options}, such as `"append"` the new text, or permit the creation (`"create"`) of new file if it doesn't exist, etc...
 	*/
-	text?: Array<[destination: string, content: string | ReadableStream<string>, options?: Deno.WriteFileOptions]>
+	text?: Array<[
+		destination: string,
+		content:
+		| string
+		| ReadableStream<string>
+		| Uint8Array
+		| ReadableStream<Uint8Array>,
+		options?: Deno.WriteFileOptions,
+	]>
 
 	/** select logging level:
 	 * - `undefined` or `"none"`: skip logging (`dnt` itself will still log).
