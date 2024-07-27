@@ -1,6 +1,6 @@
 export type {
-	PackageJson,
-	BuildOptions as dntBuildOptions
+	BuildOptions as DntBuildOptions,
+	PackageJson
 } from "jsr:@deno/dnt@0.41.2"
 export {
 	copy as copyDir,
@@ -18,6 +18,8 @@ export {
 	toFileUrl as pathToFileUrl
 } from "jsr:@std/path@0.225.2"
 
+// TODO: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
+// TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
 
 import {
 	resolve as _pathResolve,
@@ -62,7 +64,42 @@ export const resolveUri = (path: string) => {
 /** turn optional properties `P` of interface `T` into required */
 export type Require<T, P extends keyof T> = Omit<T, P> & Required<Pick<T, P>>
 
+/** type `T` or promise of type `T` (`Promise<T>`) */
 export type MaybePromise<T> = T | Promise<T>
+
+
+// TODO: maybe add the `detectReadableStreamType` function to kitchensink
+type ReadableStreamKind<T> = T extends string
+	? "string"
+	: "uint8array"
+
+/** detects the type of a `ReadableStream`.
+ * note that the original stream is partially consumed, and you will not be able to use it any longer.
+ * instead, you will have to use the new stream returned by this function for consumption.
+ * 
+ * the implementation works as follows:
+ * - create 2 clones of the original-stream via the `tee` method
+ * - read the first-stream-clone's first chunk, and guess the type based on it
+ * - cancel the original-stream and the first-stream-clone
+ * - return the untouched second-stream-clone and the guessed type in an `Object` wrapper
+*/
+export const detectReadableStreamType = async <
+	T extends string | Uint8Array,
+	K extends ReadableStreamKind<T>,
+>(stream: ReadableStream<T>): Promise<{ kind: K, stream: typeof stream }> => {
+	const
+		[clone1, clone2] = stream.tee(),
+		content = await clone1.getReader().read(),
+		content_type: K = typeof content.value === "string"
+			? "string" as K
+			: "uint8array" as K
+	clone1.cancel()
+	stream.cancel()
+	return {
+		kind: content_type,
+		stream: clone2,
+	}
+}
 
 // memorization code is copied from from "jsr:@oazmi/kitchensink@0.7.5/lambda" and then modified.
 interface MemorizeCoreControls<V, K> {

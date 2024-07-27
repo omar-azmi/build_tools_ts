@@ -6,9 +6,9 @@
  * @module
 */
 
-import { build as dntBuild } from "jsr:@deno/dnt@0.41.2"
+import { build as dntBuild, type BuildOptions as DntBuildOptions } from "jsr:@deno/dnt@0.41.2"
 import type { CliArgs } from "./cli/npm.ts"
-import { emptyDir, pathResolve, type dntBuildOptions } from "./deps.ts"
+import { emptyDir, pathResolve } from "./deps.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson } from "./funcdefs.ts"
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.ts"
 
@@ -22,7 +22,7 @@ export interface BuildNpmConfig extends BaseBuildConfig {
 	dir: string
 
 	/** [`dnt`](https://jsr.io/@deno/dnt) related additional build options for you to configure. */
-	dnt?: Omit<Partial<dntBuildOptions>, "entryPoints" | "outDir" | "scriptModule">
+	dnt?: Omit<Partial<DntBuildOptions>, "entryPoints" | "outDir" | "scriptModule">
 }
 
 /** the default configuration used by the {@link buildNpm} function, for missing/unprovided configuration fields. */
@@ -138,8 +138,8 @@ export const buildNpm = async (build_config: Partial<BuildNpmConfig> = {}): Prom
 		dir: abs_dir,
 		files: [],
 		cleanup: async () => {
-			if (dryrun) { return }
 			if (log_is_basic) { console.log("[in-fs] deleting your npm-build directory:", abs_dir) }
+			if (dryrun) { return }
 			await emptyDir(abs_dir)
 			await Deno.remove(abs_dir)
 		}

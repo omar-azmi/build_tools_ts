@@ -9,7 +9,7 @@ import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.26
 import { emptyDir, ensureFile, pathResolve } from "./deps.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl, joinSlash, trimSlashes } from "./funcdefs.ts"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.ts"
-
+export type { TypeDocOptions } from "npm:typedoc@0.26.4"
 
 /** the configuration for the documentation building function {@link buildDocs}. */
 export interface BuildDocsConfig extends BaseBuildConfig {
@@ -204,6 +204,7 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		dir: abs_dir,
 		files: [],
 		cleanup: async () => {
+			if (log_is_basic) { console.log("[in-fs] deleting your docs-build directory:", abs_dir) }
 			if (!dryrun) {
 				await emptyDir(abs_dir)
 				await Deno.remove(abs_dir)
