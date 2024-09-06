@@ -28,13 +28,17 @@ import {
 } from "jsr:@std/path@0.225.2"
 
 
+const text_encoder = new TextEncoder()
+
+export const TextToUint8Array = (input: string) => text_encoder.encode(input)
+
 const glob_pattern_regex = new RegExp("[*?]")
 
 /** test if a specified path is potentially a glob pattern */
 export const pathIsGlobPattern = (path: string) => glob_pattern_regex.test(path)
 
 /** convert windows directory slash "\" to unix directory slash "/" */
-const pathToUnixPath = (path: string) => path.replaceAll(/\\+/g, "/")
+export const pathToUnixPath = (path: string) => path.replaceAll(/\\+/g, "/")
 
 /** resolve a file path so that it becomes absolute, with unix directory separator ("/"). */
 export const pathResolve = (...pathSegments: string[]) => {

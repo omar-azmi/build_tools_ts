@@ -5,7 +5,7 @@
 
 
 import type { MaybePromise, PackageJson } from "./deps.ts"
-import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveUri } from "./deps.ts"
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, pathToUnixPath, resolveUri } from "./deps.ts"
 import type { BaseBuildConfig, DenoJson, TsConfigJson } from "./typedefs.ts"
 
 const default_deno_json_path = "./deno.json" as const
@@ -94,7 +94,7 @@ export const createTsConfigJson = async (deno_json_path: string = default_deno_j
 	} as any
 }
 
-/** trim the leading slashes at the begining of a string. */
+/** trim the leading slashes at the beginning of a string. */
 export const trimStartSlashes = (str: string): string => {
 	return str.replace(/^\/+/, "")
 }
@@ -104,12 +104,12 @@ export const trimEndSlashes = (str: string): string => {
 	return str.replace(/\/+$/, "")
 }
 
-/** trim leading and trailing slashes, at the begining and end of a string. */
+/** trim leading and trailing slashes, at the beginning and end of a string. */
 export const trimSlashes = (str: string): string => {
 	return trimEndSlashes(trimStartSlashes(str))
 }
 
-/** trim leading and trailing slashes, at the begining and end of a string. */
+/** trim leading and trailing slashes, at the beginning and end of a string. */
 export const trimDotSlashes = (str: string): string => {
 	return trimEndSlashes(str.replace(/^(\.?\/)+/, ""))
 }
@@ -155,6 +155,41 @@ export const gitRepositoryToPagesUrl = (repo_git_url: string): URL => {
 	repo_url.hostname = `${user_name}.github.io`
 	repo_url.pathname = repo_name
 	return repo_url
+}
+
+const
+	glob_pattern_to_regex_escape_control_chars = /[\.\+\^\$\{\}\(\)\|\[\]\\]/g,
+	glob_starstar_wildcard_token = "<<<StarStarWildcard>>>"
+
+// TODO: implement a more featureful glob pattern implementation that uses tokens and has feature switches (like turning ranges on or off, etc...). then move it to `kitchensink`
+/** convert a glob string to a regex object. <br>
+ * in this implementation, only the wildcards `"*"`, `"**"`, and the optional `"?"` is given meaning.
+ * all else, including parenthesis, brackets, dots, and backslash, are escaped when being converted into a regex.
+*/
+export const globToRegex = (glob_pattern: string) => {
+	const
+		// first, convert windows path separator to unix path separator
+		unix_pattern = pathToUnixPath(glob_pattern),
+		// normalize pattern by removing leading dot-slashes ("./"), so they're treated like the "**/" glob pattern.
+		normalized_pattern = trimDotSlashes(unix_pattern),
+		regex_str = normalized_pattern
+			// escape regex special characters, except for "*", "?", "[", "]", "{", and "}"
+			.replace(glob_pattern_to_regex_escape_control_chars, "\\$&")
+			// replace "**/" or "**" directory wildcard with a temporary `glob_starstar_wildcard_token`, and later we will convert to ".*"
+			.replace(/\*\*\/?/g, glob_starstar_wildcard_token)
+			// replace single "*" with "[^/]*" to match anything except directory separators
+			.replace(/\*/g, "[^\/]*")
+			// replace "?" with "." to match any single character
+			.replace(/\?/g, ".")
+			// convert negated glob ranges (like "[!abc]") to regex negation ("[^abc]")
+			.replace(/\[!(.*)\]/g, "[^$1]")
+			// support for character ranges like "[a-z]"
+			.replace(/\[(.*)\]/g, "[$1]")
+			// support for braces like "{js,ts}"
+			.replace(/\{([^,}]+),([^}]+)\}/g, "($1|$2)")
+			// put back the ".*" wildcards where they belong
+			.replace(glob_starstar_wildcard_token, ".*")
+	return new RegExp("^" + regex_str + "$")
 }
 
 export const copyAndCreateFiles = async (config: BaseBuildConfig): Promise<void> => {
@@ -219,10 +254,16 @@ folder paths MUST end with a slash, and folders and glob-patterns can only be co
 		}
 		if (is_text) {
 			if (log_is_verbose) { console.log("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options) }
-			if (!dryrun) { await Deno.writeTextFile(abs_dst, text_data as string | ReadableStream<string>, options) }
+			if (!dryrun) {
+				await ensureFile(abs_dst)
+				await Deno.writeTextFile(abs_dst, text_data as string | ReadableStream<string>, options)
+			}
 		} else {
 			if (log_is_verbose) { console.log("[in-fs] writing binary", `to: "${abs_dst}"`, "with the configuration:", options) }
-			if (!dryrun) { await Deno.writeFile(abs_dst, text_data as Uint8Array | ReadableStream<Uint8Array>, options) }
+			if (!dryrun) {
+				await ensureFile(abs_dst)
+				await Deno.writeFile(abs_dst, text_data as Uint8Array | ReadableStream<Uint8Array>, options)
+			}
 		}
 	}
 }

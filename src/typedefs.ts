@@ -53,7 +53,24 @@ export interface TemporaryFiles extends LeftoverArtifacts {
 	files: string[]
 }
 
-/** the base configuration used by the `npm` and `docs` submodules for their building functions. */
+/** a description of a writable (or appendable) file.
+ * - the first entry of the array must describe the destination path of the file,
+ *   relative to whichever build process's `dir` that you are using (typically defined in the {@link BaseBuildConfig.dir | config's `dir` field}).
+ * - the second entry should be the file's contents, which can either be a `string` text, a `ReadableStream`, or a `Uint8Array` binary.
+ * - the third and optional entry lets you specify additional {@link Deno.WriteFileOptions | deno specific file writing options},
+ *   such as `"append"` the new text, or permit the creation (`"create"`) of new file if it doesn't exist, etc...
+*/
+export type WritableFileConfig = [
+	destination: string,
+	content:
+	| string
+	| ReadableStream<string>
+	| Uint8Array
+	| ReadableStream<Uint8Array>,
+	options?: Deno.WriteFileOptions,
+]
+
+/** the base configuration used by the `npm`, `docs`, and `dist` submodules for their building functions. */
 export interface BaseBuildConfig {
 	/** the desired output directory.
 	 * if a relative path is provided, then it will be resolved as a path relative to Deno's current working directory. (which is generally where `deno.json` resides.)
@@ -81,15 +98,7 @@ export interface BaseBuildConfig {
 	/** write (or append) additional text or binary files to the output {@link dir | `build`} directory, at the specified relative destination.
 	 * use the 3rd `options` item to specify text {@link Deno.WriteFileOptions | writing options}, such as `"append"` the new text, or permit the creation (`"create"`) of new file if it doesn't exist, etc...
 	*/
-	text?: Array<[
-		destination: string,
-		content:
-		| string
-		| ReadableStream<string>
-		| Uint8Array
-		| ReadableStream<Uint8Array>,
-		options?: Deno.WriteFileOptions,
-	]>
+	text?: Array<WritableFileConfig>
 
 	/** select logging level:
 	 * - `undefined` or `"none"`: skip logging (`dnt` itself will still log).
