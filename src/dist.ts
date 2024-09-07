@@ -3,11 +3,11 @@
  * the {@link buildDist} function in this module provides a convenient way for you to bundle your deno-project using [`esbuild`](https://github.com/evanw/esbuild).
  * 
  * for more advanced bundling, use the {@link bundle} function, then proceed with additional transformations via the {@link transform} function,
- * and then finally write the output to your filesystem via the {@link copyAndCreateFiles} utility function.
+ * and then finally write the output to your filesystem via the {@link createFiles} utility function.
  * @example
  * ```ts
  * import { bundle, transform, esStop } from "jsr:@oazmi/build-tools/dist"
- * import { copyAndCreateFiles } from "jsr:@oazmi/build-tools/funcdefs"
+ * import { createFiles } from "jsr:@oazmi/build-tools/funcdefs"
  * 
  * const bundled_files = await bundle({
  * 	deno: "./deno.json",
@@ -16,14 +16,10 @@
  * 	esbuild: { splitting: true }
  * })
  * const minified_files = await transform(bundled_files, [{}], "verbose")
- * // TODO: consider making a more concise function for text writing that is independent of your `BaseBuildConfig` information,
- * //       and use that function compositely inside of `copyAndCreateFiles`.
- * await copyAndCreateFiles({
- * 	deno: "./deno.json", // TODO: this information should not be required for file writing only
- * 	dir: "./dist/", // TODO: this information should not be required for file writing only
+ * await createFiles(minified_files, {
+ * 	dir: "./dist/", // this information is not really needed, as the file paths in `minified_files` are absolute.
  * 	dryrun: false,
  * 	log: "verbose",
- * 	text: minified_files,
  * })
  * 
  * // it is important that you stop esbuild manually, otherwise the deno process will not quit automatically.
@@ -34,15 +30,15 @@
 */
 
 import {
-	type BuildOptions as EsBuildOptions,
-	type TransformOptions as EsTransformOptions,
 	build as esBuild,
 	stop as esStop,
-	transform as esTransform
+	transform as esTransform,
+	type BuildOptions as EsBuildOptions,
+	type TransformOptions as EsTransformOptions,
 } from "http://deno.land/x/esbuild@v0.23.0/mod.js"
 import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3"
-import { emptyDir, MaybePromise, pathResolve, TextToUint8Array } from "./deps.ts"
-import { copyAndCreateFiles, getDenoJson, globToRegex } from "./funcdefs.ts"
+import { emptyDir, pathResolve, TextToUint8Array, type MaybePromise } from "./deps.ts"
+import { copyAndCreateFiles, getDenoJson, globToRegex, type createFiles } from "./funcdefs.ts"
 import type { BaseBuildConfig, DenoJson, ExportsWithMain, TemporaryFiles, WritableFileConfig } from "./typedefs.ts"
 
 

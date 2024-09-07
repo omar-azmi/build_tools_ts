@@ -1,3 +1,8 @@
+/** this module consists of type definitions for the `deno.json` configuration file.
+ * it is for internal use, and probably irrelevant to the end-user.
+ * 
+ * @module
+*/
 
 /** the json schema for `deno.json` deno configuration file. <br>
  * taken from [deno's official config schema](https://github.com/denoland/deno/blob/v1.44.4/cli/schemas/config-file.v1.json),

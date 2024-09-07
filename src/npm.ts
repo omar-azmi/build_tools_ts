@@ -12,6 +12,7 @@ import { emptyDir, pathResolve } from "./deps.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson } from "./funcdefs.ts"
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.ts"
 
+
 /** the configuration for the npm-release building function {@link buildNpm}. */
 export interface BuildNpmConfig extends BaseBuildConfig {
 	/** the path to the folder where you wish to create your npm release.

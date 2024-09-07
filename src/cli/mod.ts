@@ -7,5 +7,6 @@
 import type { CliConfigJson as DocsCliConfigJson } from "./docs.ts"
 import type { CliConfigJson as NpmCliConfigJson } from "./npm.ts"
 
+
 /** the combined json schema definition for this package's configurable cli json configuration files, provided with the `--config` witch. */
 export interface CliConfigJson extends DocsCliConfigJson, NpmCliConfigJson { }

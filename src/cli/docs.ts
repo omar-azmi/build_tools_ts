@@ -10,6 +10,7 @@
 import { buildDocs as buildDocsFn, type BuildDocsConfig } from "../docs.ts"
 import { parseArgs } from "./deps.ts"
 
+
 /** the cli args for generating the documentation of your deno project to via the {@link buildDocsFn | buildDocs} function. */
 export interface CliArgs {
 	/** {@inheritDoc BuildDocsConfig.dir} */

@@ -1,3 +1,10 @@
+import {
+	resolve as _pathResolve,
+	isAbsolute as pathIsAbsolute,
+	toFileUrl as pathToFileUrl
+} from "jsr:@std/path@0.225.2"
+
+
 export type {
 	BuildOptions as DntBuildOptions,
 	PackageJson
@@ -20,13 +27,6 @@ export {
 
 // TODO: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
-
-import {
-	resolve as _pathResolve,
-	isAbsolute as pathIsAbsolute,
-	toFileUrl as pathToFileUrl
-} from "jsr:@std/path@0.225.2"
-
 
 const text_encoder = new TextEncoder()
 
