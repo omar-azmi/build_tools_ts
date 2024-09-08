@@ -42,7 +42,7 @@ import {
 	transform as esTransform,
 	type BuildOptions as EsBuildOptions,
 	type TransformOptions as EsTransformOptions,
-} from "http://deno.land/x/esbuild@v0.23.0/mod.js"
+} from "npm:esbuild@0.23.1"
 import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3"
 import { emptyDir, pathResolve, TextToUint8Array, type MaybePromise } from "./deps.ts"
 import { copyAndCreateFiles, getDenoJson, globToRegex, type createFiles } from "./funcdefs.ts"
@@ -56,7 +56,7 @@ export {
 	type BuildOptions as EsBuildOptions,
 	type OutputFile as EsOutputFile,
 	type TransformOptions as EsTransformOptions
-} from "http://deno.land/x/esbuild@v0.23.0/mod.js"
+} from "npm:esbuild@0.23.1"
 export { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3"
 
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
@@ -91,13 +91,13 @@ export interface BuildDistConfig extends BaseBuildConfig {
 	| string[]
 	| { [output_name: string]: string }
 
-	/** [`esbuild`](https://deno.land/x/esbuild) related additional build options for you to configure. <br>
+	/** [`esbuild`](https://www.npmjs.com/package/esbuild) related additional build options for you to configure. <br>
 	 * note that `outdir` and `outfile` options are made unavailable, since they are controlled by your {@link dir} value. <br>
 	 * in addition, esbuild `plugins` must be configured via {@link plugins}.
 	*/
 	esbuild?: Omit<Partial<EsBuildOptions>, "outdir" | "outfile" | "plugins" | "entryPoints">
 
-	/** apply a collection of optional [`esbuild`](https://deno.land/x/esbuild) plugins.
+	/** apply a collection of optional [`esbuild`](https://www.npmjs.com/package/esbuild) plugins.
 	 * 
 	 * @defaultValue {@link denoPlugins} (via [esbuild-deno-loader](https://jsr.io/@luca/esbuild-deno-loader))
 	*/

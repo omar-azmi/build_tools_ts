@@ -166,7 +166,7 @@ const
  * in this implementation, only the wildcards `"*"`, `"**"`, and the optional `"?"` is given meaning.
  * all else, including parenthesis, brackets, dots, and backslash, are escaped when being converted into a regex.
 */
-export const globToRegex = (glob_pattern: string) => {
+export const globToRegex = (glob_pattern: string): RegExp => {
 	const
 		// first, convert windows path separator to unix path separator
 		unix_pattern = pathToUnixPath(glob_pattern),
@@ -258,7 +258,7 @@ export interface CreateFilesConfig extends Pick<BaseBuildConfig, "dir" | "log" |
  * this function accepts virtual files that are either in text (`string`), binary (`Uint8Array`), or streamable text/binary (`ReadableStream<string | Uint8Array>`) formats.
  * it is important that you provide the configuration parameter's {@link config["dir"] | `dir`} field, so that relative paths can be resolved according to the provided directory.
 */
-export const createFiles = async (input_files: Array<WritableFileConfig>, config: CreateFilesConfig) => {
+export const createFiles = async (input_files: Array<WritableFileConfig>, config: CreateFilesConfig): Promise<void> => {
 	const
 		{ dir = "./", log = "basic", dryrun = false }: CreateFilesConfig = config,
 		log_is_verbose = log === "verbose",

@@ -62,7 +62,7 @@
 		"dependencies": {},
 		"devDependencies": {
 			"typescript": "^5.0.0",
-			"esbuild": "^0.23.0",
+			"esbuild": "^0.23.1",
 			"typedoc": "^0.26.4",
 			"typedoc-plugin-missing-exports": "^3.0.0",
 			"typedoc-plugin-mermaid": "^1.12.0"
@@ -86,9 +86,11 @@
 		"passes": "1",
 		"split": true,
 		"esbuild": {
+			"chunkNames": "chunks/[hash]",
 			"external": [
 				"Deno",
 				"typedoc",
+				"esbuild",
 				"@ts-morph"
 			]
 		}
@@ -110,7 +112,7 @@
 		"build-dist": "deno run -A \"./src/cli/dist.ts\" --config=\"./deno.json\"",
 		"build-docs": "deno run -A \"./src/cli/docs.ts\" --config=\"./deno.json\"",
 		"build-npm": "deno run -A \"./src/cli/npm.ts\" --config=\"./deno.json\"",
-		"build-npm-dist": "cd \"./npm/\" && npm run build-dist",
+		"build-npm-dist": "cd \"./npm/\" && npm run build-esm -- --platform=node && npm run build-esm-minify -- --platform=node",
 		"clean": "deno run -A \"./clean.ts\"",
 		"test": "deno test -A",
 		"publish-jsr": "deno publish"

@@ -17,9 +17,10 @@ runs:
       shell: bash
       run: deno task build-npm --install
 
-    - name: deno-task build-npm-dist
-      shell: bash
-      run: deno task build-npm-dist
+    # the distribution's size is about 32.0 mb, and it's worth nothing. so we don't bother with it.
+    # - name: deno-task build-npm-dist
+    #   shell: bash
+    #   run: deno task build-npm-dist
 
     - name: create npm branch
       uses: s0/git-publish-subdir-action@develop
