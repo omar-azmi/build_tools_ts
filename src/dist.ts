@@ -10,6 +10,12 @@
  * import { createFiles } from "jsr:@oazmi/build-tools/funcdefs"
  * 
  * const bundled_files = await bundle({
+ * 	// when no input files are provided, the function reads your "deno.json" file to use its "exports" field as the input.
+ * 	input: {
+ * 		"my-lib.js": "./src/mod.ts",
+ * 		"plugins/hello.js": "./src/plugins/hello.ts",
+ * 		"plugins/world.js": "./src/plugins/world.ts",
+ * 	},
  * 	deno: "./deno.json",
  * 	dir: "./dist/",
  * 	log: "verbose",
@@ -21,6 +27,7 @@
  * 	dryrun: false,
  * 	log: "verbose",
  * })
+ * // your output files are now saved to: "./dist/my-lib.js", "./dist/plugins/hello.js", and "./dist/plugins/world.js"
  * 
  * // it is important that you stop esbuild manually, otherwise the deno process will not quit automatically.
  * await esStop()
@@ -52,44 +59,14 @@ export {
 } from "http://deno.land/x/esbuild@v0.23.0/mod.js"
 export { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3"
 
-/** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. */
-export interface BundleConfig extends BaseBuildConfig {
+/** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
+ * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.
+*/
+export interface BundleConfig extends BuildDistConfig {
 	copy?: never
 	text?: never
 	dryrun?: never
-
-	/** the *virtual* path to the folder where you wish to create your distribution release.
-	 * if a relative path is provided, then it will be resolved as a path relative to Deno's current working directory. (which is generally where `deno.json` resides.)
-	 * the directory provided here will serve as esbuild configuration's {@link esbuild["outdir"] | `outdir` option}.
-	 * 
-	 * @defaultValue `"./dist/"`
-	*/
-	dir: string
-
-	/** [`esbuild`](https://deno.land/x/esbuild) related additional build options for you to configure. <br>
-	 * note that `outdir` and `outfile` options are made unavailable, since they are controlled by your {@link dir} value. <br>
-	 * in addition, esbuild `plugins` must be configured via {@link plugins}.
-	 * 
-	 * > [!TIP]
-	 * > if you wish to declare a set of bundling `entryPoints` that are different from your {@link deno | `deno.json`} file's `exports` field,
-	 * > simply modify the {@link EsBuildOptions.entryPoints} option in this field.
-	*/
-	esbuild?: Omit<Partial<EsBuildOptions>, "outdir" | "outfile" | "plugins" | "write">
-
-	/** apply a collection of optional [`esbuild`](https://deno.land/x/esbuild) plugins.
-	 * 
-	 * @defaultValue {@link denoPlugins} (via [esbuild-deno-loader](jsr:@luca/esbuild-deno-loader@0.10.3))
-	*/
-	plugins?: EsBuildOptions["plugins"]
-
-	/** stop running esbuild's wasm-service after compilation?
-	 * booting up wasm takes a little while, so you'll want to turn this option to `false` if you are calling the {@link buildDist} function multiple times for multiple compilations.
-	 * on the other hand, it is good to stop the service on your very last compilation-run, as keeping the service alive results in prolonging the time it takes for deno to exit it process.
-	 * (at least this is how it was in the earlier releases of esbuild, but I do recall seeing a PR that supposedly addressed this issue)
-	 * 
-	 * @defaultValue `false`
-	*/
-	stop?: boolean
+	esbuild?: Omit<Partial<EsBuildOptions>, "outdir" | "outfile" | "plugins" | "entryPoints" | "write">
 }
 
 /** the configuration for the distribution-building function {@link buildDist}. */
@@ -102,17 +79,27 @@ export interface BuildDistConfig extends BaseBuildConfig {
 	*/
 	dir: string
 
-	/** [`esbuild`](https://deno.land/x/esbuild) related additional build options for you to configure. <br>
-	 * note that `outdir` and `outfile` options are made unavailable, since they get controlled by the {@link dir} value.
-	 * in addition, esbuild `plugins` must be configured via {@link plugins}.
+	/** the collection of files to compile. this option translates into esbuild's {@link EsBuildOptions.entryPoints | entryPoints} configuration field. <br>
+	 * if this is not provided, then the {@link DenoJson.exports | `exports` field} is used from your {@link deno | `deno.json`} as the entry points for esbuild.
 	 * 
-	 * @defaultValue {@link denoPlugins} (via [esbuild-deno-loader](jsr:@luca/esbuild-deno-loader@0.10.3))
+	 * @defaultValue `undefined`, so that your `deno.json`'s `exports` are used as entry points.
 	*/
-	esbuild?: Omit<Partial<EsBuildOptions>, "outdir" | "outfile" | "plugins">
+	input?:
+	| null
+	| undefined
+	| string
+	| string[]
+	| { [output_name: string]: string }
+
+	/** [`esbuild`](https://deno.land/x/esbuild) related additional build options for you to configure. <br>
+	 * note that `outdir` and `outfile` options are made unavailable, since they are controlled by your {@link dir} value. <br>
+	 * in addition, esbuild `plugins` must be configured via {@link plugins}.
+	*/
+	esbuild?: Omit<Partial<EsBuildOptions>, "outdir" | "outfile" | "plugins" | "entryPoints">
 
 	/** apply a collection of optional [`esbuild`](https://deno.land/x/esbuild) plugins.
 	 * 
-	 * @defaultValue {@link denoPlugins} (via [esbuild-deno-loader](jsr:@luca/esbuild-deno-loader@0.10.3))
+	 * @defaultValue {@link denoPlugins} (via [esbuild-deno-loader](https://jsr.io/@luca/esbuild-deno-loader))
 	*/
 	plugins?: EsBuildOptions["plugins"]
 
@@ -135,6 +122,7 @@ export interface TransformationConfig {
 	 * @defaultValue `undefined`
 	*/
 	pattern?:
+	| null
 	| undefined
 	| string
 	| RegExp
@@ -187,6 +175,19 @@ const defaultTransformationConfig: Required<TransformationConfig> = {
 	}
 }
 
+// TODO: move this function to `/src/funcdefs.ts` if the other modules also accept user-customizable inputs.
+// TODO: move the `BundleConfig.input` field to `BaseBuildConfig` if the other modules also begin to accept alternate inputs different from the one in "deno.json".
+const parse_entry_points = async (deno: string, input?: BundleConfig["input"]): Promise<EsBuildOptions["entryPoints"]> => {
+	input ??= undefined
+	if (input) { return typeof input === "string" ? [input] : input }
+	input = (await getDenoJson(deno)).exports ?? {}
+	return typeof input === "string"
+		? [input]
+		// we treat `input`s from our `deno.json`'s `exports` field differently, because it is customary to not include the extension part of the exported module,
+		// but it is required by esbuild in the output's file name. thus we simply convert the exports dictionary to an array to let esbuild name the exports itself.
+		: Object.values(input as ExportsWithMain)
+}
+
 /** this function bundles your deno-project's {@link DenoJson.exports | exports} in-memory, using the blazing fast [`esbuild`](https://github.com/evanw/esbuild) bundler,
  * along with the useful [`esbuild-deno-loader`](https://jsr.io/@luca/esbuild-deno-loader) default plugin. <br>
  * the output of this function is an array of {@link WritableFileConfig}, consisting of the destination path and the content of the bundled javascript/css code (as a binary `Uint8Array`).
@@ -197,15 +198,17 @@ const defaultTransformationConfig: Required<TransformationConfig> = {
 */
 export const bundle = async (bundle_config: Partial<BundleConfig> = {}): Promise<BundleOutput> => {
 	const
-		{ dir, deno, esbuild = {}, plugins, stop = false, log }: BundleConfig = { ...defaultBundleConfig, ...bundle_config },
+		{ dir, deno, input, esbuild = {}, plugins, stop = false, log }: BundleConfig = { ...defaultBundleConfig, ...bundle_config },
 		abs_dir = pathResolve(dir),
 		abs_deno = pathResolve(deno),
 		log_is_verbose = log === "verbose",
 		log_is_basic = log_is_verbose || log === "basic",
-		{ exports = {} } = await getDenoJson(deno),
-		entryPoints = typeof exports === "string" ? [exports] : Object.values(exports as ExportsWithMain)
+		entryPoints = await parse_entry_points(deno, input)
+	if (log_is_verbose) {
+		console.log("current dist-bundle configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, log, stop })
+		console.log("bundling the following entry-points:", entryPoints)
+	}
 	let delta_time = performance.now()
-	if (log_is_verbose) { console.log("bundling the following entry-points:", entryPoints) }
 	const bundled_code = await esBuild({
 		entryPoints,
 		outdir: abs_dir,
@@ -235,15 +238,17 @@ export const bundle = async (bundle_config: Partial<BundleConfig> = {}): Promise
 */
 export const buildDist = async (build_config: Partial<BuildDistConfig>): Promise<TemporaryFiles> => {
 	const
-		{ dir, deno, esbuild = {}, plugins, stop = true, copy = [], text = [], log, dryrun = false }: BuildDistConfig = { ...defaultBuildDistConfig, ...build_config },
+		{ dir, deno, input, esbuild = {}, plugins, stop = true, copy = [], text = [], log, dryrun = false }: BuildDistConfig = { ...defaultBuildDistConfig, ...build_config },
 		abs_dir = pathResolve(dir),
 		abs_deno = pathResolve(deno),
 		log_is_verbose = log === "verbose",
 		log_is_basic = log_is_verbose || log === "basic",
-		{ exports } = await getDenoJson(deno),
-		entryPoints = typeof exports === "string" ? [exports] : Object.values(exports)
+		entryPoints = await parse_entry_points(deno, input)
 	let delta_time = performance.now()
-	if (log_is_verbose) { console.log("bundling the following entry-points:", entryPoints) }
+	if (log_is_verbose) {
+		console.log("current dist-build configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, log, stop, copy, text, dryrun })
+		console.log("bundling the following entry-points:", entryPoints)
+	}
 	const bundled_code = await esBuild({
 		entryPoints,
 		outdir: abs_dir,
@@ -254,7 +259,7 @@ export const buildDist = async (build_config: Partial<BuildDistConfig>): Promise
 		target: "esnext",
 		plugins,
 		...esbuild,
-		write: dryrun,
+		write: !dryrun,
 	})
 	delta_time = performance.now() - delta_time
 	if (log_is_basic) { console.log("bundling time:", delta_time, "ms") }
@@ -273,14 +278,12 @@ export const buildDist = async (build_config: Partial<BuildDistConfig>): Promise
 }
 
 const parsePathPatternMatching = (pattern: TransformationConfig["pattern"]): PathPatternMatchingFn => {
+	pattern ??= undefined
 	switch (typeof pattern) {
 		case "function": { return pattern }
 		case "undefined": { return (() => true) }
 		case "object": { return (file_path: string) => pattern.test(file_path) }
-		case "string": {
-			const regex = globToRegex(pattern)
-			return ((file_path: string) => regex.test(file_path))
-		}
+		case "string": { return parsePathPatternMatching(globToRegex(pattern)) }
 	}
 }
 
