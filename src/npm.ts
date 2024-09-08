@@ -5,6 +5,7 @@
  * 
  * @module
 */
+// TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
 
 import { build as dntBuild, type BuildOptions as DntBuildOptions } from "jsr:@deno/dnt@0.41.2"
 import type { CliArgs } from "./cli/npm.ts"
@@ -18,7 +19,7 @@ export interface BuildNpmConfig extends BaseBuildConfig {
 	/** the path to the folder where you wish to create your npm release.
 	 * if a relative path is provided, then it will be resolved as a path relative to Deno's current working directory. (which is generally where `deno.json` resides.)
 	 * 
-	 *  `"./npm/"`
+	 * @defaultValue `"./npm/"`
 	*/
 	dir: string
 

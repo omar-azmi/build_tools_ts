@@ -192,6 +192,7 @@ export const globToRegex = (glob_pattern: string) => {
 	return new RegExp("^" + regex_str + "$")
 }
 
+// TODO: `copyAndCreateFiles` and `createFiles` should return an artifacts info (such as `TemporaryFiles`).
 /** this function takes in your {@link BaseBuildConfig | generic config} object,
  * and figures out the files that need to be copied (specified in the {@link BaseBuildConfig.copy} field),
  * and the new text/binary files that need to be written (specified in the {@link BaseBuildConfig.text} field).

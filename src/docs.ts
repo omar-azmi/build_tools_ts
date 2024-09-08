@@ -5,7 +5,8 @@
 */
 
 import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.26.4"
-//TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
+// TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
+// TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
 import { emptyDir, ensureFile, pathResolve } from "./deps.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl, joinSlash, trimSlashes } from "./funcdefs.ts"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.ts"
