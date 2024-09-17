@@ -6,6 +6,7 @@
  * @module
 */
 
+import { setLog } from "../logger.ts"
 import { buildNpm as buildNpmFn, type BuildNpmConfig } from "../npm.ts"
 import { parseArgs } from "./deps.ts"
 
@@ -19,7 +20,7 @@ export interface CliArgs {
 	deno?: BuildNpmConfig["deno"]
 
 	/** {@inheritdoc BuildNpmConfig.log} */
-	log?: boolean | BuildNpmConfig["log"]
+	log?: BuildNpmConfig["log"]
 
 	/** {@inheritdoc BuildNpmConfig.dryrun} */
 	dryrun?: BuildNpmConfig["dryrun"]
@@ -69,16 +70,10 @@ const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path
 	? JSON.parse(await Deno.readTextFile(config_path))
 	: {}
-const { install, log = false, ...combined_config } = { ...config_file.buildNpm, ...rest_cli_args }
-const dnt = (combined_config.dnt ??= {})
+const { install, log = false, ...config } = { ...config_file.buildNpm, ...rest_cli_args }
+const dnt = (config.dnt ??= {})
 dnt.skipNpmInstall ??= (install ? false : true)
 if (typeof install === "string") { dnt.packageManager = install }
 
-const config: Partial<BuildNpmConfig> = {
-	...combined_config,
-	log: (log === false ? undefined
-		: (log === true ? "basic" : log)
-	),
-}
-
-const artifacts_info = await buildNpmFn(config)
+setLog({ log })
+const artifacts_info = await buildNpmFn(config satisfies Partial<BuildNpmConfig>)
