@@ -140,13 +140,16 @@ const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path
 	? JSON.parse(await Deno.readTextFile(config_path))
 	: {}
+if (config_file.buildDist?.input && input && (input.length > 0)) {
+	config_file.buildDist.input = input
+}
 const {
 	deno = "./deno.json", dir = "./dist/",
 	log: log_config = false, passes = "1", format = "esm", minify = "syntax", split = false,
 	transform = [{ pattern: "**.js", loader: "js", options: { minify: true, platform: "browser", format: "esm", target: "esnext" } }],
 	esbuild: esbuild_config,
 	...combined_config
-} = { ...config_file.buildDist, ...rest_cli_args, input }
+} = { ...config_file.buildDist, ...rest_cli_args }
 const esbuild: EsBuildOptions = {
 	...esbuild_config,
 	format,
