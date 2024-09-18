@@ -32,6 +32,7 @@ import {
 	type TransformationConfig
 } from "../dist.ts"
 import { copyAndCreateFiles, createFiles } from "../funcdefs.ts"
+import { setLog } from "../logger.ts"
 import type { DenoJson, TemporaryFiles } from "../typedefs.ts"
 import { parseArgs } from "./deps.ts"
 
@@ -45,7 +46,7 @@ export interface CliArgs {
 	deno?: BuildDistConfig["deno"]
 
 	/** {@inheritdoc BuildDistConfig.log} */
-	log?: boolean | BuildDistConfig["log"]
+	log?: BuildDistConfig["log"]
 
 	/** {@inheritdoc BuildDistConfig.dryrun} */
 	dryrun?: BuildDistConfig["dryrun"]
@@ -140,13 +141,16 @@ const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path
 	? JSON.parse(await Deno.readTextFile(config_path))
 	: {}
+if (config_file.buildDist?.input && input && (input.length > 0)) {
+	config_file.buildDist.input = input
+}
 const {
 	deno = "./deno.json", dir = "./dist/",
-	log: log_config = false, passes = "1", format = "esm", minify = "syntax", split = false,
+	log = false, passes = "1", format = "esm", minify = "syntax", split = false,
 	transform = [{ pattern: "**.js", loader: "js", options: { minify: true, platform: "browser", format: "esm", target: "esnext" } }],
 	esbuild: esbuild_config,
 	...combined_config
-} = { ...config_file.buildDist, ...rest_cli_args, input }
+} = { ...config_file.buildDist, ...rest_cli_args }
 const esbuild: EsBuildOptions = {
 	...esbuild_config,
 	format,
@@ -156,13 +160,10 @@ const esbuild: EsBuildOptions = {
 	minifySyntax: minify === "syntax" ? true : undefined,
 	minifyWhitespace: minify === "whitespace" ? true : undefined,
 }
-const log = (log_config === false
-	? undefined
-	: (log_config === true ? "basic" : log_config)
-)
 const config: Partial<BuildDistConfig> = {
-	...combined_config, esbuild, log, dir, deno
+	...combined_config, esbuild, dir, deno
 }
+setLog({ log })
 
 let artifacts_info: TemporaryFiles
 if (passes == "2") {
@@ -170,9 +171,9 @@ if (passes == "2") {
 	const
 		{ copy, text, dryrun, ...bundle_config } = config,
 		bundled_files = await bundleFn(bundle_config),
-		transformed_files = await transformFn(bundled_files, transform, log)
-	await createFiles(transformed_files, { dir, dryrun, log })
-	await copyAndCreateFiles({ deno, dir, copy, text, dryrun, log })
+		transformed_files = await transformFn(bundled_files, transform)
+	await createFiles(transformed_files, { dir, dryrun })
+	await copyAndCreateFiles({ deno, dir, copy, text, dryrun })
 } else {
 	// a single pass compilation can be done by esbuild natively
 	artifacts_info = await buildDistFn(config)

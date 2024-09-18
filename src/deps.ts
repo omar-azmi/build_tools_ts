@@ -25,8 +25,9 @@ export {
 	toFileUrl as pathToFileUrl
 } from "jsr:@std/path@0.225.2"
 
-// TODO: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
+// DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
+// TODO: develop a more robust esbuild resolver and loader plugin for deno specific specifiers (such as `npm:` and `jsr:`), that does not interrupt other npm-based esbuild plugins.
 
 const text_encoder = new TextEncoder()
 

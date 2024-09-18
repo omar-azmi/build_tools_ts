@@ -5,6 +5,7 @@
 
 import type { MaybePromise, PackageJson } from "./deps.ts"
 import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, pathToUnixPath, resolveUri } from "./deps.ts"
+import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TsConfigJson, WritableFileConfig } from "./typedefs.ts"
 
 
@@ -198,14 +199,13 @@ export const globToRegex = (glob_pattern: string): RegExp => {
  * and the new text/binary files that need to be written (specified in the {@link BaseBuildConfig.text} field).
 */
 export const copyAndCreateFiles = async (config: BaseBuildConfig): Promise<void> => {
+	setLog(config)
 	const
 		{ dir, deno, copy = [], text = [], log, dryrun = false }: BaseBuildConfig = config,
-		abs_deno_dir = pathResolve(deno, "../"),
-		log_is_verbose = log === "verbose",
-		log_is_basic = log_is_verbose || log === "basic"
+		abs_deno_dir = pathResolve(deno, "../")
 
 	// copying other files
-	if (log_is_basic) { console.log("[in-fs] copying additional files from you deno directory over to the build directory") }
+	logBasic("[in-fs] copying additional files from you deno directory over to the build directory")
 	await Promise.all(copy.map(async ([src, dst]): Promise<void> => {
 		const
 			is_single_file = (
@@ -216,7 +216,7 @@ export const copyAndCreateFiles = async (config: BaseBuildConfig): Promise<void>
 			abs_src = pathResolve(abs_deno_dir, src),
 			abs_dst = pathResolve(dir, dst)
 		if (is_single_file) {
-			if (log_is_verbose) { console.log("[in-fs] copying a file", `from: "${abs_src}"`, `to: "${abs_dst}"`) }
+			logVerbose("[in-fs] copying a file", `from: "${abs_src}"`, `to: "${abs_dst}"`)
 			if (!dryrun) { await Deno.copyFile(abs_src, abs_dst) }
 		}
 		else {
@@ -237,7 +237,7 @@ folder paths MUST end with a slash, and folders and glob-patterns can only be co
 				if (is_file && !dryrun) { await ensureFile(abs_dst) }
 				if (is_folder && !dryrun) { await ensureDir(abs_dst) }
 				// TODO: how should I handle system links? (i.e. if `isSymlink` was true)
-				if (log_is_verbose) { console.log("[in-fs] copying", `from: "${abs_src}"`, `to: "${abs_dst}"`) }
+				logVerbose("[in-fs] copying", `from: "${abs_src}"`, `to: "${abs_dst}"`)
 				if (!dryrun) { await copyDir(abs_src, abs_dst, { overwrite: true }) }
 			}
 		}
@@ -259,13 +259,11 @@ export interface CreateFilesConfig extends Pick<BaseBuildConfig, "dir" | "log" |
  * it is important that you provide the configuration parameter's {@link config["dir"] | `dir`} field, so that relative paths can be resolved according to the provided directory.
 */
 export const createFiles = async (input_files: Array<WritableFileConfig>, config: CreateFilesConfig): Promise<void> => {
-	const
-		{ dir = "./", log = "basic", dryrun = false }: CreateFilesConfig = config,
-		log_is_verbose = log === "verbose",
-		log_is_basic = log_is_verbose || log === "basic"
+	setLog(config)
+	const { dir = "./", dryrun = false }: CreateFilesConfig = config
 
 	// writing text or binary files
-	if (log_is_basic) { console.log("[in-fs] writing additional text/binary files to your build directory") }
+	logBasic("[in-fs] writing additional text/binary files to your build directory")
 	for (let [dst_path, content, options] of input_files) {
 		const
 			abs_dst = pathResolve(dir, dst_path),
@@ -278,13 +276,13 @@ export const createFiles = async (input_files: Array<WritableFileConfig>, config
 			is_text = kind === "string"
 		}
 		if (is_text) {
-			if (log_is_verbose) { console.log("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options) }
+			logVerbose("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options)
 			if (!dryrun) {
 				await ensureFile(abs_dst)
 				await Deno.writeTextFile(abs_dst, content as string | ReadableStream<string>, options)
 			}
 		} else {
-			if (log_is_verbose) { console.log("[in-fs] writing binary", `to: "${abs_dst}"`, "with the configuration:", options) }
+			logVerbose("[in-fs] writing binary", `to: "${abs_dst}"`, "with the configuration:", options)
 			if (!dryrun) {
 				await ensureFile(abs_dst)
 				await Deno.writeFile(abs_dst, content as Uint8Array | ReadableStream<Uint8Array>, options)

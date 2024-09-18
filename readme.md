@@ -3,7 +3,7 @@
 This package contains various convenience tools for codebase transformation, documentation generation, and code bundling.
 
 Under the hood, it relies on:
-- [`esbuild`](https://deno.land/x/esbuild@v0.23.0) + [`esbuild-deno-loader`](https://jsr.io/@luca/esbuild-deno-loader) for bundling.
+- [`esbuild`](https://www.npmjs.com/package/esbuild) + [`esbuild-deno-loader`](https://jsr.io/@luca/esbuild-deno-loader) for bundling.
 - [`dnt`](https://jsr.io/@deno/dnt) for deno to node project transformation.
 - [`typedoc`](https://www.npmjs.com/package/typedoc) for documentation generation.
 

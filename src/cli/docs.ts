@@ -8,6 +8,7 @@
 */
 
 import { buildDocs as buildDocsFn, type BuildDocsConfig } from "../docs.ts"
+import { setLog } from "../logger.ts"
 import { parseArgs } from "./deps.ts"
 
 
@@ -20,7 +21,7 @@ export interface CliArgs {
 	deno?: BuildDocsConfig["deno"]
 
 	/** {@inheritdoc BuildDocsConfig.log} */
-	log?: boolean | BuildDocsConfig["log"]
+	log?: BuildDocsConfig["log"]
 
 	/** {@inheritdoc BuildDocsConfig.dryrun} */
 	dryrun?: BuildDocsConfig["dryrun"]
@@ -68,13 +69,7 @@ const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path
 	? JSON.parse(await Deno.readTextFile(config_path))
 	: {}
-const { log = false, ...combined_config } = { ...config_file.buildDocs, ...rest_cli_args }
+const { log = false, ...config } = { ...config_file.buildDocs, ...rest_cli_args }
 
-const config: Partial<BuildDocsConfig> = {
-	...combined_config,
-	log: (log === false ? undefined
-		: (log === true ? "basic" : log)
-	),
-}
-
-const artifacts_info = await buildDocsFn(config)
+setLog({ log })
+const artifacts_info = await buildDocsFn(config satisfies Partial<BuildDocsConfig>)
