@@ -7,6 +7,7 @@
 */
 import "../_dnt.polyfills.js";
 import * as dntShim from "../_dnt.shims.js";
+import { setLog } from "../logger.js";
 import { buildNpm as buildNpmFn } from "../npm.js";
 import { parseArgs } from "./deps.js";
 const cli_args = parseArgs(dntShim.Deno.args);
@@ -14,15 +15,11 @@ const { config: config_path, ...rest_cli_args } = cli_args;
 const config_file = config_path
     ? JSON.parse(await dntShim.Deno.readTextFile(config_path))
     : {};
-const { install, log = false, ...combined_config } = { ...config_file.buildNpm, ...rest_cli_args };
-const dnt = (combined_config.dnt ??= {});
+const { install, log = false, ...config } = { ...config_file.buildNpm, ...rest_cli_args };
+const dnt = (config.dnt ??= {});
 dnt.skipNpmInstall ??= (install ? false : true);
 if (typeof install === "string") {
     dnt.packageManager = install;
 }
-const config = {
-    ...combined_config,
-    log: (log === false ? undefined
-        : (log === true ? "basic" : log)),
-};
+setLog({ log });
 const artifacts_info = await buildNpmFn(config);

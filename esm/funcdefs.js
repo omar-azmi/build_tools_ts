@@ -5,6 +5,7 @@
 import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
 import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, pathToUnixPath, resolveUri } from "./deps.js";
+import { logBasic, logVerbose, setLog } from "./logger.js";
 const default_deno_json_path = "./deno.json";
 const getDenoJson_FromUri = async (deno_json_path_uri) => {
     // unfortunately, dynamic imports can only be published in jsr if we enable the `--allow-dirty` flag,
@@ -170,19 +171,16 @@ export const globToRegex = (glob_pattern) => {
  * and the new text/binary files that need to be written (specified in the {@link BaseBuildConfig.text} field).
 */
 export const copyAndCreateFiles = async (config) => {
-    const { dir, deno, copy = [], text = [], log, dryrun = false } = config, abs_deno_dir = pathResolve(deno, "../"), log_is_verbose = log === "verbose", log_is_basic = log_is_verbose || log === "basic";
+    setLog(config);
+    const { dir, deno, copy = [], text = [], log, dryrun = false } = config, abs_deno_dir = pathResolve(deno, "../");
     // copying other files
-    if (log_is_basic) {
-        console.log("[in-fs] copying additional files from you deno directory over to the build directory");
-    }
+    logBasic("[in-fs] copying additional files from you deno directory over to the build directory");
     await Promise.all(copy.map(async ([src, dst]) => {
         const is_single_file = (src.endsWith("/")
             || dst.endsWith("/")
             || pathIsGlobPattern(src)) ? false : true, abs_src = pathResolve(abs_deno_dir, src), abs_dst = pathResolve(dir, dst);
         if (is_single_file) {
-            if (log_is_verbose) {
-                console.log("[in-fs] copying a file", `from: "${abs_src}"`, `to: "${abs_dst}"`);
-            }
+            logVerbose("[in-fs] copying a file", `from: "${abs_src}"`, `to: "${abs_dst}"`);
             if (!dryrun) {
                 await dntShim.Deno.copyFile(abs_src, abs_dst);
             }
@@ -206,9 +204,7 @@ folder paths MUST end with a slash, and folders and glob-patterns can only be co
                     await ensureDir(abs_dst);
                 }
                 // TODO: how should I handle system links? (i.e. if `isSymlink` was true)
-                if (log_is_verbose) {
-                    console.log("[in-fs] copying", `from: "${abs_src}"`, `to: "${abs_dst}"`);
-                }
+                logVerbose("[in-fs] copying", `from: "${abs_src}"`, `to: "${abs_dst}"`);
                 if (!dryrun) {
                     await copyDir(abs_src, abs_dst, { overwrite: true });
                 }
@@ -223,11 +219,10 @@ folder paths MUST end with a slash, and folders and glob-patterns can only be co
  * it is important that you provide the configuration parameter's {@link config["dir"] | `dir`} field, so that relative paths can be resolved according to the provided directory.
 */
 export const createFiles = async (input_files, config) => {
-    const { dir = "./", log = "basic", dryrun = false } = config, log_is_verbose = log === "verbose", log_is_basic = log_is_verbose || log === "basic";
+    setLog(config);
+    const { dir = "./", dryrun = false } = config;
     // writing text or binary files
-    if (log_is_basic) {
-        console.log("[in-fs] writing additional text/binary files to your build directory");
-    }
+    logBasic("[in-fs] writing additional text/binary files to your build directory");
     for (let [dst_path, content, options] of input_files) {
         const abs_dst = pathResolve(dir, dst_path), data_is_stream = content.getReader ? true : false;
         let is_text = typeof content === "string" ? true : false;
@@ -238,18 +233,14 @@ export const createFiles = async (input_files, config) => {
             is_text = kind === "string";
         }
         if (is_text) {
-            if (log_is_verbose) {
-                console.log("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options);
-            }
+            logVerbose("[in-fs] writing text", `to: "${abs_dst}"`, "with the configuration:", options);
             if (!dryrun) {
                 await ensureFile(abs_dst);
                 await dntShim.Deno.writeTextFile(abs_dst, content, options);
             }
         }
         else {
-            if (log_is_verbose) {
-                console.log("[in-fs] writing binary", `to: "${abs_dst}"`, "with the configuration:", options);
-            }
+            logVerbose("[in-fs] writing binary", `to: "${abs_dst}"`, "with the configuration:", options);
             if (!dryrun) {
                 await ensureFile(abs_dst);
                 await dntShim.Deno.writeFile(abs_dst, content, options);

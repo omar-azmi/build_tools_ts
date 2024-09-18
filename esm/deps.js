@@ -2,8 +2,9 @@ import * as dntShim from "./_dnt.shims.js";
 import { resolve as _pathResolve, isAbsolute as pathIsAbsolute, toFileUrl as pathToFileUrl } from "./deps/jsr.io/@std/path/0.225.2/mod.js";
 export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob, walk as walkDir } from "./deps/jsr.io/@std/fs/0.229.3/mod.js";
 export { dirname as pathDirname, isAbsolute as pathIsAbsolute, join as pathJoin, relative as pathRelative, toFileUrl as pathToFileUrl } from "./deps/jsr.io/@std/path/0.225.2/mod.js";
-// TODO: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
+// DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
+// TODO: develop a more robust esbuild resolver and loader plugin for deno specific specifiers (such as `npm:` and `jsr:`), that does not interrupt other npm-based esbuild plugins.
 const text_encoder = new TextEncoder();
 export const TextToUint8Array = (input) => text_encoder.encode(input);
 const glob_pattern_regex = new RegExp("[*?]");

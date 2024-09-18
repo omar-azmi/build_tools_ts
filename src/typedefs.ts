@@ -107,11 +107,12 @@ export interface BaseBuildConfig {
 	text?: Array<WritableFileConfig>
 
 	/** select logging level:
-	 * - `undefined` or `"none"`: skip logging (`dnt` itself will still log).
-	 * - `"basic"`: log what is being carried out at the top level.
+	 * - `false` or `"none"`: skip logging (`dnt` itself will still log).
+	 * - `true` or `"basic"`: log what is being carried out at the top level.
 	 * - `"verbose"`: in addition to basic logging, it also logs which files/folders are being copied or generated.
+	 * - `undefined`: unchange logging from previous state (which is `"basic"` by default).
 	*/
-	log?: "none" | "basic" | "verbose"
+	log?: boolean | "none" | "basic" | "verbose"
 
 	/** enable `dryrun` if you wish for nothing to be written onto the the filesystem.
 	 * 

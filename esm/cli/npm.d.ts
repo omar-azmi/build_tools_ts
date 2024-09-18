@@ -14,7 +14,7 @@ export interface CliArgs {
     /** {@inheritdoc BuildNpmConfig.deno} */
     deno?: BuildNpmConfig["deno"];
     /** {@inheritdoc BuildNpmConfig.log} */
-    log?: boolean | BuildNpmConfig["log"];
+    log?: BuildNpmConfig["log"];
     /** {@inheritdoc BuildNpmConfig.dryrun} */
     dryrun?: BuildNpmConfig["dryrun"];
     /** should `npm install` be invoked after the node project's creation?

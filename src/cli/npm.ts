@@ -10,6 +10,7 @@ import "../_dnt.polyfills.js";
 import * as dntShim from "../_dnt.shims.js";
 
 
+import { setLog } from "../logger.js"
 import { buildNpm as buildNpmFn, type BuildNpmConfig } from "../npm.js"
 import { parseArgs } from "./deps.js"
 
@@ -23,7 +24,7 @@ export interface CliArgs {
 	deno?: BuildNpmConfig["deno"]
 
 	/** {@inheritdoc BuildNpmConfig.log} */
-	log?: boolean | BuildNpmConfig["log"]
+	log?: BuildNpmConfig["log"]
 
 	/** {@inheritdoc BuildNpmConfig.dryrun} */
 	dryrun?: BuildNpmConfig["dryrun"]
@@ -73,16 +74,10 @@ const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path
 	? JSON.parse(await dntShim.Deno.readTextFile(config_path))
 	: {}
-const { install, log = false, ...combined_config } = { ...config_file.buildNpm, ...rest_cli_args }
-const dnt = (combined_config.dnt ??= {})
+const { install, log = false, ...config } = { ...config_file.buildNpm, ...rest_cli_args }
+const dnt = (config.dnt ??= {})
 dnt.skipNpmInstall ??= (install ? false : true)
 if (typeof install === "string") { dnt.packageManager = install }
 
-const config: Partial<BuildNpmConfig> = {
-	...combined_config,
-	log: (log === false ? undefined
-		: (log === true ? "basic" : log)
-	),
-}
-
-const artifacts_info = await buildNpmFn(config)
+setLog({ log })
+const artifacts_info = await buildNpmFn(config satisfies Partial<BuildNpmConfig>)

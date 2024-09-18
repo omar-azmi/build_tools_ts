@@ -30,7 +30,7 @@ export interface CliArgs {
     /** {@inheritdoc BuildDistConfig.deno} */
     deno?: BuildDistConfig["deno"];
     /** {@inheritdoc BuildDistConfig.log} */
-    log?: boolean | BuildDistConfig["log"];
+    log?: BuildDistConfig["log"];
     /** {@inheritdoc BuildDistConfig.dryrun} */
     dryrun?: BuildDistConfig["dryrun"];
     /** specify the number of compilation passes to perform:

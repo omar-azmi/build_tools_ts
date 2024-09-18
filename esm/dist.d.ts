@@ -39,8 +39,8 @@ import "./_dnt.polyfills.js";
 import { type BuildOptions as EsBuildOptions, type TransformOptions as EsTransformOptions } from "esbuild";
 import { type MaybePromise } from "./deps.js";
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.js";
-export { build as esBuild, stop as esStop, transform as esTransform, type BuildOptions as EsBuildOptions, type OutputFile as EsOutputFile, type TransformOptions as EsTransformOptions } from "esbuild";
 export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.10.3/mod.js";
+export { build as esBuild, stop as esStop, transform as esTransform, type BuildOptions as EsBuildOptions, type OutputFile as EsOutputFile, type TransformOptions as EsTransformOptions } from "esbuild";
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
  * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.
 */
@@ -134,5 +134,5 @@ export declare const buildDist: (build_config: Partial<BuildDistConfig>) => Prom
 /** apply additional transformations onto your {@link BundleOutput | virtual files}.
  * this is especially useful when you wish to further minify a bundled javascript output (double minification).
 */
-export declare const transform: (input_files: MaybePromise<BundleOutput>, transformation_configs: Array<TransformationConfig>, log?: BaseBuildConfig["log"]) => Promise<BundleOutput>;
+export declare const transform: (input_files: MaybePromise<BundleOutput>, transformation_configs: Array<TransformationConfig>) => Promise<BundleOutput>;
 //# sourceMappingURL=dist.d.ts.map

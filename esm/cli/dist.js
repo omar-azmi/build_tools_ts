@@ -25,6 +25,7 @@ import "../_dnt.polyfills.js";
 import * as dntShim from "../_dnt.shims.js";
 import { buildDist as buildDistFn, bundle as bundleFn, esStop, transform as transformFn } from "../dist.js";
 import { copyAndCreateFiles, createFiles } from "../funcdefs.js";
+import { setLog } from "../logger.js";
 import { parseArgs } from "./deps.js";
 const { input, i, ...cli_args } = parseArgs(dntShim.Deno.args, {
     collect: ["input"],
@@ -34,7 +35,10 @@ const { config: config_path, ...rest_cli_args } = cli_args;
 const config_file = config_path
     ? JSON.parse(await dntShim.Deno.readTextFile(config_path))
     : {};
-const { deno = "./deno.json", dir = "./dist/", log: log_config = false, passes = "1", format = "esm", minify = "syntax", split = false, transform = [{ pattern: "**.js", loader: "js", options: { minify: true, platform: "browser", format: "esm", target: "esnext" } }], esbuild: esbuild_config, ...combined_config } = { ...config_file.buildDist, ...rest_cli_args, input };
+if (config_file.buildDist?.input && input && (input.length > 0)) {
+    config_file.buildDist.input = input;
+}
+const { deno = "./deno.json", dir = "./dist/", log = false, passes = "1", format = "esm", minify = "syntax", split = false, transform = [{ pattern: "**.js", loader: "js", options: { minify: true, platform: "browser", format: "esm", target: "esnext" } }], esbuild: esbuild_config, ...combined_config } = { ...config_file.buildDist, ...rest_cli_args };
 const esbuild = {
     ...esbuild_config,
     format,
@@ -44,18 +48,16 @@ const esbuild = {
     minifySyntax: minify === "syntax" ? true : undefined,
     minifyWhitespace: minify === "whitespace" ? true : undefined,
 };
-const log = (log_config === false
-    ? undefined
-    : (log_config === true ? "basic" : log_config));
 const config = {
-    ...combined_config, esbuild, log, dir, deno
+    ...combined_config, esbuild, dir, deno
 };
+setLog({ log });
 let artifacts_info;
 if (passes == "2") {
     // we shall now perform double compilation (bundling then transformation)
-    const { copy, text, dryrun, ...bundle_config } = config, bundled_files = await bundleFn(bundle_config), transformed_files = await transformFn(bundled_files, transform, log);
-    await createFiles(transformed_files, { dir, dryrun, log });
-    await copyAndCreateFiles({ deno, dir, copy, text, dryrun, log });
+    const { copy, text, dryrun, ...bundle_config } = config, bundled_files = await bundleFn(bundle_config), transformed_files = await transformFn(bundled_files, transform);
+    await createFiles(transformed_files, { dir, dryrun });
+    await copyAndCreateFiles({ deno, dir, copy, text, dryrun });
 }
 else {
     // a single pass compilation can be done by esbuild natively

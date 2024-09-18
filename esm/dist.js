@@ -37,12 +37,13 @@
 */
 import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
-import { build as esBuild, stop as esStop, transform as esTransform, } from "esbuild";
 import { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.10.3/mod.js";
+import { build as esBuild, stop as esStop, transform as esTransform, } from "esbuild";
 import { emptyDir, pathResolve, TextToUint8Array } from "./deps.js";
 import { copyAndCreateFiles, getDenoJson, globToRegex } from "./funcdefs.js";
-export { build as esBuild, stop as esStop, transform as esTransform } from "esbuild";
+import { logBasic, logVerbose, setLog } from "./logger.js";
 export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.10.3/mod.js";
+export { build as esBuild, stop as esStop, transform as esTransform } from "esbuild";
 const defaultBundleConfig = {
     dir: "./dist/",
     deno: "./deno.json",
@@ -86,11 +87,10 @@ const parse_entry_points = async (deno, input) => {
  * take a look at {@link BundleConfig} to see what configuration options are available. <br>
 */
 export const bundle = async (bundle_config = {}) => {
-    const { dir, deno, input, esbuild = {}, plugins, stop = false, log } = { ...defaultBundleConfig, ...bundle_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), log_is_verbose = log === "verbose", log_is_basic = log_is_verbose || log === "basic", entryPoints = await parse_entry_points(deno, input);
-    if (log_is_verbose) {
-        console.log("current dist-bundle configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, log, stop });
-        console.log("bundling the following entry-points:", entryPoints);
-    }
+    setLog(bundle_config);
+    const { dir, deno, input, esbuild = {}, plugins, stop = false } = { ...defaultBundleConfig, ...bundle_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), entryPoints = await parse_entry_points(deno, input);
+    logVerbose("current dist-bundle configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop });
+    logVerbose("bundling the following entry-points:", entryPoints);
     let delta_time = performance.now();
     const bundled_code = await esBuild({
         entryPoints,
@@ -105,9 +105,7 @@ export const bundle = async (bundle_config = {}) => {
         write: false,
     });
     delta_time = performance.now() - delta_time;
-    if (log_is_basic) {
-        console.log("bundling time:", delta_time, "ms");
-    }
+    logBasic("bundling time:", delta_time, "ms");
     if (stop) {
         await esStop();
     }
@@ -123,12 +121,11 @@ export const bundle = async (bundle_config = {}) => {
  * take a look at {@link BuildDistConfig} to see what configuration options are available. <br>
 */
 export const buildDist = async (build_config) => {
-    const { dir, deno, input, esbuild = {}, plugins, stop = true, copy = [], text = [], log, dryrun = false } = { ...defaultBuildDistConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), log_is_verbose = log === "verbose", log_is_basic = log_is_verbose || log === "basic", entryPoints = await parse_entry_points(deno, input);
+    setLog(build_config);
+    const { dir, deno, input, esbuild = {}, plugins, stop = true, copy = [], text = [], dryrun = false } = { ...defaultBuildDistConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), entryPoints = await parse_entry_points(deno, input);
     let delta_time = performance.now();
-    if (log_is_verbose) {
-        console.log("current dist-build configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, log, stop, copy, text, dryrun });
-        console.log("bundling the following entry-points:", entryPoints);
-    }
+    logVerbose("current dist-build configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop, copy, text, dryrun });
+    logVerbose("bundling the following entry-points:", entryPoints);
     const bundled_code = await esBuild({
         entryPoints,
         outdir: abs_dir,
@@ -142,20 +139,16 @@ export const buildDist = async (build_config) => {
         write: !dryrun,
     });
     delta_time = performance.now() - delta_time;
-    if (log_is_basic) {
-        console.log("bundling time:", delta_time, "ms");
-    }
+    logBasic("bundling time:", delta_time, "ms");
     if (stop) {
         await esStop();
     }
-    await copyAndCreateFiles({ dir, deno, copy, text, log, dryrun });
+    await copyAndCreateFiles({ dir, deno, copy, text, dryrun });
     return {
         dir: abs_dir,
         files: [],
         cleanup: async () => {
-            if (log_is_basic) {
-                console.log("[in-fs] deleting your distribution-build directory:", abs_dir);
-            }
+            logBasic("[in-fs] deleting your distribution-build directory:", abs_dir);
             if (dryrun) {
                 return;
             }
@@ -184,9 +177,9 @@ const parsePathPatternMatching = (pattern) => {
 /** apply additional transformations onto your {@link BundleOutput | virtual files}.
  * this is especially useful when you wish to further minify a bundled javascript output (double minification).
 */
-export const transform = async (input_files, transformation_configs, log = "basic") => {
+export const transform = async (input_files, transformation_configs) => {
     input_files = await input_files;
-    const log_is_verbose = log === "verbose", log_is_basic = log_is_verbose || log === "basic", transformations = transformation_configs.map((config) => {
+    const transformations = transformation_configs.map((config) => {
         const { loader, options, pattern } = { ...defaultTransformationConfig, ...config }, pattern_fn = parsePathPatternMatching(pattern);
         return {
             test: pattern_fn,
@@ -199,9 +192,7 @@ export const transform = async (input_files, transformation_configs, log = "basi
             const new_file_name = test(path);
             if (new_file_name) {
                 const results = await esTransform(content, options), new_content = TextToUint8Array(results.code), new_path = typeof new_file_name === "string" ? new_file_name : path;
-                if (log_is_verbose) {
-                    console.log(`- transformed file: ${file_number}`, "\n\t", `change in output path: "${path}" -> "${new_path}"`, "\n\t", `change in binary size: "${content.byteLength / 1024} kb" -> "${new_content.byteLength / 1024} kb"`);
-                }
+                logVerbose(`- transformed file: ${file_number}`, "\n\t", `change in output path: "${path}" -> "${new_path}"`, "\n\t", `change in binary size: "${content.byteLength / 1024} kb" -> "${new_content.byteLength / 1024} kb"`);
                 content = new_content;
                 path = new_path;
             }
@@ -209,8 +200,6 @@ export const transform = async (input_files, transformation_configs, log = "basi
         return [path, content];
     }));
     delta_time = performance.now() - delta_time;
-    if (log_is_basic) {
-        console.log("transformation time:", delta_time, "ms");
-    }
+    logBasic("transformation time:", delta_time, "ms");
     return transformed_files;
 };

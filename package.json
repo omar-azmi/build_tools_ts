@@ -1,6 +1,6 @@
 {
   "name": "@oazmi/build-tools",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "general deno build tool scripts which I practically use in all of my typescript repos",
   "keywords": [
     "build-tools",

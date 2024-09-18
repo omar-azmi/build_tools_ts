@@ -10,6 +10,7 @@ import { Application as typedocApp } from "typedoc";
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
 import { emptyDir, ensureFile, pathResolve } from "./deps.js";
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl, joinSlash, trimSlashes } from "./funcdefs.js";
+import { console_warn, logBasic, logVerbose, setLog } from "./logger.js";
 /** the default configuration used by the {@link buildDocs} function, for missing/unprovided configuration fields. */
 export const defaultBuildDocsConfig = {
     dir: "./docs/",
@@ -33,34 +34,23 @@ th, td { border: 0.1em solid rgba(0, 0, 0, 0.75); padding: 0.1em; }
  * moreover, to use this transformer via cli, use the [`./cli/docs.ts`](./cli/docs.ts) script file (or [`jsr:@oazmi/build-tools/cli/docs`](https://jsr.io/@oazmi/build-tools) if using jsr), and take a look at its {@link CliArgs} for list of supported cli args.
 */
 export const buildDocs = async (build_config = {}) => {
-    const { dir, deno, copy = [], text = [], site, css, typedoc = {}, preserveTemporary = false, log, dryrun = false } = { ...defaultBuildDocsConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno_dir = pathResolve(deno, "../"), log_is_verbose = log === "verbose", log_is_basic = log_is_verbose || log === "basic";
-    if (log_is_verbose) {
-        console.log("current docs-build configuration is:", { dir, deno, site, preserveTemporary, copy, text, typedoc, css, log, dryrun });
-    }
+    setLog(build_config);
+    const { dir, deno, copy = [], text = [], site, css, typedoc = {}, preserveTemporary = false, dryrun = false } = { ...defaultBuildDocsConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno_dir = pathResolve(deno, "../");
+    logVerbose("current docs-build configuration is:", { dir, deno, site, preserveTemporary, copy, text, typedoc, css, dryrun });
     // first we generate the "package.json" and "tsconfig.json" files (in the directory of "deno.json"), which are required by "npm:typedoc" to function in deno environment.
-    if (log_is_verbose) {
-        console.log("[in-memory] creating a \"package.json\" file from your \"deno.json\" file");
-    }
+    logVerbose("[in-memory] creating a \"package.json\" file from your \"deno.json\" file");
     const package_json = await createPackageJson(deno), package_json_abs_path = pathResolve(abs_deno_dir, "package.json");
-    if (log_is_verbose) {
-        console.log("[in-memory] creating a \"tsconfig.json\" file from your \"deno.json\" file");
-    }
+    logVerbose("[in-memory] creating a \"tsconfig.json\" file from your \"deno.json\" file");
     const tsconfig_json = await createTsConfigJson(deno), tsconfig_json_asb_path = pathResolve(abs_deno_dir, "tsconfig.json");
-    if (log_is_basic) {
-        console.log("[in-memory] generated \"package.json\" and \"tsconfig.json\" files.");
-    }
+    logBasic("[in-memory] generated \"package.json\" and \"tsconfig.json\" files.");
     if (!dryrun) {
         await ensureFile(package_json_abs_path);
         await ensureFile(tsconfig_json_asb_path);
         await dntShim.Deno.writeTextFile(package_json_abs_path, JSON.stringify(package_json));
         await dntShim.Deno.writeTextFile(tsconfig_json_asb_path, JSON.stringify(tsconfig_json));
     }
-    if (log_is_verbose) {
-        console.log("[in-fs] wrote \"package.json\" to:", package_json_abs_path);
-    }
-    if (log_is_verbose) {
-        console.log("[in-fs] wrote \"tsconfig.json\" to:", tsconfig_json_asb_path);
-    }
+    logVerbose("[in-fs] wrote \"package.json\" to:", package_json_abs_path);
+    logVerbose("[in-fs] wrote \"tsconfig.json\" to:", tsconfig_json_asb_path);
     const node_project_temp_files = {
         dir: pathResolve(abs_deno_dir),
         files: [package_json_abs_path, tsconfig_json_asb_path],
@@ -69,21 +59,15 @@ export const buildDocs = async (build_config = {}) => {
                 await dntShim.Deno.remove(package_json_abs_path);
                 await dntShim.Deno.remove(tsconfig_json_asb_path);
             }
-            if (log_is_verbose) {
-                console.log("[in-fs] deleted \"package.json\" at:", package_json_abs_path);
-            }
-            if (log_is_verbose) {
-                console.log("[in-fs] deleted \"tsconfig.json\" at:", tsconfig_json_asb_path);
-            }
+            logVerbose("[in-fs] deleted \"package.json\" at:", package_json_abs_path);
+            logVerbose("[in-fs] deleted \"tsconfig.json\" at:", tsconfig_json_asb_path);
         },
     };
     // generating a custom css file is requested
     let custom_css_temp_files;
     if (css) {
         const temp_dir = pathResolve(abs_deno_dir, "temp"), file_path = pathResolve(temp_dir, "custom.css");
-        if (log_is_verbose) {
-            console.log("[in-fs] generating a \"custom.css\" file for rendered html at:", file_path);
-        }
+        logVerbose("[in-fs] generating a \"custom.css\" file for rendered html at:", file_path);
         typedoc.customCss = file_path;
         if (!dryrun) {
             await ensureFile(file_path);
@@ -105,25 +89,19 @@ export const buildDocs = async (build_config = {}) => {
                         await dntShim.Deno.remove(temp_dir);
                     }
                 }
-                if (log_is_verbose) {
-                    console.log("[in-fs] deleted \"custom.css\" at:", file_path);
-                }
+                logVerbose("[in-fs] deleted \"custom.css\" at:", file_path);
             }
         };
     }
     // time to run the `typedoc` documentation generator
-    if (log_is_verbose) {
-        console.log("[in-fs] emptying your docs-build directory:", abs_dir);
-    }
+    logVerbose("[in-fs] emptying your docs-build directory:", abs_dir);
     if (!dryrun) {
         await emptyDir(dir);
     }
     const { exports, repository } = await getDenoJson(deno), repo_url = gitRepositoryToUrl(repository?.url ?? "git+https://github.com/404/404.git"), site_root_path = trimSlashes(site ?? (repository?.url ? gitRepositoryToPagesUrl(repository.url).pathname : "")), { ".": mainEntrypoint = undefined, ...subEntrypoints } = typeof exports === "string"
         ? { ".": exports }
         : exports, entryPoints = [...(mainEntrypoint ? [mainEntrypoint] : []), ...Object.values(subEntrypoints)];
-    if (log_is_verbose) {
-        console.log("[in-memory] bootstrapping TypeDoc");
-    }
+    logVerbose("[in-memory] bootstrapping TypeDoc");
     const typedoc_app = await typedocApp.bootstrapWithPlugins({
         // even though the intermediate "package.json" that we created contains the `exports` field, `typedoc` can't figure out the entrypoints on its own.
         entryPoints,
@@ -149,21 +127,17 @@ export const buildDocs = async (build_config = {}) => {
         },
         ...typedoc,
     });
-    if (log_is_basic) {
-        console.log("[in-memory] generating TypeDoc documents in-memory.");
-    }
+    logBasic("[in-memory] generating TypeDoc documents in-memory.");
     const typedoc_project = await typedoc_app.convert();
-    if (log_is_basic) {
-        console.log("[in-fs] rendering TypeDoc documents to html and outputting to:", abs_dir);
-    }
+    logBasic("[in-fs] rendering TypeDoc documents to html and outputting to:", abs_dir);
     if (typedoc_project === undefined) {
-        console.log("TypeDoc doument parsing failed");
+        console_warn("TypeDoc document parsing failed");
     }
     if (!dryrun && typedoc_project) {
         await typedoc_app.generateDocs(typedoc_project, dir);
     }
     // creating new text files and copying over files to the destination `dir` folder.
-    await copyAndCreateFiles({ dir, deno, copy, text, log, dryrun });
+    await copyAndCreateFiles({ dir, deno, copy, text, dryrun });
     // clean up temporary files if `preserveTemporary` is false
     if (!preserveTemporary) {
         await node_project_temp_files.cleanup();
@@ -173,9 +147,7 @@ export const buildDocs = async (build_config = {}) => {
         dir: abs_dir,
         files: [],
         cleanup: async () => {
-            if (log_is_basic) {
-                console.log("[in-fs] deleting your docs-build directory:", abs_dir);
-            }
+            logBasic("[in-fs] deleting your docs-build directory:", abs_dir);
             if (!dryrun) {
                 await emptyDir(abs_dir);
                 await dntShim.Deno.remove(abs_dir);

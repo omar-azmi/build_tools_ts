@@ -15,7 +15,7 @@ export interface CliArgs {
     /** {@inheritdoc BuildDocsConfig.deno} */
     deno?: BuildDocsConfig["deno"];
     /** {@inheritdoc BuildDocsConfig.log} */
-    log?: boolean | BuildDocsConfig["log"];
+    log?: BuildDocsConfig["log"];
     /** {@inheritdoc BuildDocsConfig.dryrun} */
     dryrun?: BuildDocsConfig["dryrun"];
     /** {@inheritdoc BuildDocsConfig.site} */
