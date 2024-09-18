@@ -11,6 +11,6 @@
 /deno.lock
 /deno.d.ts
 
-# automatic file clones
-/src/readme.md
-/src/license.md
+# automatic file clones (no longer relevant)
+# /src/readme.md
+# /src/license.md

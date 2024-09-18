@@ -6,9 +6,10 @@
 
 import type { BaseBuildConfig } from "./typedefs.ts"
 
-
+/** a `string` for specifying the log level. */
 export type LogLevel = Exclude<NonNullable<BaseBuildConfig["log"]>, boolean>
 
+/** configuration for {@link setLog}. */
 export interface LogConfig {
 	log?: BaseBuildConfig["log"]
 	[ignored_props: string]: any
@@ -41,7 +42,7 @@ export const {
  * - `{ log: undefined }`: logging level is unchanged. by default, it starts with `"basic"`.
  * - `{ log: "none" }`: no logging occurs (neither {@link logBasic} nor {@link logVerbose} print anything).
  * - `{ log: "basic" }`: basic logging occurs ({@link logBasic} prints, but {@link logVerbose} does not print).
- * - `{ log: "verbose" }`: basic logging + verbose logging occurs ({both @link logBasic} and {@link logVerbose} print).
+ * - `{ log: "verbose" }`: basic logging + verbose logging occurs (both {@link logBasic} and {@link logVerbose} print).
 */
 export const setLog = (config: LogConfig): void => {
 	const { log } = config
@@ -54,10 +55,16 @@ export const setLog = (config: LogConfig): void => {
 	}
 }
 
-export const
-	logBasic = (...data: any[]): void => {
-		if (log_is_basic) { console_log(...data) }
-	},
-	logVerbose = (...data: any[]): void => {
-		if (log_is_verbose) { console_log(...data) }
-	}
+/** print some basic useful information on the console.
+ * the print will only appear if the logging-level is either set to `"basic"` or `"verbose"` via {@link setLog}
+*/
+export const logBasic = (...data: any[]): void => {
+	if (log_is_basic) { console_log(...data) }
+}
+
+/** print verbose details on the console.
+ * the print will only appear if the logging-level is either set to `"verbose"` via {@link setLog}
+*/
+export const logVerbose = (...data: any[]): void => {
+	if (log_is_verbose) { console_log(...data) }
+}
