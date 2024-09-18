@@ -17,16 +17,16 @@ import { parseArgs } from "./deps.js"
 
 /** the cli args for transforming your deno project to a node based project via the {@link buildNpmFn | buildNpm} function. */
 export interface CliArgs {
-	/** {@inheritDoc BuildNpmConfig.dir} */
+	/** {@inheritDoc npm!BuildNpmConfig.dir} */
 	dir?: BuildNpmConfig["dir"]
 
-	/** {@inheritdoc BuildNpmConfig.deno} */
+	/** {@inheritDoc npm!BuildNpmConfig.deno} */
 	deno?: BuildNpmConfig["deno"]
 
-	/** {@inheritdoc BuildNpmConfig.log} */
+	/** {@inheritDoc npm!BuildNpmConfig.log} */
 	log?: BuildNpmConfig["log"]
 
-	/** {@inheritdoc BuildNpmConfig.dryrun} */
+	/** {@inheritDoc npm!BuildNpmConfig.dryrun} */
 	dryrun?: BuildNpmConfig["dryrun"]
 
 	/** should `npm install` be invoked after the node project's creation?
@@ -49,13 +49,13 @@ export interface CliArgs {
 
 /** contains the relevant fields within the {@link CliConfigJson | configuration json file}, that are used for configuring the npm build of the project. */
 export interface CliNpmConfig extends Omit<CliArgs, "config"> {
-	/** {@inheritdoc BuildNpmConfig.copy} */
+	/** {@inheritDoc npm!BuildNpmConfig.copy} */
 	copy?: BuildNpmConfig["copy"]
 
-	/** {@inheritdoc BuildNpmConfig.text} */
+	/** {@inheritDoc npm!BuildNpmConfig.text} */
 	text?: BuildNpmConfig["text"]
 
-	/** {@inheritdoc BuildNpmConfig.dnt} */
+	/** {@inheritDoc npm!BuildNpmConfig.dnt} */
 	dnt?: BuildNpmConfig["dnt"]
 }
 

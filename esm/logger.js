@@ -16,7 +16,7 @@ export const { assert: console_assert, clear: console_clear, debug: console_debu
  * - `{ log: undefined }`: logging level is unchanged. by default, it starts with `"basic"`.
  * - `{ log: "none" }`: no logging occurs (neither {@link logBasic} nor {@link logVerbose} print anything).
  * - `{ log: "basic" }`: basic logging occurs ({@link logBasic} prints, but {@link logVerbose} does not print).
- * - `{ log: "verbose" }`: basic logging + verbose logging occurs ({both @link logBasic} and {@link logVerbose} print).
+ * - `{ log: "verbose" }`: basic logging + verbose logging occurs (both {@link logBasic} and {@link logVerbose} print).
 */
 export const setLog = (config) => {
     const { log } = config;
@@ -28,11 +28,18 @@ export const setLog = (config) => {
         log_is_basic = log_is_verbose || log_level === "basic";
     }
 };
+/** print some basic useful information on the console.
+ * the print will only appear if the logging-level is either set to `"basic"` or `"verbose"` via {@link setLog}
+*/
 export const logBasic = (...data) => {
     if (log_is_basic) {
         console_log(...data);
     }
-}, logVerbose = (...data) => {
+};
+/** print verbose details on the console.
+ * the print will only appear if the logging-level is either set to `"verbose"` via {@link setLog}
+*/
+export const logVerbose = (...data) => {
     if (log_is_verbose) {
         console_log(...data);
     }

@@ -25,13 +25,13 @@ import "../_dnt.polyfills.js";
 import { type BuildDistConfig, type EsBuildOptions, type TransformationConfig } from "../dist.js";
 /** the cli args for generating the documentation of your deno project to via the {@link buildDistFn | buildDist} function. */
 export interface CliArgs {
-    /** {@inheritDoc BuildDistConfig.dir} */
+    /** {@inheritDoc dist!BuildDistConfig.dir} */
     dir?: BuildDistConfig["dir"];
-    /** {@inheritdoc BuildDistConfig.deno} */
+    /** {@inheritDoc dist!BuildDistConfig.deno} */
     deno?: BuildDistConfig["deno"];
-    /** {@inheritdoc BuildDistConfig.log} */
+    /** {@inheritDoc dist!BuildDistConfig.log} */
     log?: BuildDistConfig["log"];
-    /** {@inheritdoc BuildDistConfig.dryrun} */
+    /** {@inheritDoc dist!BuildDistConfig.dryrun} */
     dryrun?: BuildDistConfig["dryrun"];
     /** specify the number of compilation passes to perform:
      * - `"1"` implies a single-pass compilation, and only uses the {@link buildDistFn | buildDist} function under the hood.
@@ -57,7 +57,7 @@ export interface CliArgs {
      * @defaultValue `"syntax"`
     */
     minify?: boolean | "syntax" | "whitespace" | "identifiers";
-    /** {@inheritdoc EsBuildOptions.format}
+    /** {@inheritDoc dist!EsBuildOptions.format}
      *
      * @defaultValue `"esm"`
     */
@@ -70,13 +70,13 @@ export interface CliArgs {
 }
 /** contains the relevant fields within the {@link CliConfigJson | configuration json file}, that are used for configuring distribution generation. */
 export interface CliDistConfig extends Omit<CliArgs, "config"> {
-    /** {@inheritdoc BuildDistConfig.input} */
+    /** {@inheritDoc dist!BuildDistConfig.input} */
     input?: BuildDistConfig["input"];
-    /** {@inheritdoc BuildDistConfig.copy} */
+    /** {@inheritDoc dist!BuildDistConfig.copy} */
     copy?: BuildDistConfig["copy"];
-    /** {@inheritdoc BuildDistConfig.text} */
+    /** {@inheritDoc dist!BuildDistConfig.text} */
     text?: BuildDistConfig["text"];
-    /** {@inheritdoc BuildDistConfig.esbuild} */
+    /** {@inheritDoc dist!BuildDistConfig.esbuild} */
     esbuild?: BuildDistConfig["esbuild"];
     /** when using two {@link passes} (i.e. `passes === "2"`), in the second stage compilation (transformation),
      * the transformations listed in this array will be applied sequentially to whichever output file that matches the given {@link TransformationCliConfig.pattern | glob pattern}.

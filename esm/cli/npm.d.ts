@@ -9,13 +9,13 @@ import "../_dnt.polyfills.js";
 import { type BuildNpmConfig } from "../npm.js";
 /** the cli args for transforming your deno project to a node based project via the {@link buildNpmFn | buildNpm} function. */
 export interface CliArgs {
-    /** {@inheritDoc BuildNpmConfig.dir} */
+    /** {@inheritDoc npm!BuildNpmConfig.dir} */
     dir?: BuildNpmConfig["dir"];
-    /** {@inheritdoc BuildNpmConfig.deno} */
+    /** {@inheritDoc npm!BuildNpmConfig.deno} */
     deno?: BuildNpmConfig["deno"];
-    /** {@inheritdoc BuildNpmConfig.log} */
+    /** {@inheritDoc npm!BuildNpmConfig.log} */
     log?: BuildNpmConfig["log"];
-    /** {@inheritdoc BuildNpmConfig.dryrun} */
+    /** {@inheritDoc npm!BuildNpmConfig.dryrun} */
     dryrun?: BuildNpmConfig["dryrun"];
     /** should `npm install` be invoked after the node project's creation?
      * you could also specify the binary-name of the node-installer, such as `pnpm`, `npm`, `yarn`,
@@ -35,11 +35,11 @@ export interface CliArgs {
 }
 /** contains the relevant fields within the {@link CliConfigJson | configuration json file}, that are used for configuring the npm build of the project. */
 export interface CliNpmConfig extends Omit<CliArgs, "config"> {
-    /** {@inheritdoc BuildNpmConfig.copy} */
+    /** {@inheritDoc npm!BuildNpmConfig.copy} */
     copy?: BuildNpmConfig["copy"];
-    /** {@inheritdoc BuildNpmConfig.text} */
+    /** {@inheritDoc npm!BuildNpmConfig.text} */
     text?: BuildNpmConfig["text"];
-    /** {@inheritdoc BuildNpmConfig.dnt} */
+    /** {@inheritDoc npm!BuildNpmConfig.dnt} */
     dnt?: BuildNpmConfig["dnt"];
 }
 /** the schema of an npm-building configuration json file, which can be referenced in the {@link CliArgs}, by passing its file-path with the `--config` switch. <br>

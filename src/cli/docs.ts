@@ -18,22 +18,22 @@ import { parseArgs } from "./deps.js"
 
 /** the cli args for generating the documentation of your deno project to via the {@link buildDocsFn | buildDocs} function. */
 export interface CliArgs {
-	/** {@inheritDoc BuildDocsConfig.dir} */
+	/** {@inheritDoc docs!BuildDocsConfig.dir} */
 	dir?: BuildDocsConfig["dir"]
 
-	/** {@inheritdoc BuildDocsConfig.deno} */
+	/** {@inheritDoc docs!BuildDocsConfig.deno} */
 	deno?: BuildDocsConfig["deno"]
 
-	/** {@inheritdoc BuildDocsConfig.log} */
+	/** {@inheritDoc docs!BuildDocsConfig.log} */
 	log?: BuildDocsConfig["log"]
 
-	/** {@inheritdoc BuildDocsConfig.dryrun} */
+	/** {@inheritDoc docs!BuildDocsConfig.dryrun} */
 	dryrun?: BuildDocsConfig["dryrun"]
 
-	/** {@inheritdoc BuildDocsConfig.site} */
+	/** {@inheritDoc docs!BuildDocsConfig.site} */
 	site?: BuildDocsConfig["site"]
 
-	/** {@inheritdoc BuildDocsConfig.preserveTemporary} */
+	/** {@inheritDoc docs!BuildDocsConfig.preserveTemporary} */
 	preserveTemporary?: BuildDocsConfig["preserveTemporary"]
 
 	/** a path to an docs-build configuration json file that provides additional modifiable parameters.
@@ -45,16 +45,16 @@ export interface CliArgs {
 
 /** contains the relevant fields within the {@link CliConfigJson | configuration json file}, that are used for configuring documentation generation. */
 export interface CliDocsConfig extends Omit<CliArgs, "config"> {
-	/** {@inheritdoc BuildDocsConfig.copy} */
+	/** {@inheritDoc docs!BuildDocsConfig.copy} */
 	copy?: BuildDocsConfig["copy"]
 
-	/** {@inheritdoc BuildDocsConfig.text} */
+	/** {@inheritDoc docs!BuildDocsConfig.text} */
 	text?: BuildDocsConfig["text"]
 
-	/** {@inheritdoc BuildDocsConfig.css} */
+	/** {@inheritDoc docs!BuildDocsConfig.css} */
 	css?: BuildDocsConfig["css"]
 
-	/** {@inheritdoc BuildDocsConfig.typedoc} */
+	/** {@inheritDoc docs!BuildDocsConfig.typedoc} */
 	typedoc?: BuildDocsConfig["typedoc"]
 }
 
