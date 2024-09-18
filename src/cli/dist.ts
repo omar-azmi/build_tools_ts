@@ -39,16 +39,16 @@ import { parseArgs } from "./deps.ts"
 
 /** the cli args for generating the documentation of your deno project to via the {@link buildDistFn | buildDist} function. */
 export interface CliArgs {
-	/** {@inheritDoc BuildDistConfig.dir} */
+	/** {@inheritDoc dist!BuildDistConfig.dir} */
 	dir?: BuildDistConfig["dir"]
 
-	/** {@inheritdoc BuildDistConfig.deno} */
+	/** {@inheritDoc dist!BuildDistConfig.deno} */
 	deno?: BuildDistConfig["deno"]
 
-	/** {@inheritdoc BuildDistConfig.log} */
+	/** {@inheritDoc dist!BuildDistConfig.log} */
 	log?: BuildDistConfig["log"]
 
-	/** {@inheritdoc BuildDistConfig.dryrun} */
+	/** {@inheritDoc dist!BuildDistConfig.dryrun} */
 	dryrun?: BuildDistConfig["dryrun"]
 
 	/** specify the number of compilation passes to perform:
@@ -78,7 +78,7 @@ export interface CliArgs {
 	*/
 	minify?: boolean | "syntax" | "whitespace" | "identifiers"
 
-	/** {@inheritdoc EsBuildOptions.format}
+	/** {@inheritDoc dist!EsBuildOptions.format}
 	 * 
 	 * @defaultValue `"esm"`
 	*/
@@ -93,16 +93,16 @@ export interface CliArgs {
 
 /** contains the relevant fields within the {@link CliConfigJson | configuration json file}, that are used for configuring distribution generation. */
 export interface CliDistConfig extends Omit<CliArgs, "config"> {
-	/** {@inheritdoc BuildDistConfig.input} */
+	/** {@inheritDoc dist!BuildDistConfig.input} */
 	input?: BuildDistConfig["input"]
 
-	/** {@inheritdoc BuildDistConfig.copy} */
+	/** {@inheritDoc dist!BuildDistConfig.copy} */
 	copy?: BuildDistConfig["copy"]
 
-	/** {@inheritdoc BuildDistConfig.text} */
+	/** {@inheritDoc dist!BuildDistConfig.text} */
 	text?: BuildDistConfig["text"]
 
-	/** {@inheritdoc BuildDistConfig.esbuild} */
+	/** {@inheritDoc dist!BuildDistConfig.esbuild} */
 	esbuild?: BuildDistConfig["esbuild"]
 
 	/** when using two {@link passes} (i.e. `passes === "2"`), in the second stage compilation (transformation),
@@ -141,8 +141,8 @@ const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path
 	? JSON.parse(await Deno.readTextFile(config_path))
 	: {}
-if (config_file.buildDist?.input && input && (input.length > 0)) {
-	config_file.buildDist.input = input
+if (input && (input.length > 0)) {
+	(config_file.buildDist ??= {}).input = input
 }
 const {
 	deno = "./deno.json", dir = "./dist/",
