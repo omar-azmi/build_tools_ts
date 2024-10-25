@@ -1,77 +1,66 @@
 import {
-	resolve as _pathResolve,
-	isAbsolute as pathIsAbsolute,
-	toFileUrl as pathToFileUrl
-} from "jsr:@std/path@0.225.2"
+	resolveAsUrl as _resolveAsUrl,
+	ensureEndSlash,
+	pathToPosixPath,
+	resolvePathFactory
+} from "jsr:@oazmi/kitchensink@0.8.4/pathman"
 
 
 export type {
 	BuildOptions as DntBuildOptions,
 	PackageJson
-} from "jsr:@deno/dnt@0.41.2"
+} from "jsr:@deno/dnt@0.41.3"
+export {
+	decode_str as decodeText,
+	encode_str as encodeText
+} from "jsr:@oazmi/kitchensink@0.8.4/eightpack"
+export {
+	memorize
+} from "jsr:@oazmi/kitchensink@0.8.4/lambda"
+export type {
+	MaybePromise,
+	Require
+} from "jsr:@oazmi/kitchensink@0.8.4/typedefs"
+export {
+	isAbsolutePath,
+	joinPaths,
+	relativePath
+} from "jsr:@oazmi/kitchensink@0.8.4/pathman"
+export {
+	defaultStopwatch
+} from "jsr:@oazmi/kitchensink@0.8.4/timeman"
 export {
 	copy as copyDir,
 	emptyDir,
 	ensureDir,
 	ensureFile,
-	expandGlob,
-	walk as walkDir
-} from "jsr:@std/fs@0.229.3"
+	expandGlob
+} from "jsr:@std/fs@1.0.5"
 export {
-	dirname as pathDirname,
-	isAbsolute as pathIsAbsolute,
-	join as pathJoin,
-	relative as pathRelative,
-	toFileUrl as pathToFileUrl
-} from "jsr:@std/path@0.225.2"
+	globToRegExp,
+	isGlob as pathIsGlobPattern
+} from "jsr:@std/path@1.0.7"
 
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
 // TODO: develop a more robust esbuild resolver and loader plugin for deno specific specifiers (such as `npm:` and `jsr:`), that does not interrupt other npm-based esbuild plugins.
+// DONE: use `globToRegExp` and `isGlob` from "jsr:@std/path" instead of your wonky implementations.
+// TODO: in version `0.3.0` of this library, add a new "directory-server" tool, and accompany it with a cli. 
 
-const text_encoder = new TextEncoder()
+/** get the current working directory (`Deno.cwd`) in posix path format. */
+export const getCwdPath = () => { return ensureEndSlash(pathToPosixPath(Deno.cwd())) }
 
-export const TextToUint8Array = (input: string) => text_encoder.encode(input)
+/** resolve a file path so that it becomes absolute, with unix directory separator ("/").
+ * TODO: refactor the name `pathResolve` to `resolvePath`
+*/
+export const pathResolve = resolvePathFactory(getCwdPath)
 
-const glob_pattern_regex = new RegExp("[*?]")
-
-/** test if a specified path is potentially a glob pattern */
-export const pathIsGlobPattern = (path: string) => glob_pattern_regex.test(path)
-
-/** convert windows directory slash "\" to unix directory slash "/" */
-export const pathToUnixPath = (path: string) => path.replaceAll(/\\+/g, "/")
-
-/** resolve a file path so that it becomes absolute, with unix directory separator ("/"). */
-export const pathResolve = (...pathSegments: string[]) => {
-	const is_folder = pathSegments.at(-1)?.endsWith("/") ? true : false
-	return pathToUnixPath(_pathResolve(...pathSegments)) + (is_folder ? "/" : "")
+/** resolve a `path` (with an optional `base` path) as a `URL` object.
+ * if a relative `path` is provided, and no `base` path is given, then it will be assumed that the `base` path is the current working directory (`Deno.cwd()`).
+*/
+export const resolveAsUrl = (path: string | URL, base?: string | URL): URL => {
+	return _resolveAsUrl(path, base ?? getCwdPath())
 }
-
-const
-	uri_prefixes = ["http://", "https://", "file://", "blob://", "data://"],
-	path_has_uri_prefix = (path: string): boolean => {
-		for (const prefix of uri_prefixes) {
-			if (path.startsWith(prefix)) { return true }
-		}
-		return false
-	}
-export const resolveUri = (path: string) => {
-	const path_url = path_has_uri_prefix(path)
-		? new URL(path)
-		: pathToFileUrl(
-			pathIsAbsolute(path)
-				? pathResolve(path)
-				: pathResolve(Deno.cwd(), path)
-		)
-	return path_url.href
-}
-
-/** turn optional properties `P` of interface `T` into required */
-export type Require<T, P extends keyof T> = Omit<T, P> & Required<Pick<T, P>>
-
-/** type `T` or promise of type `T` (`Promise<T>`) */
-export type MaybePromise<T> = T | Promise<T>
-
 
 // TODO: maybe add the `detectReadableStreamType` function to kitchensink
 type ReadableStreamKind<T> = T extends string
@@ -105,28 +94,3 @@ export const detectReadableStreamType = async <
 		stream: clone2,
 	}
 }
-
-// memorization code is copied from from "jsr:@oazmi/kitchensink@0.7.5/lambda" and then modified.
-interface MemorizeCoreControls<V, K> {
-	fn: (arg: K) => V
-	memory: Map<K, V>
-}
-
-const memorizeCore = <V, K>(fn: (arg: K) => V): MemorizeCoreControls<V, K> => {
-	const
-		memory = new Map<K, V>(),
-		memorized_fn: typeof fn = (arg: K): V => {
-			const
-				arg_exists = memory.has(arg),
-				value = arg_exists ? memory.get(arg)! : fn(arg)
-			if (!arg_exists) { memory.set(arg, value) }
-			return value
-		}
-	return { fn: memorized_fn, memory }
-}
-
-/** memorize the return value of a single parameter function. further calls with memorized arguments will return the value much quicker. */
-export const memorize = <V, K>(fn: (arg: K) => V): (typeof fn) => {
-	return memorizeCore(fn).fn
-}
-
