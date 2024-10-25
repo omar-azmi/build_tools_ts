@@ -44,8 +44,8 @@ import {
 	type BuildOptions as EsBuildOptions,
 	type TransformOptions as EsTransformOptions,
 } from "npm:esbuild@0.23.1"
-import { emptyDir, pathResolve, TextToUint8Array, type MaybePromise } from "./deps.ts"
-import { copyAndCreateFiles, getDenoJson, globToRegex, type createFiles } from "./funcdefs.ts"
+import { emptyDir, encodeText, globToRegExp, pathResolve, type MaybePromise } from "./deps.ts"
+import { copyAndCreateFiles, getDenoJson, type createFiles } from "./funcdefs.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, ExportsWithMain, TemporaryFiles, WritableFileConfig } from "./typedefs.ts"
 
@@ -57,6 +57,8 @@ export {
 	transform as esTransform,
 	type BuildOptions as EsBuildOptions,
 	type OutputFile as EsOutputFile,
+	type Plugin as EsPlugin,
+	type PluginBuild as EsPluginBuild,
 	type TransformOptions as EsTransformOptions
 } from "npm:esbuild@0.23.1"
 
@@ -278,7 +280,7 @@ const parsePathPatternMatching = (pattern: TransformationConfig["pattern"]): Pat
 		case "function": { return pattern }
 		case "undefined": { return (() => true) }
 		case "object": { return (file_path: string) => pattern.test(file_path) }
-		case "string": { return parsePathPatternMatching(globToRegex(pattern)) }
+		case "string": { return parsePathPatternMatching(globToRegExp(pattern)) }
 	}
 }
 
@@ -308,7 +310,7 @@ export const transform = async (
 				if (new_file_name) {
 					const
 						results = await esTransform(content, options),
-						new_content = TextToUint8Array(results.code),
+						new_content = encodeText(results.code),
 						new_path = typeof new_file_name === "string" ? new_file_name : path
 					logVerbose(
 						`- transformed file: ${file_number}`,

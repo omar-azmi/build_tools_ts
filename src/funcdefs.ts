@@ -4,7 +4,7 @@
 */
 
 import type { MaybePromise, PackageJson } from "./deps.ts"
-import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, pathToUnixPath, resolveUri } from "./deps.ts"
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl } from "./deps.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TsConfigJson, WritableFileConfig } from "./typedefs.ts"
 
@@ -36,8 +36,8 @@ const getDenoJson_FromUri_Memorized = memorize(getDenoJson_FromUri)
  * const my_deno_json = await getDenoJson<ReturnType<typeof get_my_deno_json>>("./cwd_path/to/deno.json")
  * ```
 */
-export const getDenoJson = async <DENO_JSON extends MaybePromise<DenoJson>>(deno_json_path: string = default_deno_json_path): Promise<DENO_JSON> => {
-	return await getDenoJson_FromUri_Memorized(resolveUri(deno_json_path))
+export const getDenoJson = async <DENO_JSON extends MaybePromise<DenoJson>>(deno_json_path: string | URL = default_deno_json_path): Promise<DENO_JSON> => {
+	return await getDenoJson_FromUri_Memorized(resolveAsUrl(deno_json_path).href)
 }
 
 /** create a "package.json" nodejs-project file, based on your "deno.json" configuration file. <br>
@@ -158,40 +158,11 @@ export const gitRepositoryToPagesUrl = (repo_git_url: string): URL => {
 	return repo_url
 }
 
-const
-	glob_pattern_to_regex_escape_control_chars = /[\.\+\^\$\{\}\(\)\|\[\]\\]/g,
-	glob_starstar_wildcard_token = "<<<StarStarWildcard>>>"
+// TODO: PURGE your `globToRegex` function, or consider implementing a more full featured one in `kitchensink`.
+//       for now, I will be using `globToRegExp` from `"jsr:@std/path"` instead.
 
 // TODO: implement a more featureful glob pattern implementation that uses tokens and has feature switches (like turning ranges on or off, etc...). then move it to `kitchensink`
-/** convert a glob string to a regex object. <br>
- * in this implementation, only the wildcards `"*"`, `"**"`, and the optional `"?"` is given meaning.
- * all else, including parenthesis, brackets, dots, and backslash, are escaped when being converted into a regex.
-*/
-export const globToRegex = (glob_pattern: string): RegExp => {
-	const
-		// first, convert windows path separator to unix path separator
-		unix_pattern = pathToUnixPath(glob_pattern),
-		// normalize pattern by removing leading dot-slashes ("./"), so they're treated like the "**/" glob pattern.
-		normalized_pattern = trimDotSlashes(unix_pattern),
-		regex_str = normalized_pattern
-			// escape regex special characters, except for "*", "?", "[", "]", "{", and "}"
-			.replace(glob_pattern_to_regex_escape_control_chars, "\\$&")
-			// replace "**/" or "**" directory wildcard with a temporary `glob_starstar_wildcard_token`, and later we will convert to ".*"
-			.replace(/\*\*\/?/g, glob_starstar_wildcard_token)
-			// replace single "*" with "[^/]*" to match anything except directory separators
-			.replace(/\*/g, "[^\/]*")
-			// replace "?" with "." to match any single character
-			.replace(/\?/g, ".")
-			// convert negated glob ranges (like "[!abc]") to regex negation ("[^abc]")
-			.replace(/\[!(.*)\]/g, "[^$1]")
-			// support for character ranges like "[a-z]"
-			.replace(/\[(.*)\]/g, "[$1]")
-			// support for braces like "{js,ts}"
-			.replace(/\{([^,}]+),([^}]+)\}/g, "($1|$2)")
-			// put back the ".*" wildcards where they belong
-			.replace(glob_starstar_wildcard_token, ".*")
-	return new RegExp("^" + regex_str + "$")
-}
+// DONE: guess what? don't reinvent the wheel. a good implementation already exists in `import { globToRegExp } from "jsr:@std/path"`
 
 // TODO: `copyAndCreateFiles` and `createFiles` should return an artifacts info (such as `TemporaryFiles`).
 /** this function takes in your {@link BaseBuildConfig | generic config} object,
@@ -202,7 +173,7 @@ export const copyAndCreateFiles = async (config: BaseBuildConfig): Promise<void>
 	setLog(config)
 	const
 		{ dir, deno, copy = [], text = [], log, dryrun = false }: BaseBuildConfig = config,
-		abs_deno_dir = pathResolve(deno, "../")
+		abs_deno_dir = pathResolve(deno, "./")
 
 	// copying other files
 	logBasic("[in-fs] copying additional files from you deno directory over to the build directory")

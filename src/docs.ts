@@ -83,7 +83,7 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 	const
 		{ dir, deno, copy = [], text = [], site, css, typedoc = {}, preserveTemporary = false, dryrun = false }: BuildDocsConfig = { ...defaultBuildDocsConfig, ...build_config },
 		abs_dir = pathResolve(dir),
-		abs_deno_dir = pathResolve(deno, "../")
+		abs_deno_dir = pathResolve(deno, "./")
 
 	logVerbose("current docs-build configuration is:", { dir, deno, site, preserveTemporary, copy, text, typedoc, css, dryrun })
 
