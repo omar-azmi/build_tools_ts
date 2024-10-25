@@ -13,14 +13,14 @@ export type {
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "jsr:@oazmi/kitchensink@0.8.3/eightpack"
+} from "jsr:@oazmi/kitchensink@0.8.4/eightpack"
 export {
 	memorize
-} from "jsr:@oazmi/kitchensink@0.8.3/lambda"
+} from "jsr:@oazmi/kitchensink@0.8.4/lambda"
 export type {
 	MaybePromise,
 	Require
-} from "jsr:@oazmi/kitchensink@0.8.3/typedefs"
+} from "jsr:@oazmi/kitchensink@0.8.4/typedefs"
 export {
 	isAbsolutePath,
 	joinPaths,
