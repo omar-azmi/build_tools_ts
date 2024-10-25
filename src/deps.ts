@@ -9,7 +9,7 @@ import {
 export type {
 	BuildOptions as DntBuildOptions,
 	PackageJson
-} from "jsr:@deno/dnt@0.41.2"
+} from "jsr:@deno/dnt@0.41.3"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
@@ -35,11 +35,11 @@ export {
 	ensureDir,
 	ensureFile,
 	expandGlob
-} from "jsr:@std/fs@0.229.3"
+} from "jsr:@std/fs@1.0.5"
 export {
 	globToRegExp,
 	isGlob as pathIsGlobPattern
-} from "jsr:@std/path@0.225.2"
+} from "jsr:@std/path@1.0.7"
 
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)

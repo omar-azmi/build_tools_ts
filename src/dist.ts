@@ -36,21 +36,21 @@
  * @module
 */
 
-import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3"
+import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.0"
 import {
 	build as esBuild,
 	stop as esStop,
 	transform as esTransform,
 	type BuildOptions as EsBuildOptions,
 	type TransformOptions as EsTransformOptions,
-} from "npm:esbuild@0.23.1"
+} from "npm:esbuild@0.24.0"
 import { emptyDir, encodeText, globToRegExp, pathResolve, type MaybePromise } from "./deps.ts"
 import { copyAndCreateFiles, getDenoJson, type createFiles } from "./funcdefs.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, ExportsWithMain, TemporaryFiles, WritableFileConfig } from "./typedefs.ts"
 
 
-export { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.10.3"
+export { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.0"
 export {
 	build as esBuild,
 	stop as esStop,
@@ -60,7 +60,7 @@ export {
 	type Plugin as EsPlugin,
 	type PluginBuild as EsPluginBuild,
 	type TransformOptions as EsTransformOptions
-} from "npm:esbuild@0.23.1"
+} from "npm:esbuild@0.24.0"
 
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
  * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.
