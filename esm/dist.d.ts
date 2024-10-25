@@ -21,7 +21,7 @@
  * 	log: "verbose",
  * 	esbuild: { splitting: true }
  * })
- * const minified_files = await transform(bundled_files, [{}], "verbose")
+ * const minified_files = await transform(bundled_files, [{}])
  * await createFiles(minified_files, {
  * 	dir: "./dist/", // this information is not really needed, as the file paths in `minified_files` are absolute.
  * 	dryrun: false,
@@ -39,8 +39,8 @@ import "./_dnt.polyfills.js";
 import { type BuildOptions as EsBuildOptions, type TransformOptions as EsTransformOptions } from "esbuild";
 import { type MaybePromise } from "./deps.js";
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.js";
-export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.10.3/mod.js";
-export { build as esBuild, stop as esStop, transform as esTransform, type BuildOptions as EsBuildOptions, type OutputFile as EsOutputFile, type TransformOptions as EsTransformOptions } from "esbuild";
+export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.0/mod.js";
+export { build as esBuild, stop as esStop, transform as esTransform, type BuildOptions as EsBuildOptions, type OutputFile as EsOutputFile, type Plugin as EsPlugin, type PluginBuild as EsPluginBuild, type TransformOptions as EsTransformOptions } from "esbuild";
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
  * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.
 */

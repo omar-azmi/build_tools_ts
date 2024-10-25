@@ -1,37 +1,27 @@
 import * as dntShim from "./_dnt.shims.js";
-import { resolve as _pathResolve, isAbsolute as pathIsAbsolute, toFileUrl as pathToFileUrl } from "./deps/jsr.io/@std/path/0.225.2/mod.js";
-export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob, walk as walkDir } from "./deps/jsr.io/@std/fs/0.229.3/mod.js";
-export { dirname as pathDirname, isAbsolute as pathIsAbsolute, join as pathJoin, relative as pathRelative, toFileUrl as pathToFileUrl } from "./deps/jsr.io/@std/path/0.225.2/mod.js";
+import { resolveAsUrl as _resolveAsUrl, ensureEndSlash, pathToPosixPath, resolvePathFactory } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/pathman.js";
+export { decode_str as decodeText, encode_str as encodeText } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/eightpack.js";
+export { memorize } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/lambda.js";
+export { isAbsolutePath, joinPaths, relativePath } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/pathman.js";
+export { defaultStopwatch } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/timeman.js";
+export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob } from "./deps/jsr.io/@std/fs/1.0.5/mod.js";
+export { globToRegExp, isGlob as pathIsGlobPattern } from "./deps/jsr.io/@std/path/1.0.7/mod.js";
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
 // TODO: develop a more robust esbuild resolver and loader plugin for deno specific specifiers (such as `npm:` and `jsr:`), that does not interrupt other npm-based esbuild plugins.
-const text_encoder = new TextEncoder();
-export const TextToUint8Array = (input) => text_encoder.encode(input);
-const glob_pattern_regex = new RegExp("[*?]");
-/** test if a specified path is potentially a glob pattern */
-export const pathIsGlobPattern = (path) => glob_pattern_regex.test(path);
-/** convert windows directory slash "\" to unix directory slash "/" */
-export const pathToUnixPath = (path) => path.replaceAll(/\\+/g, "/");
-/** resolve a file path so that it becomes absolute, with unix directory separator ("/"). */
-export const pathResolve = (...pathSegments) => {
-    const is_folder = pathSegments.at(-1)?.endsWith("/") ? true : false;
-    return pathToUnixPath(_pathResolve(...pathSegments)) + (is_folder ? "/" : "");
-};
-const uri_prefixes = ["http://", "https://", "file://", "blob://", "data://"], path_has_uri_prefix = (path) => {
-    for (const prefix of uri_prefixes) {
-        if (path.startsWith(prefix)) {
-            return true;
-        }
-    }
-    return false;
-};
-export const resolveUri = (path) => {
-    const path_url = path_has_uri_prefix(path)
-        ? new URL(path)
-        : pathToFileUrl(pathIsAbsolute(path)
-            ? pathResolve(path)
-            : pathResolve(dntShim.Deno.cwd(), path));
-    return path_url.href;
+// DONE: use `globToRegExp` and `isGlob` from "jsr:@std/path" instead of your wonky implementations.
+// TODO: in version `0.3.0` of this library, add a new "directory-server" tool, and accompany it with a cli. 
+/** get the current working directory (`Deno.cwd`) in posix path format. */
+export const getCwdPath = () => { return ensureEndSlash(pathToPosixPath(dntShim.Deno.cwd())); };
+/** resolve a file path so that it becomes absolute, with unix directory separator ("/").
+ * TODO: refactor the name `pathResolve` to `resolvePath`
+*/
+export const pathResolve = resolvePathFactory(getCwdPath);
+/** resolve a `path` (with an optional `base` path) as a `URL` object.
+ * if a relative `path` is provided, and no `base` path is given, then it will be assumed that the `base` path is the current working directory (`Deno.cwd()`).
+*/
+export const resolveAsUrl = (path, base) => {
+    return _resolveAsUrl(path, base ?? getCwdPath());
 };
 /** detects the type of a `ReadableStream`.
  * note that the original stream is partially consumed, and you will not be able to use it any longer.
@@ -53,18 +43,4 @@ export const detectReadableStreamType = async (stream) => {
         kind: content_type,
         stream: clone2,
     };
-};
-const memorizeCore = (fn) => {
-    const memory = new Map(), memorized_fn = (arg) => {
-        const arg_exists = memory.has(arg), value = arg_exists ? memory.get(arg) : fn(arg);
-        if (!arg_exists) {
-            memory.set(arg, value);
-        }
-        return value;
-    };
-    return { fn: memorized_fn, memory };
-};
-/** memorize the return value of a single parameter function. further calls with memorized arguments will return the value much quicker. */
-export const memorize = (fn) => {
-    return memorizeCore(fn).fn;
 };

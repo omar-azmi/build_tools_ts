@@ -1,18 +1,21 @@
-export type { BuildOptions as DntBuildOptions, PackageJson } from "./deps/jsr.io/@deno/dnt/0.41.2/mod.js";
-export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob, walk as walkDir } from "./deps/jsr.io/@std/fs/0.229.3/mod.js";
-export { dirname as pathDirname, isAbsolute as pathIsAbsolute, join as pathJoin, relative as pathRelative, toFileUrl as pathToFileUrl } from "./deps/jsr.io/@std/path/0.225.2/mod.js";
-export declare const TextToUint8Array: (input: string) => Uint8Array;
-/** test if a specified path is potentially a glob pattern */
-export declare const pathIsGlobPattern: (path: string) => boolean;
-/** convert windows directory slash "\" to unix directory slash "/" */
-export declare const pathToUnixPath: (path: string) => string;
-/** resolve a file path so that it becomes absolute, with unix directory separator ("/"). */
-export declare const pathResolve: (...pathSegments: string[]) => string;
-export declare const resolveUri: (path: string) => string;
-/** turn optional properties `P` of interface `T` into required */
-export type Require<T, P extends keyof T> = Omit<T, P> & Required<Pick<T, P>>;
-/** type `T` or promise of type `T` (`Promise<T>`) */
-export type MaybePromise<T> = T | Promise<T>;
+export type { BuildOptions as DntBuildOptions, PackageJson } from "./deps/jsr.io/@deno/dnt/0.41.3/mod.js";
+export { decode_str as decodeText, encode_str as encodeText } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/eightpack.js";
+export { memorize } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/lambda.js";
+export type { MaybePromise, Require } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/typedefs.js";
+export { isAbsolutePath, joinPaths, relativePath } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/pathman.js";
+export { defaultStopwatch } from "./deps/jsr.io/@oazmi/kitchensink/0.8.4/src/timeman.js";
+export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob } from "./deps/jsr.io/@std/fs/1.0.5/mod.js";
+export { globToRegExp, isGlob as pathIsGlobPattern } from "./deps/jsr.io/@std/path/1.0.7/mod.js";
+/** get the current working directory (`Deno.cwd`) in posix path format. */
+export declare const getCwdPath: () => string;
+/** resolve a file path so that it becomes absolute, with unix directory separator ("/").
+ * TODO: refactor the name `pathResolve` to `resolvePath`
+*/
+export declare const pathResolve: (...segments: string[]) => string;
+/** resolve a `path` (with an optional `base` path) as a `URL` object.
+ * if a relative `path` is provided, and no `base` path is given, then it will be assumed that the `base` path is the current working directory (`Deno.cwd()`).
+*/
+export declare const resolveAsUrl: (path: string | URL, base?: string | URL) => URL;
 type ReadableStreamKind<T> = T extends string ? "string" : "uint8array";
 /** detects the type of a `ReadableStream`.
  * note that the original stream is partially consumed, and you will not be able to use it any longer.
@@ -26,8 +29,6 @@ type ReadableStreamKind<T> = T extends string ? "string" : "uint8array";
 */
 export declare const detectReadableStreamType: <T extends string | Uint8Array, K extends ReadableStreamKind<T>>(stream: ReadableStream<T>) => Promise<{
     kind: K;
-    stream: ReadableStream<T>;
+    stream: typeof stream;
 }>;
-/** memorize the return value of a single parameter function. further calls with memorized arguments will return the value much quicker. */
-export declare const memorize: <V, K>(fn: (arg: K) => V) => (arg: K) => V;
 //# sourceMappingURL=deps.d.ts.map

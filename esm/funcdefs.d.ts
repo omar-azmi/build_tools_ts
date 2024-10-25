@@ -22,7 +22,7 @@ import type { BaseBuildConfig, DenoJson, TsConfigJson, WritableFileConfig } from
  * const my_deno_json = await getDenoJson<ReturnType<typeof get_my_deno_json>>("./cwd_path/to/deno.json")
  * ```
 */
-export declare const getDenoJson: <DENO_JSON extends MaybePromise<DenoJson>>(deno_json_path?: string) => Promise<DENO_JSON>;
+export declare const getDenoJson: <DENO_JSON extends MaybePromise<DenoJson>>(deno_json_path?: string | URL) => Promise<DENO_JSON>;
 /** create a "package.json" nodejs-project file, based on your "deno.json" configuration file. <br>
  * the following required fields inside of your "deno.json" will get merged into the output:
  * - `name`, `version`
@@ -81,11 +81,6 @@ export declare const gitRepositoryToUrl: (repo_git_url: string) => URL;
  * | `https://github.com/omar-azmi/build_tools_ts`         | `https://oamr-azmi.github.io/build_tools_ts` |
 */
 export declare const gitRepositoryToPagesUrl: (repo_git_url: string) => URL;
-/** convert a glob string to a regex object. <br>
- * in this implementation, only the wildcards `"*"`, `"**"`, and the optional `"?"` is given meaning.
- * all else, including parenthesis, brackets, dots, and backslash, are escaped when being converted into a regex.
-*/
-export declare const globToRegex: (glob_pattern: string) => RegExp;
 /** this function takes in your {@link BaseBuildConfig | generic config} object,
  * and figures out the files that need to be copied (specified in the {@link BaseBuildConfig.copy} field),
  * and the new text/binary files that need to be written (specified in the {@link BaseBuildConfig.text} field).

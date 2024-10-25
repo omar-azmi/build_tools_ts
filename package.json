@@ -1,6 +1,6 @@
 {
   "name": "@oazmi/build-tools",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "general deno build tool scripts which I practically use in all of my typescript repos",
   "keywords": [
     "build-tools",
@@ -63,16 +63,14 @@
     "build-iife-minify": "npx esbuild \"./src/mod.ts\" --bundle --minify --format=iife --outfile=\"./dist/@oazmi/build-tools.iife.min.js\""
   },
   "dependencies": {
-    "@ts-morph/bootstrap": "0.22",
-    "code-block-writer": "^13.0.1",
-    "esbuild": "0.23.1",
-    "typedoc": "0.26.4",
+    "esbuild": "0.24.0",
+    "typedoc": "0.26.10",
     "@deno/shim-deno": "~0.18.0"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
     "typescript": "^5.0.0",
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.24.0",
     "typedoc": "^0.26.4",
     "typedoc-plugin-missing-exports": "^3.0.0",
     "typedoc-plugin-mermaid": "^1.12.0"

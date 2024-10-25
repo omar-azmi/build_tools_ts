@@ -35,7 +35,7 @@ th, td { border: 0.1em solid rgba(0, 0, 0, 0.75); padding: 0.1em; }
 */
 export const buildDocs = async (build_config = {}) => {
     setLog(build_config);
-    const { dir, deno, copy = [], text = [], site, css, typedoc = {}, preserveTemporary = false, dryrun = false } = { ...defaultBuildDocsConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno_dir = pathResolve(deno, "../");
+    const { dir, deno, copy = [], text = [], site, css, typedoc = {}, preserveTemporary = false, dryrun = false } = { ...defaultBuildDocsConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno_dir = pathResolve(deno, "./");
     logVerbose("current docs-build configuration is:", { dir, deno, site, preserveTemporary, copy, text, typedoc, css, dryrun });
     // first we generate the "package.json" and "tsconfig.json" files (in the directory of "deno.json"), which are required by "npm:typedoc" to function in deno environment.
     logVerbose("[in-memory] creating a \"package.json\" file from your \"deno.json\" file");

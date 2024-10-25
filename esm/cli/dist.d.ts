@@ -84,7 +84,7 @@ export interface CliDistConfig extends Omit<CliArgs, "config"> {
      * by default, when nothing is provided, only javascript esm-minification transformation will take place.
      * meaning that it will take shape of the following default value:
      *
-     * @defaultValue `[{ pattern: "**.js", loader: "js", options: { minify: true, platform: "browser", format: "esm", target: "esnext" } }, ]`
+     * @defaultValue `[{ pattern: "./**\/*.js", loader: "js", options: { minify: true, platform: "browser", format: "esm", target: "esnext" } }, ]`
     */
     transform?: Array<TransformationCliConfig>;
 }

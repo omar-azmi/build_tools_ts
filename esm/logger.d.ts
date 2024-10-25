@@ -3,7 +3,6 @@
  *
  * @module
 */
-/// <reference types="node" />
 import type { BaseBuildConfig } from "./typedefs.js";
 /** a `string` for specifying the log level. */
 export type LogLevel = Exclude<NonNullable<BaseBuildConfig["log"]>, boolean>;
@@ -13,8 +12,8 @@ export interface LogConfig {
     [ignored_props: string]: any;
 }
 export declare const console_assert: {
-    (condition?: boolean | undefined, ...data: any[]): void;
-    (value: any, message?: string | undefined, ...optionalParams: any[]): void;
+    (condition?: boolean, ...data: any[]): void;
+    (value: any, message?: string, ...optionalParams: any[]): void;
 }, console_clear: {
     (): void;
     (): void;
@@ -23,7 +22,7 @@ export declare const console_assert: {
     (message?: any, ...optionalParams: any[]): void;
 }, console_dir: {
     (item?: any, options?: any): void;
-    (obj: any, options?: import("util").InspectOptions | undefined): void;
+    (obj: any, options?: import("util").InspectOptions): void;
 }, console_error: {
     (...data: any[]): void;
     (message?: any, ...optionalParams: any[]): void;
@@ -31,8 +30,8 @@ export declare const console_assert: {
     (...data: any[]): void;
     (message?: any, ...optionalParams: any[]): void;
 }, console_table: {
-    (tabularData?: any, properties?: string[] | undefined): void;
-    (tabularData: any, properties?: readonly string[] | undefined): void;
+    (tabularData?: any, properties?: string[]): void;
+    (tabularData: any, properties?: readonly string[]): void;
 }, console_warn: {
     (...data: any[]): void;
     (message?: any, ...optionalParams: any[]): void;

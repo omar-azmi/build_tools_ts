@@ -6,7 +6,7 @@
  * @module
 */
 import "./_dnt.polyfills.js";
-import { type BuildOptions as DntBuildOptions } from "./deps/jsr.io/@deno/dnt/0.41.2/mod.js";
+import { type BuildOptions as DntBuildOptions } from "./deps/jsr.io/@deno/dnt/0.41.3/mod.js";
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.js";
 /** the configuration for the npm-release building function {@link buildNpm}. */
 export interface BuildNpmConfig extends BaseBuildConfig {

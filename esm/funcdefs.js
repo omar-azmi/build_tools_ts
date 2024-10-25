@@ -4,7 +4,7 @@
 */
 import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
-import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, pathToUnixPath, resolveUri } from "./deps.js";
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl } from "./deps.js";
 import { logBasic, logVerbose, setLog } from "./logger.js";
 const default_deno_json_path = "./deno.json";
 const getDenoJson_FromUri = async (deno_json_path_uri) => {
@@ -32,7 +32,7 @@ const getDenoJson_FromUri_Memorized = memorize(getDenoJson_FromUri);
  * ```
 */
 export const getDenoJson = async (deno_json_path = default_deno_json_path) => {
-    return await getDenoJson_FromUri_Memorized(resolveUri(deno_json_path));
+    return await getDenoJson_FromUri_Memorized(resolveAsUrl(deno_json_path).href);
 };
 /** create a "package.json" nodejs-project file, based on your "deno.json" configuration file. <br>
  * the following required fields inside of your "deno.json" will get merged into the output:
@@ -135,36 +135,10 @@ export const gitRepositoryToPagesUrl = (repo_git_url) => {
     repo_url.pathname = repo_name;
     return repo_url;
 };
-const glob_pattern_to_regex_escape_control_chars = /[\.\+\^\$\{\}\(\)\|\[\]\\]/g, glob_starstar_wildcard_token = "<<<StarStarWildcard>>>";
+// TODO: PURGE your `globToRegex` function, or consider implementing a more full featured one in `kitchensink`.
+//       for now, I will be using `globToRegExp` from `"jsr:@std/path"` instead.
 // TODO: implement a more featureful glob pattern implementation that uses tokens and has feature switches (like turning ranges on or off, etc...). then move it to `kitchensink`
-/** convert a glob string to a regex object. <br>
- * in this implementation, only the wildcards `"*"`, `"**"`, and the optional `"?"` is given meaning.
- * all else, including parenthesis, brackets, dots, and backslash, are escaped when being converted into a regex.
-*/
-export const globToRegex = (glob_pattern) => {
-    const 
-    // first, convert windows path separator to unix path separator
-    unix_pattern = pathToUnixPath(glob_pattern), 
-    // normalize pattern by removing leading dot-slashes ("./"), so they're treated like the "**/" glob pattern.
-    normalized_pattern = trimDotSlashes(unix_pattern), regex_str = normalized_pattern
-        // escape regex special characters, except for "*", "?", "[", "]", "{", and "}"
-        .replace(glob_pattern_to_regex_escape_control_chars, "\\$&")
-        // replace "**/" or "**" directory wildcard with a temporary `glob_starstar_wildcard_token`, and later we will convert to ".*"
-        .replace(/\*\*\/?/g, glob_starstar_wildcard_token)
-        // replace single "*" with "[^/]*" to match anything except directory separators
-        .replace(/\*/g, "[^\/]*")
-        // replace "?" with "." to match any single character
-        .replace(/\?/g, ".")
-        // convert negated glob ranges (like "[!abc]") to regex negation ("[^abc]")
-        .replace(/\[!(.*)\]/g, "[^$1]")
-        // support for character ranges like "[a-z]"
-        .replace(/\[(.*)\]/g, "[$1]")
-        // support for braces like "{js,ts}"
-        .replace(/\{([^,}]+),([^}]+)\}/g, "($1|$2)")
-        // put back the ".*" wildcards where they belong
-        .replace(glob_starstar_wildcard_token, ".*");
-    return new RegExp("^" + regex_str + "$");
-};
+// DONE: guess what? don't reinvent the wheel. a good implementation already exists in `import { globToRegExp } from "jsr:@std/path"`
 // TODO: `copyAndCreateFiles` and `createFiles` should return an artifacts info (such as `TemporaryFiles`).
 /** this function takes in your {@link BaseBuildConfig | generic config} object,
  * and figures out the files that need to be copied (specified in the {@link BaseBuildConfig.copy} field),
@@ -172,7 +146,7 @@ export const globToRegex = (glob_pattern) => {
 */
 export const copyAndCreateFiles = async (config) => {
     setLog(config);
-    const { dir, deno, copy = [], text = [], log, dryrun = false } = config, abs_deno_dir = pathResolve(deno, "../");
+    const { dir, deno, copy = [], text = [], log, dryrun = false } = config, abs_deno_dir = pathResolve(deno, "./");
     // copying other files
     logBasic("[in-fs] copying additional files from you deno directory over to the build directory");
     await Promise.all(copy.map(async ([src, dst]) => {

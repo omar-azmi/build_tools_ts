@@ -107,6 +107,54 @@ async function fromAsync(items, mapfn, thisArg) {
 if (!Array.fromAsync) {
     Array.fromAsync = fromAsync;
 }
+// https://github.com/tc39/proposal-promise-with-resolvers/blob/3a78801e073e99217dbeb2c43ba7212f3bdc8b83/polyfills.js#L1C1-L9C2
+if (Promise.withResolvers === undefined) {
+    Promise.withResolvers = () => {
+        const out = {};
+        out.promise = new Promise((resolve_, reject_) => {
+            out.resolve = resolve_;
+            out.reject = reject_;
+        });
+        return out;
+    };
+}
+function findLastIndex(self, callbackfn, that) {
+    const boundFunc = that === undefined ? callbackfn : callbackfn.bind(that);
+    let index = self.length - 1;
+    while (index >= 0) {
+        const result = boundFunc(self[index], index, self);
+        if (result) {
+            return index;
+        }
+        index--;
+    }
+    return -1;
+}
+function findLast(self, callbackfn, that) {
+    const index = self.findLastIndex(callbackfn, that);
+    return index === -1 ? undefined : self[index];
+}
+if (!Array.prototype.findLastIndex) {
+    Array.prototype.findLastIndex = function (callbackfn, that) {
+        return findLastIndex(this, callbackfn, that);
+    };
+}
+if (!Array.prototype.findLast) {
+    Array.prototype.findLast = function (callbackfn, that) {
+        return findLast(this, callbackfn, that);
+    };
+}
+if (!Uint8Array.prototype.findLastIndex) {
+    Uint8Array.prototype.findLastIndex = function (callbackfn, that) {
+        return findLastIndex(this, callbackfn, that);
+    };
+}
+if (!Uint8Array.prototype.findLast) {
+    Uint8Array.prototype.findLast = function (callbackfn, that) {
+        return findLast(this, callbackfn, that);
+    };
+}
+// https://github.com/tc39/proposal-accessible-object-hasownproperty/blob/main/polyfill.js
 if (!Object.hasOwn) {
     Object.defineProperty(Object, "hasOwn", {
         value: function (object, property) {

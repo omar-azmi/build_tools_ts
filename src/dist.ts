@@ -21,7 +21,7 @@
  * 	log: "verbose",
  * 	esbuild: { splitting: true }
  * })
- * const minified_files = await transform(bundled_files, [{}], "verbose")
+ * const minified_files = await transform(bundled_files, [{}])
  * await createFiles(minified_files, {
  * 	dir: "./dist/", // this information is not really needed, as the file paths in `minified_files` are absolute.
  * 	dryrun: false,
@@ -40,7 +40,7 @@ import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
 
 
-import { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.10.3/mod.js"
+import { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.0/mod.js"
 import {
 	build as esBuild,
 	stop as esStop,
@@ -48,19 +48,21 @@ import {
 	type BuildOptions as EsBuildOptions,
 	type TransformOptions as EsTransformOptions,
 } from "esbuild"
-import { emptyDir, pathResolve, TextToUint8Array, type MaybePromise } from "./deps.js"
-import { copyAndCreateFiles, getDenoJson, globToRegex, type createFiles } from "./funcdefs.js"
+import { defaultStopwatch, emptyDir, encodeText, globToRegExp, pathResolve, type MaybePromise } from "./deps.js"
+import { copyAndCreateFiles, getDenoJson, type createFiles } from "./funcdefs.js"
 import { logBasic, logVerbose, setLog } from "./logger.js"
 import type { BaseBuildConfig, DenoJson, ExportsWithMain, TemporaryFiles, WritableFileConfig } from "./typedefs.js"
 
 
-export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.10.3/mod.js"
+export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.0/mod.js"
 export {
 	build as esBuild,
 	stop as esStop,
 	transform as esTransform,
 	type BuildOptions as EsBuildOptions,
 	type OutputFile as EsOutputFile,
+	type Plugin as EsPlugin,
+	type PluginBuild as EsPluginBuild,
 	type TransformOptions as EsTransformOptions
 } from "esbuild"
 
@@ -210,7 +212,7 @@ export const bundle = async (bundle_config: Partial<BundleConfig> = {}): Promise
 		entryPoints = await parse_entry_points(deno, input)
 	logVerbose("current dist-bundle configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop })
 	logVerbose("bundling the following entry-points:", entryPoints)
-	let delta_time = performance.now()
+	defaultStopwatch.push()
 	const bundled_code = await esBuild({
 		entryPoints,
 		outdir: abs_dir,
@@ -223,8 +225,7 @@ export const bundle = async (bundle_config: Partial<BundleConfig> = {}): Promise
 		...esbuild,
 		write: false,
 	})
-	delta_time = performance.now() - delta_time
-	logBasic("bundling time:", delta_time, "ms")
+	logBasic("bundling time:", defaultStopwatch.popDelta(), "ms")
 	if (stop) { await esStop() }
 	return bundled_code.outputFiles.map(({ path, contents }) => {
 		return [path, contents]
@@ -245,7 +246,7 @@ export const buildDist = async (build_config: Partial<BuildDistConfig>): Promise
 		abs_dir = pathResolve(dir),
 		abs_deno = pathResolve(deno),
 		entryPoints = await parse_entry_points(deno, input)
-	let delta_time = performance.now()
+	defaultStopwatch.push()
 	logVerbose("current dist-build configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop, copy, text, dryrun })
 	logVerbose("bundling the following entry-points:", entryPoints)
 	const bundled_code = await esBuild({
@@ -260,8 +261,7 @@ export const buildDist = async (build_config: Partial<BuildDistConfig>): Promise
 		...esbuild,
 		write: !dryrun,
 	})
-	delta_time = performance.now() - delta_time
-	logBasic("bundling time:", delta_time, "ms")
+	logBasic("bundling time:", defaultStopwatch.popDelta(), "ms")
 	if (stop) { await esStop() }
 	await copyAndCreateFiles({ dir, deno, copy, text, dryrun })
 	return {
@@ -282,7 +282,7 @@ const parsePathPatternMatching = (pattern: TransformationConfig["pattern"]): Pat
 		case "function": { return pattern }
 		case "undefined": { return (() => true) }
 		case "object": { return (file_path: string) => pattern.test(file_path) }
-		case "string": { return parsePathPatternMatching(globToRegex(pattern)) }
+		case "string": { return parsePathPatternMatching(globToRegExp(pattern)) }
 	}
 }
 
@@ -303,7 +303,7 @@ export const transform = async (
 			options: { ...options, loader } as EsTransformOptions
 		}
 	})
-	let delta_time = performance.now()
+	defaultStopwatch.push()
 
 	const transformed_files = await Promise.all(input_files.map(
 		async ([path, content], file_number): Promise<VirtualFileOutput> => {
@@ -312,7 +312,7 @@ export const transform = async (
 				if (new_file_name) {
 					const
 						results = await esTransform(content, options),
-						new_content = TextToUint8Array(results.code),
+						new_content = encodeText(results.code),
 						new_path = typeof new_file_name === "string" ? new_file_name : path
 					logVerbose(
 						`- transformed file: ${file_number}`,
@@ -326,7 +326,6 @@ export const transform = async (
 			return [path, content]
 		}
 	))
-	delta_time = performance.now() - delta_time
-	logBasic("transformation time:", delta_time, "ms")
+	logBasic("transformation time:", defaultStopwatch.popDelta(), "ms")
 	return transformed_files
 }
