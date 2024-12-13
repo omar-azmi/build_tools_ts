@@ -1,6 +1,6 @@
 {
 	"name": "@oazmi/build-tools",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"description": "general deno build tool scripts which I practically use in all of my typescript repos",
 	"author": "Omar Azmi",
 	"license": "Anti-Competition License",
@@ -113,6 +113,7 @@
 		"build-docs": "deno run -A \"./src/cli/docs.ts\" --config=\"./deno.json\"",
 		"build-npm": "deno run -A \"./src/cli/npm.ts\" --config=\"./deno.json\"",
 		"build-npm-dist": "cd \"./npm/\" && npm run build-esm -- --platform=node && npm run build-esm-minify -- --platform=node",
+		"local-server": "deno run --allow-net --allow-read \"jsr:@std/http/file-server\"",
 		"clean": "deno run -A \"./clean.ts\"",
 		"test": "deno test -A",
 		"test-doc": "deno test -A --doc \"./src/*\"",

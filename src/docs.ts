@@ -4,7 +4,7 @@
  * @module
 */
 
-import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.26.10"
+import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.27.4"
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
 import { emptyDir, ensureFile, pathResolve } from "./deps.ts"
@@ -13,7 +13,7 @@ import { console_warn, logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.ts"
 
 
-export type { TypeDocOptions } from "npm:typedoc@0.26.10"
+export type { TypeDocOptions } from "npm:typedoc@0.27.4"
 
 /** the configuration for the documentation building function {@link buildDocs}. */
 export interface BuildDocsConfig extends BaseBuildConfig {
@@ -70,6 +70,7 @@ export const defaultBuildDocsConfig: BuildDocsConfig = {
 table { border-collapse: collapse; }
 th { background-color: rgba(128, 128, 128, 0.50); }
 th, td { border: 0.1em solid rgba(0, 0, 0, 0.75); padding: 0.1em; }
+pre code { tab-size: 4; }
 `,
 }
 
