@@ -4,8 +4,11 @@
  * @module
 */
 
+import { console_log } from "./deps.ts"
 import type { BaseBuildConfig } from "./typedefs.ts"
 
+
+export { console_log, console_warn } from "./deps.ts"
 /** a `string` for specifying the log level. */
 export type LogLevel = Exclude<NonNullable<BaseBuildConfig["log"]>, boolean>
 
@@ -23,17 +26,6 @@ let
 	log_level: LogLevel = "basic",
 	log_is_basic: boolean = true,
 	log_is_verbose: boolean = false
-
-export const {
-	assert: console_assert,
-	clear: console_clear,
-	debug: console_debug,
-	dir: console_dir,
-	error: console_error,
-	log: console_log,
-	table: console_table,
-	warn: console_warn,
-} = console
 
 /** set the logging to a certain level.
  * the value passed to this function affects the logging behavior of the {@link logBasic} and {@link logVerbose} functions.

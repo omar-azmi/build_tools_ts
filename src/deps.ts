@@ -11,6 +11,10 @@ export type {
 	PackageJson
 } from "jsr:@deno/dnt@0.41.3"
 export {
+	console_log,
+	console_warn
+} from "jsr:@oazmi/kitchensink@0.9.1/alias"
+export {
 	detectReadableStreamType
 } from "jsr:@oazmi/kitchensink@0.9.1/browser"
 export {
