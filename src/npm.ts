@@ -115,17 +115,17 @@ export const buildNpm = async (build_config: Partial<BuildNpmConfig> = {}): Prom
 			// however, I loose the ability to map it from my package's npm releases as a consequence.
 			// consider whether or not I'd like to have my dependencies as jsr imports or npm imports.
 			// mappings: Object.fromEntries(
-			// 	["binder", "builtin_aliases_deps", "lambda", "struct", "typedefs",].map((submodule_path) => {
+			// 	["alias", "binder", "browser", "eightpack", "lambda", "pathman", "timeman", "struct", "typedefs",].map((submodule_path) => {
 			// 		return [
-			// 			"jsr:@oazmi/kitchensink@0.7.5/" + submodule_path,
+			// 			"jsr:@oazmi/kitchensink@0.9.1/" + submodule_path,
 			// 			{
 			// 				name: "@oazmi/kitchensink",
-			// 				version: "0.7.5-a",
+			// 				version: "0.9.1",
 			// 				subPath: submodule_path,
 			// 			}
 			// 		]
 			// 	})
-			// )
+			// ),
 			...dnt,
 		})
 	}

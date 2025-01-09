@@ -1,6 +1,6 @@
 {
 	"name": "@oazmi/build-tools",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"description": "general deno build tool scripts which I practically use in all of my typescript repos",
 	"author": "Omar Azmi",
 	"license": "Anti-Competition License",
@@ -20,6 +20,7 @@
 		"./dist": "./src/dist.ts",
 		"./docs": "./src/docs.ts",
 		"./npm": "./src/npm.ts",
+		"./logger": "./src/logger.ts",
 		"./funcdefs": "./src/funcdefs.ts",
 		"./typedefs": "./src/typedefs.ts"
 	},
@@ -60,10 +61,10 @@
 	"packageJson": {
 		"dependencies": {},
 		"devDependencies": {
-			"typescript": "^5.0.0",
-			"esbuild": "^0.24.0",
-			"typedoc": "^0.26.4",
-			"typedoc-plugin-missing-exports": "^3.0.0",
+			"typescript": "^5.6.0",
+			"esbuild": "^0.24.2",
+			"typedoc": "^0.27.4",
+			"typedoc-plugin-missing-exports": "^3.1.0",
 			"typedoc-plugin-mermaid": "^1.12.0"
 		},
 		"keywords": [
@@ -86,11 +87,18 @@
 		"split": true,
 		"esbuild": {
 			"chunkNames": "chunks/[hash]",
+			"platform": "node",
 			"external": [
 				"Deno",
 				"typedoc",
 				"esbuild",
-				"@ts-morph"
+				"crypto",
+				"fs",
+				"inspector",
+				"os",
+				"path",
+				"perf_hooks",
+				"source-map-support"
 			]
 		}
 	},

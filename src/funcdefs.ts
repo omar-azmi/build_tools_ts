@@ -4,7 +4,7 @@
 */
 
 import type { MaybePromise, PackageJson } from "./deps.ts"
-import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl } from "./deps.ts"
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl, trimSlashes } from "./deps.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TsConfigJson, WritableFileConfig } from "./typedefs.ts"
 
@@ -93,33 +93,6 @@ export const createTsConfigJson = async (deno_json_path: string = default_deno_j
 		...rest_overrides,
 		compilerOptions,
 	} as any
-}
-
-/** trim the leading slashes at the beginning of a string. */
-export const trimStartSlashes = (str: string): string => {
-	return str.replace(/^\/+/, "")
-}
-
-/** trim the trailing slashes at the end of a string. */
-export const trimEndSlashes = (str: string): string => {
-	return str.replace(/\/+$/, "")
-}
-
-/** trim leading and trailing slashes, at the beginning and end of a string. */
-export const trimSlashes = (str: string): string => {
-	return trimEndSlashes(trimStartSlashes(str))
-}
-
-/** trim leading and trailing slashes, at the beginning and end of a string. */
-export const trimDotSlashes = (str: string): string => {
-	return trimEndSlashes(str.replace(/^(\.?\/)+/, ""))
-}
-
-/** join path segments with slashes in between. */
-export const joinSlash = (...segments: string[]): string => {
-	return segments
-		.map(trimDotSlashes)
-		.reduce((output, subpath) => (output + "/" + subpath), "")
 }
 
 /** convert potential git-repository url to a proper repository url.

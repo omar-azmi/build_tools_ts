@@ -3,7 +3,7 @@ import {
 	ensureEndSlash,
 	pathToPosixPath,
 	resolvePathFactory
-} from "jsr:@oazmi/kitchensink@0.8.6/pathman"
+} from "jsr:@oazmi/kitchensink@0.9.1/pathman"
 
 
 export type {
@@ -12,26 +12,30 @@ export type {
 } from "jsr:@deno/dnt@0.41.3"
 export {
 	detectReadableStreamType
-} from "jsr:@oazmi/kitchensink@0.8.6/browser"
+} from "jsr:@oazmi/kitchensink@0.9.1/browser"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "jsr:@oazmi/kitchensink@0.8.6/eightpack"
+} from "jsr:@oazmi/kitchensink@0.9.1/eightpack"
 export {
 	memorize
-} from "jsr:@oazmi/kitchensink@0.8.6/lambda"
+} from "jsr:@oazmi/kitchensink@0.9.1/lambda"
 export {
+	ensureEndSlash,
+	ensureStartDotSlash,
 	isAbsolutePath,
 	joinPaths,
-	relativePath
-} from "jsr:@oazmi/kitchensink@0.8.6/pathman"
+	parseFilepathInfo,
+	relativePath,
+	trimSlashes
+} from "jsr:@oazmi/kitchensink@0.9.1/pathman"
 export {
 	defaultStopwatch
-} from "jsr:@oazmi/kitchensink@0.8.6/timeman"
+} from "jsr:@oazmi/kitchensink@0.9.1/timeman"
 export type {
 	MaybePromise,
 	Require
-} from "jsr:@oazmi/kitchensink@0.8.6/typedefs"
+} from "jsr:@oazmi/kitchensink@0.9.1/typedefs"
 export {
 	copy as copyDir,
 	emptyDir,

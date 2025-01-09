@@ -4,16 +4,16 @@
  * @module
 */
 
-import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.27.4"
+import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.27.6"
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
-import { emptyDir, ensureFile, pathResolve } from "./deps.ts"
-import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl, joinSlash, trimSlashes } from "./funcdefs.ts"
+import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.ts"
+import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl } from "./funcdefs.ts"
 import { console_warn, logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.ts"
 
 
-export type { TypeDocOptions } from "npm:typedoc@0.27.4"
+export type { TypeDocOptions } from "npm:typedoc@0.27.6"
 
 /** the configuration for the documentation building function {@link buildDocs}. */
 export interface BuildDocsConfig extends BaseBuildConfig {
@@ -156,11 +156,20 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 	const
 		{ exports, repository } = await getDenoJson(deno),
 		repo_url = gitRepositoryToUrl(repository?.url ?? "git+https://github.com/404/404.git"),
-		site_root_path = trimSlashes(site ?? (repository?.url ? gitRepositoryToPagesUrl(repository.url).pathname : "")),
+		site_root_path = ensureEndSlash(trimSlashes(site ?? (
+			repository?.url
+				? gitRepositoryToPagesUrl(repository.url).pathname
+				: ""
+		))),
 		{ ".": mainEntrypoint = undefined, ...subEntrypoints } = typeof exports === "string"
 			? { ".": exports }
 			: exports,
-		entryPoints: string[] = [...(mainEntrypoint ? [mainEntrypoint] : []), ...Object.values(subEntrypoints) as string[]]
+		entryPoints: string[] = [...(mainEntrypoint ? [mainEntrypoint] : []), ...Object.values(subEntrypoints) as string[]],
+		distribution_file_info = parseFilepathInfo(mainEntrypoint ?? "./src/mod.ts"),
+		distribution_file_name = ensureStartDotSlash(distribution_file_info.basename.replace(
+			new RegExp(`${distribution_file_info.extname.replaceAll(".", "\\.")}$`),
+			".js",
+		))
 
 	logVerbose("[in-memory] bootstrapping TypeDoc")
 	const typedoc_app = await typedocApp.bootstrapWithPlugins({
@@ -171,10 +180,10 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		// TODO: navigation links should be customizable, but shouldn't overwrite the github repo link
 		navigationLinks: {
 			"github": repo_url.href,
-			"readme": joinSlash(site_root_path),
-			"source": joinSlash(site_root_path, mainEntrypoint ?? "./src/mod.ts"),
-			"examples": joinSlash(site_root_path, "examples", "index.html"),
-			"distribution": joinSlash(site_root_path, "dist", "esm.js"),
+			"readme": joinPaths(site_root_path),
+			"source": joinPaths(site_root_path, mainEntrypoint ?? "./src/mod.ts"),
+			"examples": joinPaths(site_root_path, "./examples/", "./index.html"),
+			"distribution": joinPaths(site_root_path, "./dist/", distribution_file_name),
 		},
 		skipErrorChecking: true,
 		githubPages: true,
