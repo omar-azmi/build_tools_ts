@@ -43,7 +43,7 @@ import {
 	transform as esTransform,
 	type BuildOptions as EsBuildOptions,
 	type TransformOptions as EsTransformOptions,
-} from "npm:esbuild@0.24.2"
+} from "npm:esbuild@0.25.0"
 import { defaultStopwatch, emptyDir, encodeText, globToRegExp, pathResolve, type MaybePromise } from "./deps.ts"
 import { copyAndCreateFiles, getDenoJson, type createFiles } from "./funcdefs.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
@@ -60,7 +60,7 @@ export {
 	type Plugin as EsPlugin,
 	type PluginBuild as EsPluginBuild,
 	type TransformOptions as EsTransformOptions
-} from "npm:esbuild@0.24.2"
+} from "npm:esbuild@0.25.0"
 
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
  * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.

@@ -1,10 +1,13 @@
 import {
+	getRuntimeCwd,
+	identifyCurrentRuntime
+} from "jsr:@oazmi/kitchensink@0.9.7/crossenv"
+import {
 	resolveAsUrl as _resolveAsUrl,
 	ensureEndSlash,
 	pathToPosixPath,
 	resolvePathFactory
-} from "jsr:@oazmi/kitchensink@0.9.1/pathman"
-
+} from "jsr:@oazmi/kitchensink@0.9.7/pathman"
 
 export type {
 	BuildOptions as DntBuildOptions,
@@ -13,17 +16,17 @@ export type {
 export {
 	console_log,
 	console_warn
-} from "jsr:@oazmi/kitchensink@0.9.1/alias"
+} from "jsr:@oazmi/kitchensink@0.9.7/alias"
 export {
 	detectReadableStreamType
-} from "jsr:@oazmi/kitchensink@0.9.1/browser"
+} from "jsr:@oazmi/kitchensink@0.9.7/browser"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "jsr:@oazmi/kitchensink@0.9.1/eightpack"
+} from "jsr:@oazmi/kitchensink@0.9.7/eightpack"
 export {
 	memorize
-} from "jsr:@oazmi/kitchensink@0.9.1/lambda"
+} from "jsr:@oazmi/kitchensink@0.9.7/lambda"
 export {
 	ensureEndSlash,
 	ensureStartDotSlash,
@@ -32,25 +35,29 @@ export {
 	parseFilepathInfo,
 	relativePath,
 	trimSlashes
-} from "jsr:@oazmi/kitchensink@0.9.1/pathman"
+} from "jsr:@oazmi/kitchensink@0.9.7/pathman"
+export {
+	isArray,
+	isObject
+} from "jsr:@oazmi/kitchensink@0.9.7/struct"
 export {
 	defaultStopwatch
-} from "jsr:@oazmi/kitchensink@0.9.1/timeman"
+} from "jsr:@oazmi/kitchensink@0.9.7/timeman"
 export type {
 	MaybePromise,
 	Require
-} from "jsr:@oazmi/kitchensink@0.9.1/typedefs"
+} from "jsr:@oazmi/kitchensink@0.9.7/typedefs"
 export {
 	copy as copyDir,
 	emptyDir,
 	ensureDir,
 	ensureFile,
 	expandGlob
-} from "jsr:@std/fs@1.0.5"
+} from "jsr:@std/fs@1.0.13"
 export {
 	globToRegExp,
 	isGlob as pathIsGlobPattern
-} from "jsr:@std/path@1.0.7"
+} from "jsr:@std/path@1.0.8"
 
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
@@ -58,8 +65,10 @@ export {
 // DONE: use `globToRegExp` and `isGlob` from "jsr:@std/path" instead of your wonky implementations.
 // TODO: in version `0.3.0` of this library, add a new "directory-server" tool, and accompany it with a cli. 
 
+const cwd = /*@__PURE__*/ ensureEndSlash(pathToPosixPath(getRuntimeCwd(identifyCurrentRuntime())))
+
 /** get the current working directory (`Deno.cwd`) in posix path format. */
-export const getCwdPath = () => { return ensureEndSlash(pathToPosixPath(Deno.cwd())) }
+export const getCwdPath = () => { return cwd }
 
 /** resolve a file path so that it becomes absolute, with unix directory separator ("/").
  * TODO: refactor the name `pathResolve` to `resolvePath`

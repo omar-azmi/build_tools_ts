@@ -33,6 +33,7 @@ export const defaultBuildNpmConfig: BuildNpmConfig = {
 	dir: "./npm/",
 	deno: "./deno.json",
 	copy: [
+		["./assets/", "./assets/"],
 		["./readme.md", "./readme.md"],
 		["./license.md", "./license.md"],
 		["./.github/code_of_conduct.md", "./code_of_conduct.md"],
@@ -74,6 +75,7 @@ export const buildNpm = async (build_config: Partial<BuildNpmConfig> = {}): Prom
 	logVerbose("current npm-build configuration is:", { dir, deno, copy, text, dnt, dryrun })
 	logVerbose("[in-memory] creating a \"package.json\" file from your \"deno.json\" file")
 	const package_json = await createPackageJson(deno, {
+		sideEffects: false,
 		scripts: {
 			"build-dist": `npm run build-esm && npm run build-esm-minify && npm run build-iife && npm run build-iife-minify`,
 			"build-esm": `npx esbuild "${mainEntrypoint}" --bundle --format=esm --outfile="./dist/${library_name}.esm.js"`,
