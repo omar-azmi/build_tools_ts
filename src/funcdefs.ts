@@ -8,7 +8,7 @@ import * as dntShim from "./_dnt.shims.js";
 
 
 import type { MaybePromise, PackageJson } from "./deps.js"
-import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl } from "./deps.js"
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, isArray, isObject, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl, trimSlashes } from "./deps.js"
 import { logBasic, logVerbose, setLog } from "./logger.js"
 import type { BaseBuildConfig, DenoJson, TsConfigJson, WritableFileConfig } from "./typedefs.js"
 
@@ -57,17 +57,30 @@ export const getDenoJson = async <DENO_JSON extends MaybePromise<DenoJson>>(deno
  * note that if you use [dnt (deno-to-node)](https://jsr.io/@deno/dnt), then you will have to delete the `exports` property from the output, otherwise it will ruin/overwrite `dnt`'s output.
  * 
  * @param deno_json_path the path to your "deno.json" file. it could be either an absolute path, or a path relative to your current working directory (`Deno.cwd()`).
- * @param overrides provide additional overrides to apply to your output "package.json" like object.
+ * @param merge_defaults provide default "package.json" fields to merge with the acquired `packageJson` object from "deno.json", at a depth of `1` for records.
  * @returns a "package.json" like javascript object.
 */
-export const createPackageJson = async (deno_json_path: string = default_deno_json_path, overrides: Partial<PackageJson> = {}): Promise<PackageJson> => {
-	const { name, version, description, author, license, repository, bugs, exports, packageJson } = await getDenoJson(deno_json_path)
+export const createPackageJson = async (deno_json_path: string = default_deno_json_path, merge_defaults: Partial<PackageJson> = {}): Promise<PackageJson> => {
+	const
+		{ name = "", version = "0.0.0", description, author, license, repository, bugs, exports, packageJson = {} } = await getDenoJson(deno_json_path),
+		merged_package_json: Partial<PackageJson> = {}
+	for (const key in merge_defaults) {
+		// merging all record objects, at a depth of 1
+		const
+			default_value = merge_defaults[key],
+			current_value = packageJson[key],
+			default_is_dict = isObject(default_value) && !isArray(default_value),
+			current_is_dict = isObject(current_value) && !isArray(current_value),
+			current_is_undefined = current_value === undefined
+		merged_package_json[key] = current_is_undefined
+			? default_value : (current_is_dict && default_is_dict)
+				? { ...default_value, ...current_value }
+				: current_value
+	}
 	return {
-		name: name ?? "",
-		version: version ?? "0.0.0",
-		description, author, license, repository, bugs, exports,
-		...packageJson,
-		...overrides
+		name, version, description, author,
+		license, repository, bugs, exports,
+		...merged_package_json,
 	}
 }
 
@@ -97,33 +110,6 @@ export const createTsConfigJson = async (deno_json_path: string = default_deno_j
 		...rest_overrides,
 		compilerOptions,
 	} as any
-}
-
-/** trim the leading slashes at the beginning of a string. */
-export const trimStartSlashes = (str: string): string => {
-	return str.replace(/^\/+/, "")
-}
-
-/** trim the trailing slashes at the end of a string. */
-export const trimEndSlashes = (str: string): string => {
-	return str.replace(/\/+$/, "")
-}
-
-/** trim leading and trailing slashes, at the beginning and end of a string. */
-export const trimSlashes = (str: string): string => {
-	return trimEndSlashes(trimStartSlashes(str))
-}
-
-/** trim leading and trailing slashes, at the beginning and end of a string. */
-export const trimDotSlashes = (str: string): string => {
-	return trimEndSlashes(str.replace(/^(\.?\/)+/, ""))
-}
-
-/** join path segments with slashes in between. */
-export const joinSlash = (...segments: string[]): string => {
-	return segments
-		.map(trimDotSlashes)
-		.reduce((output, subpath) => (output + "/" + subpath), "")
 }
 
 /** convert potential git-repository url to a proper repository url.

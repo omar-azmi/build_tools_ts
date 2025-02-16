@@ -1,18 +1,7 @@
 {
   "name": "@oazmi/build-tools",
-  "version": "0.2.2",
+  "version": "0.2.5",
   "description": "general deno build tool scripts which I practically use in all of my typescript repos",
-  "keywords": [
-    "build-tools",
-    "build-scripts",
-    "deno-to-npm",
-    "typedoc",
-    "doc-generator",
-    "esbuild",
-    "bundler",
-    "bundle-script",
-    "typescript"
-  ],
   "author": "Omar Azmi",
   "repository": {
     "type": "git",
@@ -48,6 +37,9 @@
     "./npm": {
       "import": "./esm/npm.js"
     },
+    "./logger": {
+      "import": "./esm/logger.js"
+    },
     "./funcdefs": {
       "import": "./esm/funcdefs.js"
     },
@@ -56,24 +48,20 @@
     }
   },
   "scripts": {
-    "build-dist": "npm run build-esm && npm run build-esm-minify && npm run build-iife && npm run build-iife-minify",
+    "build-dist": "npm run build-esm -- --platform=node && npm run build-esm-minify -- --platform=node",
     "build-esm": "npx esbuild \"./src/mod.ts\" --bundle --format=esm --outfile=\"./dist/@oazmi/build-tools.esm.js\"",
     "build-esm-minify": "npx esbuild \"./src/mod.ts\" --bundle --minify --format=esm --outfile=\"./dist/@oazmi/build-tools.esm.min.js\"",
     "build-iife": "npx esbuild \"./src/mod.ts\" --bundle --format=iife --outfile=\"./dist/@oazmi/build-tools.iife.js\"",
     "build-iife-minify": "npx esbuild \"./src/mod.ts\" --bundle --minify --format=iife --outfile=\"./dist/@oazmi/build-tools.iife.min.js\""
   },
+  "sideEffects": false,
   "dependencies": {
-    "esbuild": "0.24.0",
-    "typedoc": "0.26.10",
+    "esbuild": "0.25.0",
+    "typedoc": "0.27.7",
     "@deno/shim-deno": "~0.18.0"
   },
   "devDependencies": {
-    "@types/node": "^20.9.0",
-    "typescript": "^5.0.0",
-    "esbuild": "^0.24.0",
-    "typedoc": "^0.26.4",
-    "typedoc-plugin-missing-exports": "^3.0.0",
-    "typedoc-plugin-mermaid": "^1.12.0"
+    "@types/node": "^20.9.0"
   },
   "_generatedBy": "dnt@dev"
 }

@@ -1,7 +1,7 @@
 // Copyright 2018-2024 the Deno authors. MIT license.
 import * as dntShim from "../../../../../../_dnt.shims.js";
 import { ts } from "../../../../@ts-morph/bootstrap/0.24.0/mod.js";
-import * as path from "../../../../@std/path/1.0.7/mod.js";
+import * as path from "../../../../@std/path/1.0.8/mod.js";
 export function outputDiagnostics(diagnostics) {
     const host = {
         getCanonicalFileName: (fileName) => path.resolve(fileName),

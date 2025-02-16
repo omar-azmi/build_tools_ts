@@ -3,12 +3,14 @@
  *
  * @module
 */
+import "./_dnt.polyfills.js";
+import { console_log } from "./deps.js";
+export { console_log, console_warn } from "./deps.js";
 // there are three logging level:
 // "none": `log_is_basic` and `log_is_verbose` are both `false` => no logging occurs
 // "basic": `log_is_basic` is `true` but `log_is_verbose` is `false` => basic logging occurs
 // "verbose": `log_is_basic` and `log_is_verbose` are both `true` => basic logging + verbose logging occurs
 let log_level = "basic", log_is_basic = true, log_is_verbose = false;
-export const { assert: console_assert, clear: console_clear, debug: console_debug, dir: console_dir, error: console_error, log: console_log, table: console_table, warn: console_warn, } = console;
 /** set the logging to a certain level.
  * the value passed to this function affects the logging behavior of the {@link logBasic} and {@link logVerbose} functions.
  *

@@ -17,6 +17,7 @@ export const defaultBuildNpmConfig = {
     dir: "./npm/",
     deno: "./deno.json",
     copy: [
+        ["./assets/", "./assets/"],
         ["./readme.md", "./readme.md"],
         ["./license.md", "./license.md"],
         ["./.github/code_of_conduct.md", "./code_of_conduct.md"],
@@ -48,6 +49,7 @@ export const buildNpm = async (build_config = {}) => {
     logVerbose("current npm-build configuration is:", { dir, deno, copy, text, dnt, dryrun });
     logVerbose("[in-memory] creating a \"package.json\" file from your \"deno.json\" file");
     const package_json = await createPackageJson(deno, {
+        sideEffects: false,
         scripts: {
             "build-dist": `npm run build-esm && npm run build-esm-minify && npm run build-iife && npm run build-iife-minify`,
             "build-esm": `npx esbuild "${mainEntrypoint}" --bundle --format=esm --outfile="./dist/${library_name}.esm.js"`,
@@ -89,17 +91,17 @@ export const buildNpm = async (build_config = {}) => {
             // however, I loose the ability to map it from my package's npm releases as a consequence.
             // consider whether or not I'd like to have my dependencies as jsr imports or npm imports.
             // mappings: Object.fromEntries(
-            // 	["binder", "builtin_aliases_deps", "lambda", "struct", "typedefs",].map((submodule_path) => {
+            // 	["alias", "binder", "browser", "eightpack", "lambda", "pathman", "timeman", "struct", "typedefs",].map((submodule_path) => {
             // 		return [
-            // 			"jsr:@oazmi/kitchensink@0.7.5/" + submodule_path,
+            // 			"jsr:@oazmi/kitchensink@0.9.1/" + submodule_path,
             // 			{
             // 				name: "@oazmi/kitchensink",
-            // 				version: "0.7.5-a",
+            // 				version: "0.9.1",
             // 				subPath: submodule_path,
             // 			}
             // 		]
             // 	})
-            // )
+            // ),
             ...dnt,
         });
     }

@@ -40,7 +40,7 @@ import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
 
 
-import { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.0/mod.js"
+import { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.1/mod.js"
 import {
 	build as esBuild,
 	stop as esStop,
@@ -54,7 +54,7 @@ import { logBasic, logVerbose, setLog } from "./logger.js"
 import type { BaseBuildConfig, DenoJson, ExportsWithMain, TemporaryFiles, WritableFileConfig } from "./typedefs.js"
 
 
-export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.0/mod.js"
+export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.1/mod.js"
 export {
 	build as esBuild,
 	stop as esStop,

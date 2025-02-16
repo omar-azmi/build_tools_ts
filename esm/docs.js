@@ -8,8 +8,8 @@ import * as dntShim from "./_dnt.shims.js";
 import { Application as typedocApp } from "typedoc";
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
-import { emptyDir, ensureFile, pathResolve } from "./deps.js";
-import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl, joinSlash, trimSlashes } from "./funcdefs.js";
+import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.js";
+import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl } from "./funcdefs.js";
 import { console_warn, logBasic, logVerbose, setLog } from "./logger.js";
 /** the default configuration used by the {@link buildDocs} function, for missing/unprovided configuration fields. */
 export const defaultBuildDocsConfig = {
@@ -26,6 +26,7 @@ export const defaultBuildDocsConfig = {
 table { border-collapse: collapse; }
 th { background-color: rgba(128, 128, 128, 0.50); }
 th, td { border: 0.1em solid rgba(0, 0, 0, 0.75); padding: 0.1em; }
+pre code { tab-size: 4; }
 `,
 };
 /** this function generates code documentation of your deno-project, using [`typedoc`](https://github.com/TypeStrong/typedoc).
@@ -98,9 +99,11 @@ export const buildDocs = async (build_config = {}) => {
     if (!dryrun) {
         await emptyDir(dir);
     }
-    const { exports, repository } = await getDenoJson(deno), repo_url = gitRepositoryToUrl(repository?.url ?? "git+https://github.com/404/404.git"), site_root_path = trimSlashes(site ?? (repository?.url ? gitRepositoryToPagesUrl(repository.url).pathname : "")), { ".": mainEntrypoint = undefined, ...subEntrypoints } = typeof exports === "string"
+    const { exports, repository } = await getDenoJson(deno), repo_url = gitRepositoryToUrl(repository?.url ?? "git+https://github.com/404/404.git"), site_root_path = ensureEndSlash(trimSlashes(site ?? (repository?.url
+        ? gitRepositoryToPagesUrl(repository.url).pathname
+        : ""))), { ".": mainEntrypoint = undefined, ...subEntrypoints } = typeof exports === "string"
         ? { ".": exports }
-        : exports, entryPoints = [...(mainEntrypoint ? [mainEntrypoint] : []), ...Object.values(subEntrypoints)];
+        : exports, entryPoints = [...(mainEntrypoint ? [mainEntrypoint] : []), ...Object.values(subEntrypoints)], distribution_file_info = parseFilepathInfo(mainEntrypoint ?? "./src/mod.ts"), distribution_file_name = ensureStartDotSlash(distribution_file_info.basename.replace(new RegExp(`${distribution_file_info.extname.replaceAll(".", "\\.")}$`), ".js"));
     logVerbose("[in-memory] bootstrapping TypeDoc");
     const typedoc_app = await typedocApp.bootstrapWithPlugins({
         // even though the intermediate "package.json" that we created contains the `exports` field, `typedoc` can't figure out the entrypoints on its own.
@@ -110,10 +113,10 @@ export const buildDocs = async (build_config = {}) => {
         // TODO: navigation links should be customizable, but shouldn't overwrite the github repo link
         navigationLinks: {
             "github": repo_url.href,
-            "readme": joinSlash(site_root_path),
-            "source": joinSlash(site_root_path, mainEntrypoint ?? "./src/mod.ts"),
-            "examples": joinSlash(site_root_path, "examples", "index.html"),
-            "distribution": joinSlash(site_root_path, "dist", "esm.js"),
+            "readme": joinPaths(site_root_path),
+            "source": joinPaths(site_root_path, mainEntrypoint ?? "./src/mod.ts"),
+            "examples": joinPaths(site_root_path, "./examples/", "./index.html"),
+            "distribution": joinPaths(site_root_path, "./dist/", distribution_file_name),
         },
         skipErrorChecking: true,
         githubPages: true,

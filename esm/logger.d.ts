@@ -3,7 +3,9 @@
  *
  * @module
 */
+import "./_dnt.polyfills.js";
 import type { BaseBuildConfig } from "./typedefs.js";
+export { console_log, console_warn } from "./deps.js";
 /** a `string` for specifying the log level. */
 export type LogLevel = Exclude<NonNullable<BaseBuildConfig["log"]>, boolean>;
 /** configuration for {@link setLog}. */
@@ -11,31 +13,6 @@ export interface LogConfig {
     log?: BaseBuildConfig["log"];
     [ignored_props: string]: any;
 }
-export declare const console_assert: {
-    (condition?: boolean, ...data: any[]): void;
-    (value: any, message?: string, ...optionalParams: any[]): void;
-}, console_clear: {
-    (): void;
-    (): void;
-}, console_debug: {
-    (...data: any[]): void;
-    (message?: any, ...optionalParams: any[]): void;
-}, console_dir: {
-    (item?: any, options?: any): void;
-    (obj: any, options?: import("util").InspectOptions): void;
-}, console_error: {
-    (...data: any[]): void;
-    (message?: any, ...optionalParams: any[]): void;
-}, console_log: {
-    (...data: any[]): void;
-    (message?: any, ...optionalParams: any[]): void;
-}, console_table: {
-    (tabularData?: any, properties?: string[]): void;
-    (tabularData: any, properties?: readonly string[]): void;
-}, console_warn: {
-    (...data: any[]): void;
-    (message?: any, ...optionalParams: any[]): void;
-};
 /** set the logging to a certain level.
  * the value passed to this function affects the logging behavior of the {@link logBasic} and {@link logVerbose} functions.
  *

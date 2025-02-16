@@ -36,10 +36,10 @@ export declare const getDenoJson: <DENO_JSON extends MaybePromise<DenoJson>>(den
  * note that if you use [dnt (deno-to-node)](https://jsr.io/@deno/dnt), then you will have to delete the `exports` property from the output, otherwise it will ruin/overwrite `dnt`'s output.
  *
  * @param deno_json_path the path to your "deno.json" file. it could be either an absolute path, or a path relative to your current working directory (`Deno.cwd()`).
- * @param overrides provide additional overrides to apply to your output "package.json" like object.
+ * @param merge_defaults provide default "package.json" fields to merge with the acquired `packageJson` object from "deno.json", at a depth of `1` for records.
  * @returns a "package.json" like javascript object.
 */
-export declare const createPackageJson: (deno_json_path?: string, overrides?: Partial<PackageJson>) => Promise<PackageJson>;
+export declare const createPackageJson: (deno_json_path?: string, merge_defaults?: Partial<PackageJson>) => Promise<PackageJson>;
 /** create a "tsconfig.json" file, based on your "deno.json" configuration file.
  *
  * @param deno_json_path the path to your "deno.json" file. it could be either an absolute path, or a path relative to your current working directory (`Deno.cwd()`).
@@ -49,16 +49,6 @@ export declare const createPackageJson: (deno_json_path?: string, overrides?: Pa
 export declare const createTsConfigJson: (deno_json_path?: string, overrides?: Partial<TsConfigJson>) => Promise<{
     "$schema": string;
 } & TsConfigJson>;
-/** trim the leading slashes at the beginning of a string. */
-export declare const trimStartSlashes: (str: string) => string;
-/** trim the trailing slashes at the end of a string. */
-export declare const trimEndSlashes: (str: string) => string;
-/** trim leading and trailing slashes, at the beginning and end of a string. */
-export declare const trimSlashes: (str: string) => string;
-/** trim leading and trailing slashes, at the beginning and end of a string. */
-export declare const trimDotSlashes: (str: string) => string;
-/** join path segments with slashes in between. */
-export declare const joinSlash: (...segments: string[]) => string;
 /** convert potential git-repository url to a proper repository url.
  *
  * example:
