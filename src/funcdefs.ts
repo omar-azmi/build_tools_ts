@@ -4,7 +4,7 @@
 */
 
 import type { MaybePromise, PackageJson } from "./deps.ts"
-import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, isArray, isObject, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl, trimSlashes } from "./deps.ts"
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, isArray, isObject, memorize, object_assign, object_keys, pathIsGlobPattern, pathResolve, resolveAsUrl, trimSlashes } from "./deps.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TsConfigJson, WritableFileConfig } from "./typedefs.ts"
 
@@ -60,7 +60,7 @@ export const createPackageJson = async (deno_json_path: string = default_deno_js
 	const
 		{ name = "", version = "0.0.0", description, author, license, repository, bugs, exports, packageJson = {} } = await getDenoJson(deno_json_path),
 		merged_package_json: Partial<PackageJson> = {}
-	for (const key in merge_defaults) {
+	for (const key of new Set([...object_keys(merge_defaults), ...object_keys(packageJson)])) {
 		// merging all record objects, at a depth of 1
 		const
 			default_value = merge_defaults[key],
@@ -92,7 +92,7 @@ export const createTsConfigJson = async (deno_json_path: string = default_deno_j
 		{ compilerOptions: overridden_compilerOptions, ...rest_overrides } = overrides
 	// remove "deno.ns" from compiler options, as it breaks `dnt` (I think)
 	compilerOptions.lib = (compilerOptions.lib ?? []).filter((v) => v.toLowerCase() !== "deno.ns")
-	Object.assign(compilerOptions,
+	object_assign(compilerOptions,
 		{
 			target: "ESNext",
 			forceConsistentCasingInFileNames: true,

@@ -9,7 +9,7 @@
 
 import { build as dntBuild, type BuildOptions as DntBuildOptions } from "jsr:@deno/dnt@0.41.3"
 import type { CliArgs } from "./cli/npm.ts"
-import { emptyDir, pathResolve } from "./deps.ts"
+import { emptyDir, object_entries, pathResolve } from "./deps.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson } from "./funcdefs.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.ts"
@@ -96,7 +96,7 @@ export const buildNpm = async (build_config: Partial<BuildNpmConfig> = {}): Prom
 	logBasic("[in-fs] transforming your deno project to an npm-build via \`dnt\`")
 	if (!dryrun) {
 		await dntBuild({
-			entryPoints: Object.entries(exports).map(([export_path, source_path]) => ({
+			entryPoints: object_entries(exports).map(([export_path, source_path]) => ({
 				name: export_path,
 				path: source_path,
 			})),

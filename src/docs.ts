@@ -7,7 +7,7 @@
 import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.27.7"
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
-import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.ts"
+import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, object_values, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl } from "./funcdefs.ts"
 import { console_warn, logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.ts"
@@ -164,7 +164,7 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		{ ".": mainEntrypoint = undefined, ...subEntrypoints } = typeof exports === "string"
 			? { ".": exports }
 			: exports,
-		entryPoints: string[] = [...(mainEntrypoint ? [mainEntrypoint] : []), ...Object.values(subEntrypoints) as string[]],
+		entryPoints: string[] = [...(mainEntrypoint ? [mainEntrypoint] : []), ...object_values(subEntrypoints) as string[]],
 		distribution_file_info = parseFilepathInfo(mainEntrypoint ?? "./src/mod.ts"),
 		distribution_file_name = ensureStartDotSlash(distribution_file_info.basename.replace(
 			new RegExp(`${distribution_file_info.extname.replaceAll(".", "\\.")}$`),

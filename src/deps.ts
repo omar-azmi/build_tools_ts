@@ -1,13 +1,13 @@
 import {
 	getRuntimeCwd,
 	identifyCurrentRuntime
-} from "jsr:@oazmi/kitchensink@0.9.7/crossenv"
+} from "jsr:@oazmi/kitchensink@0.9.8/crossenv"
 import {
 	resolveAsUrl as _resolveAsUrl,
 	ensureEndSlash,
 	pathToPosixPath,
 	resolvePathFactory
-} from "jsr:@oazmi/kitchensink@0.9.7/pathman"
+} from "jsr:@oazmi/kitchensink@0.9.8/pathman"
 
 export type {
 	BuildOptions as DntBuildOptions,
@@ -15,18 +15,22 @@ export type {
 } from "jsr:@deno/dnt@0.41.3"
 export {
 	console_log,
-	console_warn
-} from "jsr:@oazmi/kitchensink@0.9.7/alias"
+	console_warn,
+	object_assign,
+	object_entries,
+	object_keys,
+	object_values
+} from "jsr:@oazmi/kitchensink@0.9.8/alias"
 export {
 	detectReadableStreamType
-} from "jsr:@oazmi/kitchensink@0.9.7/browser"
+} from "jsr:@oazmi/kitchensink@0.9.8/browser"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "jsr:@oazmi/kitchensink@0.9.7/eightpack"
+} from "jsr:@oazmi/kitchensink@0.9.8/eightpack"
 export {
 	memorize
-} from "jsr:@oazmi/kitchensink@0.9.7/lambda"
+} from "jsr:@oazmi/kitchensink@0.9.8/lambda"
 export {
 	ensureEndSlash,
 	ensureStartDotSlash,
@@ -35,18 +39,18 @@ export {
 	parseFilepathInfo,
 	relativePath,
 	trimSlashes
-} from "jsr:@oazmi/kitchensink@0.9.7/pathman"
+} from "jsr:@oazmi/kitchensink@0.9.8/pathman"
 export {
 	isArray,
 	isObject
-} from "jsr:@oazmi/kitchensink@0.9.7/struct"
+} from "jsr:@oazmi/kitchensink@0.9.8/struct"
 export {
 	defaultStopwatch
-} from "jsr:@oazmi/kitchensink@0.9.7/timeman"
+} from "jsr:@oazmi/kitchensink@0.9.8/timeman"
 export type {
 	MaybePromise,
 	Require
-} from "jsr:@oazmi/kitchensink@0.9.7/typedefs"
+} from "jsr:@oazmi/kitchensink@0.9.8/typedefs"
 export {
 	copy as copyDir,
 	emptyDir,
