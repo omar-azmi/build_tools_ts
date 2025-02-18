@@ -39,7 +39,7 @@ import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
 import { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.1/mod.js";
 import { build as esBuild, stop as esStop, transform as esTransform, } from "esbuild";
-import { defaultStopwatch, emptyDir, encodeText, globToRegExp, pathResolve } from "./deps.js";
+import { defaultStopwatch, emptyDir, encodeText, globToRegExp, object_values, pathResolve } from "./deps.js";
 import { copyAndCreateFiles, getDenoJson } from "./funcdefs.js";
 import { logBasic, logVerbose, setLog } from "./logger.js";
 export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.1/mod.js";
@@ -76,7 +76,7 @@ const parse_entry_points = async (deno, input) => {
         ? [input]
         // we treat `input`s from our `deno.json`'s `exports` field differently, because it is customary to not include the extension part of the exported module,
         // but it is required by esbuild in the output's file name. thus we simply convert the exports dictionary to an array to let esbuild name the exports itself.
-        : Object.values(input);
+        : object_values(input);
 };
 /** this function bundles your deno-project's {@link DenoJson.exports | exports} in-memory, using the blazing fast [`esbuild`](https://github.com/evanw/esbuild) bundler,
  * along with the useful [`esbuild-deno-loader`](https://jsr.io/@luca/esbuild-deno-loader) default plugin. <br>

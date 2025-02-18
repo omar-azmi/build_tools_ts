@@ -4,7 +4,7 @@
 */
 import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
-import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, isArray, isObject, memorize, pathIsGlobPattern, pathResolve, resolveAsUrl, trimSlashes } from "./deps.js";
+import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, isArray, isObject, memorize, object_assign, object_keys, pathIsGlobPattern, pathResolve, resolveAsUrl, trimSlashes } from "./deps.js";
 import { logBasic, logVerbose, setLog } from "./logger.js";
 const default_deno_json_path = "./deno.json";
 const getDenoJson_FromUri = async (deno_json_path_uri) => {
@@ -52,7 +52,7 @@ export const getDenoJson = async (deno_json_path = default_deno_json_path) => {
 */
 export const createPackageJson = async (deno_json_path = default_deno_json_path, merge_defaults = {}) => {
     const { name = "", version = "0.0.0", description, author, license, repository, bugs, exports, packageJson = {} } = await getDenoJson(deno_json_path), merged_package_json = {};
-    for (const key in merge_defaults) {
+    for (const key of new Set([...object_keys(merge_defaults), ...object_keys(packageJson)])) {
         // merging all record objects, at a depth of 1
         const default_value = merge_defaults[key], current_value = packageJson[key], default_is_dict = isObject(default_value) && !isArray(default_value), current_is_dict = isObject(current_value) && !isArray(current_value), current_is_undefined = current_value === undefined;
         merged_package_json[key] = current_is_undefined
@@ -76,7 +76,7 @@ export const createTsConfigJson = async (deno_json_path = default_deno_json_path
     const { compilerOptions = {} } = await getDenoJson(deno_json_path), { compilerOptions: overridden_compilerOptions, ...rest_overrides } = overrides;
     // remove "deno.ns" from compiler options, as it breaks `dnt` (I think)
     compilerOptions.lib = (compilerOptions.lib ?? []).filter((v) => v.toLowerCase() !== "deno.ns");
-    Object.assign(compilerOptions, {
+    object_assign(compilerOptions, {
         target: "ESNext",
         forceConsistentCasingInFileNames: true,
         skipLibCheck: true,

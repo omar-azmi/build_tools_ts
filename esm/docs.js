@@ -8,7 +8,7 @@ import * as dntShim from "./_dnt.shims.js";
 import { Application as typedocApp } from "typedoc";
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
-import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.js";
+import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, object_values, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.js";
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl } from "./funcdefs.js";
 import { console_warn, logBasic, logVerbose, setLog } from "./logger.js";
 /** the default configuration used by the {@link buildDocs} function, for missing/unprovided configuration fields. */
@@ -103,7 +103,7 @@ export const buildDocs = async (build_config = {}) => {
         ? gitRepositoryToPagesUrl(repository.url).pathname
         : ""))), { ".": mainEntrypoint = undefined, ...subEntrypoints } = typeof exports === "string"
         ? { ".": exports }
-        : exports, entryPoints = [...(mainEntrypoint ? [mainEntrypoint] : []), ...Object.values(subEntrypoints)], distribution_file_info = parseFilepathInfo(mainEntrypoint ?? "./src/mod.ts"), distribution_file_name = ensureStartDotSlash(distribution_file_info.basename.replace(new RegExp(`${distribution_file_info.extname.replaceAll(".", "\\.")}$`), ".js"));
+        : exports, entryPoints = [...(mainEntrypoint ? [mainEntrypoint] : []), ...object_values(subEntrypoints)], distribution_file_info = parseFilepathInfo(mainEntrypoint ?? "./src/mod.ts"), distribution_file_name = ensureStartDotSlash(distribution_file_info.basename.replace(new RegExp(`${distribution_file_info.extname.replaceAll(".", "\\.")}$`), ".js"));
     logVerbose("[in-memory] bootstrapping TypeDoc");
     const typedoc_app = await typedocApp.bootstrapWithPlugins({
         // even though the intermediate "package.json" that we created contains the `exports` field, `typedoc` can't figure out the entrypoints on its own.

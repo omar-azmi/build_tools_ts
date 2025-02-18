@@ -13,7 +13,7 @@ import * as dntShim from "./_dnt.shims.js";
 
 import { build as dntBuild, type BuildOptions as DntBuildOptions } from "./deps/jsr.io/@deno/dnt/0.41.3/mod.js"
 import type { CliArgs } from "./cli/npm.js"
-import { emptyDir, pathResolve } from "./deps.js"
+import { emptyDir, object_entries, pathResolve } from "./deps.js"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson } from "./funcdefs.js"
 import { logBasic, logVerbose, setLog } from "./logger.js"
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.js"
@@ -100,7 +100,7 @@ export const buildNpm = async (build_config: Partial<BuildNpmConfig> = {}): Prom
 	logBasic("[in-fs] transforming your deno project to an npm-build via \`dnt\`")
 	if (!dryrun) {
 		await dntBuild({
-			entryPoints: Object.entries(exports).map(([export_path, source_path]) => ({
+			entryPoints: object_entries(exports).map(([export_path, source_path]) => ({
 				name: export_path,
 				path: source_path,
 			})),

@@ -1,13 +1,13 @@
 import {
 	getRuntimeCwd,
 	identifyCurrentRuntime
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/crossenv.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/crossenv.js"
 import {
 	resolveAsUrl as _resolveAsUrl,
 	ensureEndSlash,
 	pathToPosixPath,
 	resolvePathFactory
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/pathman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/pathman.js"
 
 export type {
 	BuildOptions as DntBuildOptions,
@@ -15,18 +15,22 @@ export type {
 } from "./deps/jsr.io/@deno/dnt/0.41.3/mod.js"
 export {
 	console_log,
-	console_warn
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/alias.js"
+	console_warn,
+	object_assign,
+	object_entries,
+	object_keys,
+	object_values
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/alias.js"
 export {
 	detectReadableStreamType
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/browser.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/browser.js"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/eightpack.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/eightpack.js"
 export {
 	memorize
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/lambda.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/lambda.js"
 export {
 	ensureEndSlash,
 	ensureStartDotSlash,
@@ -35,18 +39,18 @@ export {
 	parseFilepathInfo,
 	relativePath,
 	trimSlashes
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/pathman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/pathman.js"
 export {
 	isArray,
 	isObject
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/struct.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/struct.js"
 export {
 	defaultStopwatch
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/timeman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/timeman.js"
 export type {
 	MaybePromise,
 	Require
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.7/src/typedefs.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/typedefs.js"
 export {
 	copy as copyDir,
 	emptyDir,
