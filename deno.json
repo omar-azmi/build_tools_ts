@@ -1,6 +1,6 @@
 {
 	"name": "@oazmi/build-tools",
-	"version": "0.2.6",
+	"version": "0.2.7",
 	"description": "general deno build tool scripts which I practically use in all of my typescript repos",
 	"author": "Omar Azmi",
 	"license": "Anti-Competition License",
@@ -21,6 +21,7 @@
 		"./docs": "./src/docs.ts",
 		"./npm": "./src/npm.ts",
 		"./logger": "./src/logger.ts",
+		"./extra/docs/mermaid_plugin.ts": "./src/extra/docs/mermaid_plugin.ts",
 		"./funcdefs": "./src/funcdefs.ts",
 		"./typedefs": "./src/typedefs.ts"
 	},
@@ -59,14 +60,12 @@
 	"nodeModulesDir": "auto",
 	"packageJson": {
 		"dependencies": {
-			"@oazmi/kitchensink": "0.9.8"
+			"@oazmi/kitchensink": "0.9.10"
 		},
 		"devDependencies": {
-			"typescript": "^5.6.0",
+			"typescript": "^5.7.0",
 			"esbuild": "^0.25.0",
-			"typedoc": "^0.27.7",
-			"typedoc-plugin-missing-exports": "^3.1.0",
-			"typedoc-plugin-mermaid": "^1.12.0"
+			"typedoc": "^0.28.0"
 		},
 		"scripts": {
 			"build-dist": "npm run build-esm -- --platform=node && npm run build-esm-minify -- --platform=node"

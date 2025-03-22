@@ -34,6 +34,7 @@ export {
 export {
 	ensureEndSlash,
 	ensureStartDotSlash,
+	ensureStartSlash,
 	isAbsolutePath,
 	joinPaths,
 	parseFilepathInfo,
