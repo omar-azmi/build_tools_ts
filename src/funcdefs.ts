@@ -58,7 +58,7 @@ export const getDenoJson = async <DENO_JSON extends MaybePromise<DenoJson>>(deno
 */
 export const createPackageJson = async (deno_json_path: string = default_deno_json_path, merge_defaults: Partial<PackageJson> = {}): Promise<PackageJson> => {
 	const
-		{ name = "", version = "0.0.0", description, author, license, repository, bugs, exports, packageJson = {} } = await getDenoJson(deno_json_path),
+		{ name = "", version = "0.0.0", type: moduleType = "module", description, author, license, repository, bugs, exports, packageJson = {} } = await getDenoJson(deno_json_path),
 		merged_package_json: Partial<PackageJson> = {}
 	for (const key of new Set([...object_keys(merge_defaults), ...object_keys(packageJson)])) {
 		// merging all record objects, at a depth of 1
@@ -74,8 +74,8 @@ export const createPackageJson = async (deno_json_path: string = default_deno_js
 				: current_value
 	}
 	return {
-		name, version, description, author,
-		license, repository, bugs, exports,
+		name, version, type: moduleType, description,
+		author, license, repository, bugs, exports,
 		...merged_package_json,
 	}
 }

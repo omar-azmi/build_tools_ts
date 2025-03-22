@@ -4,16 +4,17 @@
  * @module
 */
 
-import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.27.7"
+import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.28.1"
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
 import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, object_values, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.ts"
+import { denoPlugins, esBuild, esStop } from "./dist.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl } from "./funcdefs.ts"
 import { console_warn, logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.ts"
 
 
-export type { TypeDocOptions } from "npm:typedoc@0.27.7"
+export type { TypeDocOptions } from "npm:typedoc@0.28.1"
 
 /** the configuration for the documentation building function {@link buildDocs}. */
 export interface BuildDocsConfig extends BaseBuildConfig {
@@ -171,6 +172,9 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 			".js",
 		))
 
+	logVerbose("[in-memory] bundling the mermaid graphs plugin into a data-uri")
+	const mermaid_plugin_data_uri = await typedocPluginToDataUriScript("./extra/docs/mermaid_plugin.ts", { relativeTo: "build-tools" })
+
 	logVerbose("[in-memory] bootstrapping TypeDoc")
 	const typedoc_app = await typedocApp.bootstrapWithPlugins({
 		// even though the intermediate "package.json" that we created contains the `exports` field, `typedoc` can't figure out the entrypoints on its own.
@@ -188,6 +192,7 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		skipErrorChecking: true,
 		githubPages: true,
 		includeVersion: true,
+		logLevel: "Warn",
 		sort: ["source-order", "required-first", "kind"],
 		visibilityFilters: {
 			"protected": true,
@@ -195,6 +200,7 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 			"inherited": true,
 			"external": true,
 		},
+		plugin: [mermaid_plugin_data_uri],
 		...typedoc,
 	})
 
@@ -213,6 +219,9 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		await custom_css_temp_files?.cleanup()
 	}
 
+	// stop esbuild if we dynamically bundled the mermaid plugin into a data-uri
+	await esStop()
+
 	return {
 		dir: abs_dir,
 		files: [],
@@ -229,4 +238,41 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 			}
 		}
 	}
+}
+
+interface TypedocPluginToDataUriScriptConfig {
+	relativeTo: "cwd" | "build-tools"
+}
+
+const defaultTypedocPluginToDataUriScriptConfig: TypedocPluginToDataUriScriptConfig = {
+	relativeTo: "cwd"
+}
+
+const typedocPluginToDataUriScript = async (plugin_script_path: string, config?: Partial<TypedocPluginToDataUriScriptConfig>): Promise<string> => {
+	const
+		{ relativeTo } = { ...defaultTypedocPluginToDataUriScriptConfig, ...config },
+		script_path = relativeTo === "build-tools"
+			? import.meta.resolve(plugin_script_path)
+			: plugin_script_path
+
+	console.log("resolved mermaid plugin script path to:", script_path)
+	const script_contents = await (await fetch(script_path)).text()
+	const bundle_result = (await esBuild({
+		stdin: {
+			contents: script_contents,
+			sourcefile: script_path,
+			loader: "ts",
+		},
+		// entryPoints: [script_path],
+		plugins: [...denoPlugins()],
+		outdir: "./virtual-dist/",
+		format: "esm",
+		platform: "node",
+		minify: true,
+		bundle: true,
+		write: false,
+	}))
+	const bundled_code = bundle_result.outputFiles.find((outfile) => outfile.path.endsWith(".js"))!
+
+	return "data:application/javascript;base64," + btoa(bundled_code.text)
 }
