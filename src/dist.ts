@@ -36,21 +36,21 @@
  * @module
 */
 
-import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.0"
+import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.1"
 import {
 	build as esBuild,
 	stop as esStop,
 	transform as esTransform,
 	type BuildOptions as EsBuildOptions,
 	type TransformOptions as EsTransformOptions,
-} from "npm:esbuild@0.24.0"
-import { defaultStopwatch, emptyDir, encodeText, globToRegExp, pathResolve, type MaybePromise } from "./deps.ts"
+} from "npm:esbuild@0.25.0"
+import { defaultStopwatch, emptyDir, encodeText, globToRegExp, object_values, pathResolve, type MaybePromise } from "./deps.ts"
 import { copyAndCreateFiles, getDenoJson, type createFiles } from "./funcdefs.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, ExportsWithMain, TemporaryFiles, WritableFileConfig } from "./typedefs.ts"
 
 
-export { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.0"
+export { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.1"
 export {
 	build as esBuild,
 	stop as esStop,
@@ -60,7 +60,7 @@ export {
 	type Plugin as EsPlugin,
 	type PluginBuild as EsPluginBuild,
 	type TransformOptions as EsTransformOptions
-} from "npm:esbuild@0.24.0"
+} from "npm:esbuild@0.25.0"
 
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
  * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.
@@ -188,7 +188,7 @@ const parse_entry_points = async (deno: string, input?: BundleConfig["input"]): 
 		? [input]
 		// we treat `input`s from our `deno.json`'s `exports` field differently, because it is customary to not include the extension part of the exported module,
 		// but it is required by esbuild in the output's file name. thus we simply convert the exports dictionary to an array to let esbuild name the exports itself.
-		: Object.values(input as ExportsWithMain)
+		: object_values(input as ExportsWithMain)
 }
 
 /** this function bundles your deno-project's {@link DenoJson.exports | exports} in-memory, using the blazing fast [`esbuild`](https://github.com/evanw/esbuild) bundler,
