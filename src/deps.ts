@@ -1,13 +1,13 @@
 import {
 	getRuntimeCwd,
 	identifyCurrentRuntime
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/crossenv.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/crossenv.js"
 import {
 	resolveAsUrl as _resolveAsUrl,
 	ensureEndSlash,
 	pathToPosixPath,
 	resolvePathFactory
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/pathman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/pathman.js"
 
 export type {
 	BuildOptions as DntBuildOptions,
@@ -20,37 +20,38 @@ export {
 	object_entries,
 	object_keys,
 	object_values
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/alias.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/alias.js"
 export {
 	detectReadableStreamType
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/browser.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/browser.js"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/eightpack.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/eightpack.js"
 export {
 	memorize
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/lambda.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/lambda.js"
 export {
 	ensureEndSlash,
 	ensureStartDotSlash,
+	ensureStartSlash,
 	isAbsolutePath,
 	joinPaths,
 	parseFilepathInfo,
 	relativePath,
 	trimSlashes
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/pathman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/pathman.js"
 export {
 	isArray,
 	isObject
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/struct.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/struct.js"
 export {
 	defaultStopwatch
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/timeman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/timeman.js"
 export type {
 	MaybePromise,
 	Require
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/typedefs.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/typedefs.js"
 export {
 	copy as copyDir,
 	emptyDir,

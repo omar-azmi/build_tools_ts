@@ -3,7 +3,7 @@ export declare class DenoRuntime {
     fs: DenoRuntimeFileSystem;
     path: DenoRuntimePath;
     getEnvVar(name: string): string | undefined;
-    getEndOfLine(): "\n" | "\r\n";
+    getEndOfLine(): "\r\n" | "\n";
     getPathMatchesPattern(path: string, pattern: string): boolean;
 }
 declare class DenoRuntimePath {

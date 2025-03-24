@@ -51,7 +51,7 @@ export const getDenoJson = async (deno_json_path = default_deno_json_path) => {
  * @returns a "package.json" like javascript object.
 */
 export const createPackageJson = async (deno_json_path = default_deno_json_path, merge_defaults = {}) => {
-    const { name = "", version = "0.0.0", description, author, license, repository, bugs, exports, packageJson = {} } = await getDenoJson(deno_json_path), merged_package_json = {};
+    const { name = "", version = "0.0.0", type: moduleType = "module", description, author, license, repository, bugs, exports, packageJson = {} } = await getDenoJson(deno_json_path), merged_package_json = {};
     for (const key of new Set([...object_keys(merge_defaults), ...object_keys(packageJson)])) {
         // merging all record objects, at a depth of 1
         const default_value = merge_defaults[key], current_value = packageJson[key], default_is_dict = isObject(default_value) && !isArray(default_value), current_is_dict = isObject(current_value) && !isArray(current_value), current_is_undefined = current_value === undefined;
@@ -61,8 +61,8 @@ export const createPackageJson = async (deno_json_path = default_deno_json_path,
             : current_value;
     }
     return {
-        name, version, description, author,
-        license, repository, bugs, exports,
+        name, version, type: moduleType, description,
+        author, license, repository, bugs, exports,
         ...merged_package_json,
     };
 };

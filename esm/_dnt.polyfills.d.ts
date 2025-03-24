@@ -1,4 +1,28 @@
 declare global {
+    interface ImportMeta {
+        /** A flag that indicates if the current module is the main module that was
+         * called when starting the program under Deno.
+         *
+         * ```ts
+         * if (import.meta.main) {
+         *   // this was loaded as the main module, maybe do some bootstrapping
+         * }
+         * ```
+         */
+        main: boolean;
+        /** A function that returns resolved specifier as if it would be imported
+         * using `import(specifier)`.
+         *
+         * ```ts
+         * console.log(import.meta.resolve("./foo.js"));
+         * // file:///dev/foo.js
+         * ```
+         */
+        resolve(specifier: string): string;
+    }
+}
+export {};
+declare global {
     interface ArrayConstructor {
         fromAsync<T>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T | Promise<T>> | ArrayLike<T | Promise<T>>): Promise<T[]>;
         fromAsync<T, U>(iterableOrArrayLike: AsyncIterable<T> | Iterable<T> | ArrayLike<T>, mapFn: (value: Awaited<T>) => U, thisArg?: any): Promise<Awaited<U>[]>;

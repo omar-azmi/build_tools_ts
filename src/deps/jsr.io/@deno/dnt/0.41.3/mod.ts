@@ -2,7 +2,7 @@
 import * as dntShim from "../../../../../_dnt.shims.js";
 
 
-import * as colors from "../../../@std/fmt/1.0.5/colors.js";
+import * as colors from "../../../@std/fmt/1.0.6/colors.js";
 import * as path from "../../../@std/path/1.0.8/mod.js";
 import { createProjectSync, ts } from "../../../@ts-morph/bootstrap/0.24.0/mod.js";
 import {

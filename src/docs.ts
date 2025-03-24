@@ -11,7 +11,8 @@ import * as dntShim from "./_dnt.shims.js";
 import { Application as typedocApp, type TypeDocOptions } from "typedoc"
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
-import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, joinPaths, object_values, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.js"
+import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, ensureStartSlash, joinPaths, object_values, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.js"
+import { denoPlugins, esBuild, esStop } from "./dist.js"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson, gitRepositoryToPagesUrl, gitRepositoryToUrl } from "./funcdefs.js"
 import { console_warn, logBasic, logVerbose, setLog } from "./logger.js"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.js"
@@ -160,20 +161,20 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 	const
 		{ exports, repository } = await getDenoJson(deno),
 		repo_url = gitRepositoryToUrl(repository?.url ?? "git+https://github.com/404/404.git"),
-		site_root_path = ensureEndSlash(trimSlashes(site ?? (
+		site_root_path = ensureStartSlash(ensureEndSlash(trimSlashes(site ?? (
 			repository?.url
 				? gitRepositoryToPagesUrl(repository.url).pathname
 				: ""
-		))),
+		)))),
 		{ ".": mainEntrypoint = undefined, ...subEntrypoints } = typeof exports === "string"
 			? { ".": exports }
 			: exports,
 		entryPoints: string[] = [...(mainEntrypoint ? [mainEntrypoint] : []), ...object_values(subEntrypoints) as string[]],
 		distribution_file_info = parseFilepathInfo(mainEntrypoint ?? "./src/mod.ts"),
-		distribution_file_name = ensureStartDotSlash(distribution_file_info.basename.replace(
-			new RegExp(`${distribution_file_info.extname.replaceAll(".", "\\.")}$`),
-			".js",
-		))
+		distribution_file_name = ensureStartDotSlash(distribution_file_info.basename + ".js")
+
+	logVerbose("[in-memory] bundling the mermaid graphs plugin into a data-uri")
+	const mermaid_plugin_data_uri = await typedocPluginToDataUriScript("./extra/docs/mermaid_plugin.ts", { relativeTo: "build-tools" })
 
 	logVerbose("[in-memory] bootstrapping TypeDoc")
 	const typedoc_app = await typedocApp.bootstrapWithPlugins({
@@ -181,17 +182,19 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		entryPoints,
 		out: dir,
 		readme: pathResolve(abs_deno_dir, "./readme.md"),
+		hostedBaseUrl: repository ? gitRepositoryToPagesUrl(repository.url).href : undefined,
 		// TODO: navigation links should be customizable, but shouldn't overwrite the github repo link
 		navigationLinks: {
 			"github": repo_url.href,
 			"readme": joinPaths(site_root_path),
-			"source": joinPaths(site_root_path, mainEntrypoint ?? "./src/mod.ts"),
+			"src": joinPaths(site_root_path, mainEntrypoint ?? "./src/mod.ts"),
+			"dist": joinPaths(site_root_path, "./dist/", distribution_file_name),
 			"examples": joinPaths(site_root_path, "./examples/", "./index.html"),
-			"distribution": joinPaths(site_root_path, "./dist/", distribution_file_name),
 		},
 		skipErrorChecking: true,
 		githubPages: true,
 		includeVersion: true,
+		logLevel: "Warn",
 		sort: ["source-order", "required-first", "kind"],
 		visibilityFilters: {
 			"protected": true,
@@ -199,6 +202,7 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 			"inherited": true,
 			"external": true,
 		},
+		plugin: [mermaid_plugin_data_uri],
 		...typedoc,
 	})
 
@@ -217,6 +221,9 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 		await custom_css_temp_files?.cleanup()
 	}
 
+	// stop esbuild if we dynamically bundled the mermaid plugin into a data-uri
+	await esStop()
+
 	return {
 		dir: abs_dir,
 		files: [],
@@ -233,4 +240,70 @@ export const buildDocs = async (build_config: Partial<BuildDocsConfig> = {}): Pr
 			}
 		}
 	}
+}
+
+interface TypedocPluginToDataUriScriptConfig {
+	relativeTo: "cwd" | "build-tools"
+}
+
+const defaultTypedocPluginToDataUriScriptConfig: TypedocPluginToDataUriScriptConfig = {
+	relativeTo: "cwd"
+}
+
+const typedocPluginToDataUriScript = async (plugin_script_path: string, config?: Partial<TypedocPluginToDataUriScriptConfig>): Promise<string> => {
+	const
+		{ relativeTo } = { ...defaultTypedocPluginToDataUriScriptConfig, ...config },
+		plugin_script_path_fileinfo = parseFilepathInfo(plugin_script_path),
+		plugin_script_path_without_ext = joinPaths(plugin_script_path_fileinfo.dirpath, plugin_script_path_fileinfo.basename),
+		plugin_script_paths_to_try = [
+			plugin_script_path, // try using the original path
+			plugin_script_path_without_ext + ".ts", // try using typescirpt extension (works for deno and node with typsecript support)
+			plugin_script_path_without_ext + ".js", // try using javascript extension (works for transpiled and distributed version of this library)
+			plugin_script_path_without_ext + ".mts",
+			plugin_script_path_without_ext + ".mjs",
+			plugin_script_path_without_ext + ".cts",
+			plugin_script_path_without_ext + ".cjs",
+			plugin_script_path_without_ext + ".tsx",
+			plugin_script_path_without_ext + ".jsx",
+			plugin_script_path_without_ext + "index.js",
+			plugin_script_path_without_ext + "index.ts",
+		].map((path) => {
+			return relativeTo === "build-tools"
+				? import.meta.resolve(path)
+				: path
+		})
+	let working_script_path: string | undefined
+	for await (const script_path of plugin_script_paths_to_try) {
+		// why am I not using `method: "HEAD"`? that's because "file://" urls do not support the head method unfortunately (at least not on windows).
+		if ((await fetch(script_path, { method: "GET" })).ok) {
+			working_script_path = script_path
+			break
+		}
+	}
+	if (!working_script_path) {
+		logBasic(`[error] failed to find the typedoc plugin with the path: "${plugin_script_path}"\n\tnow using a dummy plugin instead.\n\ttried fetching the following paths:`, plugin_script_paths_to_try)
+		return "data:application/javascript;utf8,export const load = (app) => { }"
+	}
+
+	logBasic("[in-memory] resolved mermaid plugin script path to:", working_script_path)
+	const script_contents = await (await fetch(working_script_path)).text()
+	const bundle_result = (await esBuild({
+		stdin: {
+			contents: script_contents,
+			sourcefile: working_script_path,
+			loader: "ts",
+		},
+		// entryPoints: [working_script_path],
+		plugins: [...denoPlugins()],
+		outdir: "./virtual-dist/",
+		format: "esm",
+		platform: "node",
+		minify: true,
+		bundle: true,
+		write: false,
+	}))
+	const bundled_code = bundle_result.outputFiles.find((outfile) => outfile.path.endsWith(".js"))!
+	logVerbose("[in-memory] successfully transpiled the typedoc plugin:", working_script_path)
+
+	return "data:application/javascript;base64," + btoa(bundled_code.text)
 }

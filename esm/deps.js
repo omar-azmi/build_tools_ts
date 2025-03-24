@@ -1,12 +1,12 @@
-import { getRuntimeCwd, identifyCurrentRuntime } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/crossenv.js";
-import { resolveAsUrl as _resolveAsUrl, ensureEndSlash, pathToPosixPath, resolvePathFactory } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/pathman.js";
-export { console_log, console_warn, object_assign, object_entries, object_keys, object_values } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/alias.js";
-export { detectReadableStreamType } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/browser.js";
-export { decode_str as decodeText, encode_str as encodeText } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/eightpack.js";
-export { memorize } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/lambda.js";
-export { ensureEndSlash, ensureStartDotSlash, isAbsolutePath, joinPaths, parseFilepathInfo, relativePath, trimSlashes } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/pathman.js";
-export { isArray, isObject } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/struct.js";
-export { defaultStopwatch } from "./deps/jsr.io/@oazmi/kitchensink/0.9.8/src/timeman.js";
+import { getRuntimeCwd, identifyCurrentRuntime } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/crossenv.js";
+import { resolveAsUrl as _resolveAsUrl, ensureEndSlash, pathToPosixPath, resolvePathFactory } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/pathman.js";
+export { console_log, console_warn, object_assign, object_entries, object_keys, object_values } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/alias.js";
+export { detectReadableStreamType } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/browser.js";
+export { decode_str as decodeText, encode_str as encodeText } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/eightpack.js";
+export { memorize } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/lambda.js";
+export { ensureEndSlash, ensureStartDotSlash, ensureStartSlash, isAbsolutePath, joinPaths, parseFilepathInfo, relativePath, trimSlashes } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/pathman.js";
+export { isArray, isObject } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/struct.js";
+export { defaultStopwatch } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/timeman.js";
 export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob } from "./deps/jsr.io/@std/fs/1.0.13/mod.js";
 export { globToRegExp, isGlob as pathIsGlobPattern } from "./deps/jsr.io/@std/path/1.0.8/mod.js";
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
