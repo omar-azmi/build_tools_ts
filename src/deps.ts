@@ -1,18 +1,18 @@
 import {
 	getRuntimeCwd,
 	identifyCurrentRuntime
-} from "jsr:@oazmi/kitchensink@0.9.10/crossenv"
+} from "@oazmi/kitchensink/crossenv"
 import {
 	resolveAsUrl as _resolveAsUrl,
 	ensureEndSlash,
 	pathToPosixPath,
 	resolvePathFactory
-} from "jsr:@oazmi/kitchensink@0.9.10/pathman"
+} from "@oazmi/kitchensink/pathman"
 
 export type {
 	BuildOptions as DntBuildOptions,
 	PackageJson
-} from "jsr:@deno/dnt@0.41.3"
+} from "@deno/dnt"
 export {
 	console_log,
 	console_warn,
@@ -20,17 +20,17 @@ export {
 	object_entries,
 	object_keys,
 	object_values
-} from "jsr:@oazmi/kitchensink@0.9.10/alias"
+} from "@oazmi/kitchensink/alias"
 export {
 	detectReadableStreamType
-} from "jsr:@oazmi/kitchensink@0.9.10/browser"
+} from "@oazmi/kitchensink/browser"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "jsr:@oazmi/kitchensink@0.9.10/eightpack"
+} from "@oazmi/kitchensink/eightpack"
 export {
 	memorize
-} from "jsr:@oazmi/kitchensink@0.9.10/lambda"
+} from "@oazmi/kitchensink/lambda"
 export {
 	ensureEndSlash,
 	ensureStartDotSlash,
@@ -40,29 +40,29 @@ export {
 	parseFilepathInfo,
 	relativePath,
 	trimSlashes
-} from "jsr:@oazmi/kitchensink@0.9.10/pathman"
+} from "@oazmi/kitchensink/pathman"
 export {
 	isArray,
 	isObject
-} from "jsr:@oazmi/kitchensink@0.9.10/struct"
+} from "@oazmi/kitchensink/struct"
 export {
 	defaultStopwatch
-} from "jsr:@oazmi/kitchensink@0.9.10/timeman"
+} from "@oazmi/kitchensink/timeman"
 export type {
 	MaybePromise,
 	Require
-} from "jsr:@oazmi/kitchensink@0.9.10/typedefs"
+} from "@oazmi/kitchensink/typedefs"
 export {
 	copy as copyDir,
 	emptyDir,
 	ensureDir,
 	ensureFile,
 	expandGlob
-} from "jsr:@std/fs@1.0.13"
+} from "@std/fs"
 export {
 	globToRegExp,
 	isGlob as pathIsGlobPattern
-} from "jsr:@std/path@1.0.8"
+} from "@std/path"
 
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)

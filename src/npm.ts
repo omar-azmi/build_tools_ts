@@ -7,7 +7,7 @@
 */
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
 
-import { build as dntBuild, type BuildOptions as DntBuildOptions } from "jsr:@deno/dnt@0.41.3"
+import { build as dntBuild, type BuildOptions as DntBuildOptions } from "@deno/dnt"
 import type { CliArgs } from "./cli/npm.ts"
 import { emptyDir, object_entries, pathResolve } from "./deps.ts"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson } from "./funcdefs.ts"

@@ -1,6 +1,6 @@
 {
 	"name": "@oazmi/build-tools",
-	"version": "0.2.7",
+	"version": "0.3.0",
 	"description": "general deno build tool scripts which I practically use in all of my typescript repos",
 	"author": "Omar Azmi",
 	"license": "Anti-Competition License",
@@ -10,6 +10,16 @@
 	},
 	"bugs": {
 		"url": "https://github.com/omar-azmi/build_tools_ts/issues"
+	},
+	"imports": {
+		"@deno/dnt": "jsr:@deno/dnt@0.42.1",
+		"@oazmi/esbuild-plugin-deno": "jsr:@oazmi/esbuild-plugin-deno@0.4.4",
+		"@oazmi/kitchensink": "jsr:@oazmi/kitchensink@0.9.14",
+		"@std/cli": "jsr:@std/cli@^1.0.21",
+		"@std/fs": "jsr:@std/fs@^1.0.19",
+		"@std/path": "jsr:@std/path@^1.1.2",
+		"esbuild": "npm:esbuild@0.25.0",
+		"typedoc": "npm:typedoc@0.28.10"
 	},
 	"exports": {
 		".": "./src/mod.ts",
@@ -57,15 +67,16 @@
 		],
 		"strict": true
 	},
-	"nodeModulesDir": "auto",
+	"nodeModulesDir": "none",
 	"packageJson": {
 		"dependencies": {
-			"@oazmi/kitchensink": "0.9.10"
+			"@oazmi/esbuild-plugin-deno": "0.4.4",
+			"@oazmi/kitchensink": "0.9.14"
 		},
 		"devDependencies": {
 			"typescript": "^5.7.0",
-			"esbuild": "^0.25.0",
-			"typedoc": "^0.28.0"
+			"esbuild": "0.25.0",
+			"typedoc": "0.28.10"
 		},
 		"scripts": {
 			"build-dist": "npm run build-esm -- --platform=node && npm run build-esm-minify -- --platform=node"
@@ -92,16 +103,9 @@
 			"chunkNames": "chunks/[hash]",
 			"platform": "node",
 			"external": [
-				"Deno",
 				"typedoc",
 				"esbuild",
-				"crypto",
-				"fs",
-				"inspector",
-				"os",
-				"path",
-				"perf_hooks",
-				"source-map-support"
+				"@deno/dnt"
 			]
 		}
 	},
@@ -112,7 +116,7 @@
 	"buildNpm": {
 		"dir": "./npm/",
 		"log": "verbose",
-		"install": "pnpm",
+		"install": "npm",
 		"dnt": {
 			"shims": {
 				"deno": true
