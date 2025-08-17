@@ -4,7 +4,7 @@
  * @module
 */
 
-import { Application as typedocApp, type TypeDocOptions } from "npm:typedoc@0.28.1"
+import { Application as typedocApp, type TypeDocOptions } from "typedoc"
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
 import { emptyDir, ensureEndSlash, ensureFile, ensureStartDotSlash, ensureStartSlash, joinPaths, object_values, parseFilepathInfo, pathResolve, trimSlashes } from "./deps.ts"
@@ -14,7 +14,7 @@ import { console_warn, logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, TemporaryFiles } from "./typedefs.ts"
 
 
-export type { TypeDocOptions } from "npm:typedoc@0.28.1"
+export type { TypeDocOptions } from "typedoc"
 
 /** the configuration for the documentation building function {@link buildDocs}. */
 export interface BuildDocsConfig extends BaseBuildConfig {
@@ -290,7 +290,9 @@ const typedocPluginToDataUriScript = async (plugin_script_path: string, config?:
 			loader: "ts",
 		},
 		// entryPoints: [working_script_path],
-		plugins: [...denoPlugins()],
+		plugins: [...denoPlugins({
+			initialPluginData: { runtimePackage: "./" }
+		})],
 		outdir: "./virtual-dist/",
 		format: "esm",
 		platform: "node",

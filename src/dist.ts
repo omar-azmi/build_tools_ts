@@ -36,21 +36,21 @@
  * @module
 */
 
-import { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.1"
+import { denoPlugins } from "@oazmi/esbuild-plugin-deno"
 import {
 	build as esBuild,
 	stop as esStop,
 	transform as esTransform,
 	type BuildOptions as EsBuildOptions,
 	type TransformOptions as EsTransformOptions,
-} from "npm:esbuild@0.25.0"
+} from "esbuild"
 import { defaultStopwatch, emptyDir, encodeText, globToRegExp, object_values, pathResolve, type MaybePromise } from "./deps.ts"
 import { copyAndCreateFiles, getDenoJson, type createFiles } from "./funcdefs.ts"
 import { logBasic, logVerbose, setLog } from "./logger.ts"
 import type { BaseBuildConfig, DenoJson, ExportsWithMain, TemporaryFiles, WritableFileConfig } from "./typedefs.ts"
 
 
-export { denoPlugins } from "jsr:@luca/esbuild-deno-loader@0.11.1"
+export { denoPlugins } from "@oazmi/esbuild-plugin-deno"
 export {
 	build as esBuild,
 	stop as esStop,
@@ -60,7 +60,7 @@ export {
 	type Plugin as EsPlugin,
 	type PluginBuild as EsPluginBuild,
 	type TransformOptions as EsTransformOptions
-} from "npm:esbuild@0.25.0"
+} from "esbuild"
 
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
  * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.
@@ -102,7 +102,7 @@ export interface BuildDistConfig extends BaseBuildConfig {
 
 	/** apply a collection of optional [`esbuild`](https://www.npmjs.com/package/esbuild) plugins.
 	 * 
-	 * @defaultValue {@link denoPlugins} (via [esbuild-deno-loader](https://jsr.io/@luca/esbuild-deno-loader))
+	 * @defaultValue {@link denoPlugins} (via [@oazmi/esbuild-plugin-deno](https://jsr.io/@oazmi/esbuild-plugin-deno))
 	*/
 	plugins?: EsBuildOptions["plugins"]
 
@@ -158,13 +158,11 @@ export type BundleOutput = Array<VirtualFileOutput>
 const defaultBundleConfig: BundleConfig = {
 	dir: "./dist/",
 	deno: "./deno.json",
-	plugins: [...denoPlugins()],
 }
 
 const defaultBuildDistConfig: BuildDistConfig = {
 	dir: "./dist/",
 	deno: "./deno.json",
-	plugins: [...denoPlugins()],
 }
 
 const defaultTransformationConfig: Required<TransformationConfig> = {
@@ -192,7 +190,7 @@ const parse_entry_points = async (deno: string, input?: BundleConfig["input"]): 
 }
 
 /** this function bundles your deno-project's {@link DenoJson.exports | exports} in-memory, using the blazing fast [`esbuild`](https://github.com/evanw/esbuild) bundler,
- * along with the useful [`esbuild-deno-loader`](https://jsr.io/@luca/esbuild-deno-loader) default plugin. <br>
+ * along with the useful [`@oazmi/esbuild-plugin-deno`](https://jsr.io/@oazmi/esbuild-plugin-deno) default plugin. <br>
  * the output of this function is an array of {@link WritableFileConfig}, consisting of the destination path and the content of the bundled javascript/css code (as a binary `Uint8Array`).
  * 
  * by default, this function reads your "deno.json" file's {@link DenoJson.exports | exports field},
@@ -202,10 +200,15 @@ const parse_entry_points = async (deno: string, input?: BundleConfig["input"]): 
 export const bundle = async (bundle_config: Partial<BundleConfig> = {}): Promise<BundleOutput> => {
 	setLog(bundle_config)
 	const
-		{ dir, deno, input, esbuild = {}, plugins, stop = false }: BundleConfig = { ...defaultBundleConfig, ...bundle_config },
+		{ dir, deno, input, esbuild = {}, plugins: _plugins, stop = false }: BundleConfig = { ...defaultBundleConfig, ...bundle_config },
 		abs_dir = pathResolve(dir),
 		abs_deno = pathResolve(deno),
-		entryPoints = await parse_entry_points(deno, input)
+		entryPoints = await parse_entry_points(deno, input),
+		plugins = _plugins ?? denoPlugins({
+			scanAncestralWorkspaces: true,
+			autoInstall: "auto-cli",
+			initialPluginData: { runtimePackage: abs_deno },
+		})
 	logVerbose("current dist-bundle configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop })
 	logVerbose("bundling the following entry-points:", entryPoints)
 	defaultStopwatch.push()
@@ -238,10 +241,15 @@ export const bundle = async (bundle_config: Partial<BundleConfig> = {}): Promise
 export const buildDist = async (build_config: Partial<BuildDistConfig>): Promise<TemporaryFiles> => {
 	setLog(build_config)
 	const
-		{ dir, deno, input, esbuild = {}, plugins, stop = true, copy = [], text = [], dryrun = false }: BuildDistConfig = { ...defaultBuildDistConfig, ...build_config },
+		{ dir, deno, input, esbuild = {}, plugins: _plugins, stop = true, copy = [], text = [], dryrun = false }: BuildDistConfig = { ...defaultBuildDistConfig, ...build_config },
 		abs_dir = pathResolve(dir),
 		abs_deno = pathResolve(deno),
-		entryPoints = await parse_entry_points(deno, input)
+		entryPoints = await parse_entry_points(deno, input),
+		plugins = _plugins ?? denoPlugins({
+			scanAncestralWorkspaces: true,
+			autoInstall: "auto-cli",
+			initialPluginData: { runtimePackage: abs_deno },
+		})
 	defaultStopwatch.push()
 	logVerbose("current dist-build configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop, copy, text, dryrun })
 	logVerbose("bundling the following entry-points:", entryPoints)

@@ -5,7 +5,7 @@
  * @module
 */
 
-import type { Application, CommentDisplayPart, Context, Converter, PageEvent } from "npm:typedoc@0.28.1"
+import type { Application, CommentDisplayPart, Context, Converter, PageEvent } from "typedoc"
 
 
 const

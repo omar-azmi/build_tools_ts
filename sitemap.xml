@@ -2,254 +2,254 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/index.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/hierarchy.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/cli_dist.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_dist.CliArgs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_dist.CliDistConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_dist.CliConfigJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_dist.TransformationCliConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/cli_docs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_docs.CliArgs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_docs.CliDocsConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_docs.CliConfigJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/cli_mod.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_mod.CliConfigJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/cli_npm.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_npm.CliArgs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_npm.CliNpmConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/cli_npm.CliConfigJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/dist.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/dist.BundleConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/dist.BuildDistConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/dist.TransformationConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/types/dist.PathPatternMatchingFn.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/types/dist.VirtualFileOutput.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/types/dist.BundleOutput.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/dist.bundle.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/dist.buildDist.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/dist.transform.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/docs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/docs.BuildDocsConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/variables/docs.defaultBuildDocsConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/docs.buildDocs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/extra_docs_mermaid_plugin.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/extra_docs_mermaid_plugin.load.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/funcdefs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/funcdefs.getDenoJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/funcdefs.createPackageJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/funcdefs.createTsConfigJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/funcdefs.gitRepositoryToUrl.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/funcdefs.gitRepositoryToPagesUrl.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/funcdefs.copyAndCreateFiles.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/funcdefs.CreateFilesConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/funcdefs.createFiles.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/logger.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/types/logger.LogLevel.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/logger.LogConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/logger.setLog.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/logger.logBasic.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/logger.logVerbose.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/mod.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/variables/mod.denoPlugins.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/npm.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/npm.BuildNpmConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/variables/npm.defaultBuildNpmConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/functions/npm.buildNpm.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/modules/typedefs.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/typedefs.DenoJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/typedefs.ExportsWithMain.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/typedefs.TsConfigJson.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/typedefs.LeftoverArtifacts.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/typedefs.TemporaryFiles.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/types/typedefs.WritableFileConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 	<url>
 		<loc>https://omar-azmi.github.io/build_tools_ts/interfaces/typedefs.BaseBuildConfig.html</loc>
-		<lastmod>2025-03-24T09:17:31.435Z</lastmod>
+		<lastmod>2025-08-17T22:31:37.305Z</lastmod>
 	</url>
 </urlset>
