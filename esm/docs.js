@@ -3,7 +3,6 @@
  *
  * @module
 */
-import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
 import { Application as typedocApp } from "typedoc";
 // TODO: import { bundle, transform } from "./dist.ts" and then create statically hosted distribution version of the library being documented
@@ -189,7 +188,8 @@ const typedocPluginToDataUriScript = async (plugin_script_path, config) => {
         plugin_script_path_without_ext + "index.ts",
     ].map((path) => {
         return relativeTo === "build-tools"
-            ? new URL(path, import.meta.url).href : path;
+            ? globalThis[Symbol.for("import-meta-ponyfill-esmodule")](import.meta).resolve(path)
+            : path;
     });
     let working_script_path;
     for await (const script_path of plugin_script_paths_to_try) {
@@ -212,7 +212,9 @@ const typedocPluginToDataUriScript = async (plugin_script_path, config) => {
             loader: "ts",
         },
         // entryPoints: [working_script_path],
-        plugins: [...denoPlugins()],
+        plugins: [...denoPlugins({
+                initialPluginData: { runtimePackage: "./" }
+            })],
         outdir: "./virtual-dist/",
         format: "esm",
         platform: "node",

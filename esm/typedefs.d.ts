@@ -2,7 +2,6 @@
  *
  * @module
 */
-import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
 import type { DntBuildOptions, PackageJson } from "./deps.js";
 import type { DenoConfigurationFileSchema } from "./types/deno_json.js";

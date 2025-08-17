@@ -4,7 +4,6 @@
  *
  * @module
 */
-import "../../_dnt.polyfills.js";
 const mermaid_codeblock_regex = /^\s*\`\`\`mermaid(?<content>.*?)\`\`\`\s*$/s, mermaid_class = "mermaid", mermaid_class_str = `class="${mermaid_class}"`;
 const mermaid_block = {
     start: `<pre><code ${mermaid_class_str}>`,

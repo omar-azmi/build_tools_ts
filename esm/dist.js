@@ -35,24 +35,21 @@
  *
  * @module
 */
-import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
-import { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.1/mod.js";
+import { denoPlugins } from "./deps/jsr.io/@oazmi/esbuild-plugin-deno/0.4.4/src/mod.js";
 import { build as esBuild, stop as esStop, transform as esTransform, } from "esbuild";
 import { defaultStopwatch, emptyDir, encodeText, globToRegExp, object_values, pathResolve } from "./deps.js";
 import { copyAndCreateFiles, getDenoJson } from "./funcdefs.js";
 import { logBasic, logVerbose, setLog } from "./logger.js";
-export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.1/mod.js";
+export { denoPlugins } from "./deps/jsr.io/@oazmi/esbuild-plugin-deno/0.4.4/src/mod.js";
 export { build as esBuild, stop as esStop, transform as esTransform } from "esbuild";
 const defaultBundleConfig = {
     dir: "./dist/",
     deno: "./deno.json",
-    plugins: [...denoPlugins()],
 };
 const defaultBuildDistConfig = {
     dir: "./dist/",
     deno: "./deno.json",
-    plugins: [...denoPlugins()],
 };
 const defaultTransformationConfig = {
     pattern: "**/*.js",
@@ -79,7 +76,7 @@ const parse_entry_points = async (deno, input) => {
         : object_values(input);
 };
 /** this function bundles your deno-project's {@link DenoJson.exports | exports} in-memory, using the blazing fast [`esbuild`](https://github.com/evanw/esbuild) bundler,
- * along with the useful [`esbuild-deno-loader`](https://jsr.io/@luca/esbuild-deno-loader) default plugin. <br>
+ * along with the useful [`@oazmi/esbuild-plugin-deno`](https://jsr.io/@oazmi/esbuild-plugin-deno) default plugin. <br>
  * the output of this function is an array of {@link WritableFileConfig}, consisting of the destination path and the content of the bundled javascript/css code (as a binary `Uint8Array`).
  *
  * by default, this function reads your "deno.json" file's {@link DenoJson.exports | exports field},
@@ -88,7 +85,11 @@ const parse_entry_points = async (deno, input) => {
 */
 export const bundle = async (bundle_config = {}) => {
     setLog(bundle_config);
-    const { dir, deno, input, esbuild = {}, plugins, stop = false } = { ...defaultBundleConfig, ...bundle_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), entryPoints = await parse_entry_points(deno, input);
+    const { dir, deno, input, esbuild = {}, plugins: _plugins, stop = false } = { ...defaultBundleConfig, ...bundle_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), entryPoints = await parse_entry_points(deno, input), plugins = _plugins ?? denoPlugins({
+        scanAncestralWorkspaces: true,
+        autoInstall: "auto-cli",
+        initialPluginData: { runtimePackage: abs_deno },
+    });
     logVerbose("current dist-bundle configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop });
     logVerbose("bundling the following entry-points:", entryPoints);
     defaultStopwatch.push();
@@ -121,7 +122,11 @@ export const bundle = async (bundle_config = {}) => {
 */
 export const buildDist = async (build_config) => {
     setLog(build_config);
-    const { dir, deno, input, esbuild = {}, plugins, stop = true, copy = [], text = [], dryrun = false } = { ...defaultBuildDistConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), entryPoints = await parse_entry_points(deno, input);
+    const { dir, deno, input, esbuild = {}, plugins: _plugins, stop = true, copy = [], text = [], dryrun = false } = { ...defaultBuildDistConfig, ...build_config }, abs_dir = pathResolve(dir), abs_deno = pathResolve(deno), entryPoints = await parse_entry_points(deno, input), plugins = _plugins ?? denoPlugins({
+        scanAncestralWorkspaces: true,
+        autoInstall: "auto-cli",
+        initialPluginData: { runtimePackage: abs_deno },
+    });
     defaultStopwatch.push();
     logVerbose("current dist-build configuration (excluding \"input\" and \"plugins\") is:", { dir, deno, esbuild, stop, copy, text, dryrun });
     logVerbose("bundling the following entry-points:", entryPoints);

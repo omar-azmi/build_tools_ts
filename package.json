@@ -1,6 +1,6 @@
 {
   "name": "@oazmi/build-tools",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "description": "general deno build tool scripts which I practically use in all of my typescript repos",
   "keywords": [
     "build-tools",
@@ -72,15 +72,16 @@
   "sideEffects": false,
   "dependencies": {
     "esbuild": "0.25.0",
-    "typedoc": "0.28.1",
+    "typedoc": "0.28.10",
     "@deno/shim-deno": "~0.18.0",
-    "@oazmi/kitchensink": "0.9.10"
+    "@oazmi/esbuild-plugin-deno": "0.4.4",
+    "@oazmi/kitchensink": "0.9.14"
   },
   "devDependencies": {
     "@types/node": "^20.9.0",
     "typescript": "^5.7.0",
-    "esbuild": "^0.25.0",
-    "typedoc": "^0.28.0"
+    "esbuild": "0.25.0",
+    "typedoc": "0.28.10"
   },
   "_generatedBy": "dnt@dev"
 }

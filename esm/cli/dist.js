@@ -1,4 +1,4 @@
-/** this is a cli tool for generating distribution files for your deno project, using [`esbuild`](https://github.com/evanw/esbuild) + [esbuild-deno-loader](https://jsr.io/@luca/esbuild-deno-loader). <br>
+/** this is a cli tool for generating distribution files for your deno project, using [`esbuild`](https://github.com/evanw/esbuild) + [@oazmi/esbuild-plugin-deno](https://jsr.io/@oazmi/esbuild-plugin-deno). <br>
  * to provide input file(s), list them as `--input="./path/to/file.ts"` (or `-i="./path/to/file.ts"` for shorthand), and do it for each input file that you have.
  * the paths that you provide must be relative to your configured "deno.json" file (which is also usually your working dir). <br>
  * if no input is provided, this tool reads your "deno.json" file to figure out the entry-points of your library (specified in the {@link DenoJson.exports | exports field}), and then runs esbuild to get your javascript distribution files ready.
@@ -21,7 +21,6 @@
  *
  * @module
 */
-import "../_dnt.polyfills.js";
 import * as dntShim from "../_dnt.shims.js";
 import { isAbsolutePath, pathResolve, relativePath } from "../deps.js";
 import { buildDist as buildDistFn, bundle as bundleFn, esStop, transform as transformFn, } from "../dist.js";

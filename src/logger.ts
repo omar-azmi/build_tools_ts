@@ -3,8 +3,6 @@
  * 
  * @module
 */
-import "./_dnt.polyfills.js";
-
 
 import { console_log } from "./deps.js"
 import type { BaseBuildConfig } from "./typedefs.js"

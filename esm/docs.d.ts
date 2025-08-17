@@ -1,9 +1,3 @@
-/** create typedoc based documentation.
- * read the documentation of the {@link buildDocs} function, and its configuration interface {@link BuildDocsConfig}.
- *
- * @module
-*/
-import "./_dnt.polyfills.js";
 import { type TypeDocOptions } from "typedoc";
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.js";
 export type { TypeDocOptions } from "typedoc";

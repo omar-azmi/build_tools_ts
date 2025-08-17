@@ -1,12 +1,4 @@
-/** the {@link buildNpm} function in this module provides way for you to transform your deno-project to a node-project, using [`dnt`](https://jsr.io/@deno/dnt) under the hood. <br>
- * this tool reads your "deno.json" file to figure out most of what needs to be transformed, and comes with a handful of useful preset configurations. <br>
- * take a look at {@link BuildNpmConfig} to see what configuration options are available. <br>
- * moreover, to use this transformer via cli, use the [`./cli/npm.ts`](./cli/npm.ts) script file (or [`jsr:@oazmi/build-tools/cli/npm`](https://jsr.io/@oazmi/build-tools) if using jsr), and take a look at its {@link CliArgs} for list of supported cli args.
- *
- * @module
-*/
-import "./_dnt.polyfills.js";
-import { type BuildOptions as DntBuildOptions } from "./deps/jsr.io/@deno/dnt/0.41.3/mod.js";
+import { type BuildOptions as DntBuildOptions } from "./deps/jsr.io/@deno/dnt/0.42.1/mod.js";
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.js";
 /** the configuration for the npm-release building function {@link buildNpm}. */
 export interface BuildNpmConfig extends BaseBuildConfig {

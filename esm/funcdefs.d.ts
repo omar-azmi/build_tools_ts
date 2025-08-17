@@ -1,8 +1,3 @@
-/** this module contains common utility functions used by this package.
- *
- * @module
-*/
-import "./_dnt.polyfills.js";
 import type { MaybePromise, PackageJson } from "./deps.js";
 import type { BaseBuildConfig, DenoJson, TsConfigJson, WritableFileConfig } from "./typedefs.js";
 /** this function loads your "deno.json" file at the provided path, as a fully statically typed javascript object. <br>

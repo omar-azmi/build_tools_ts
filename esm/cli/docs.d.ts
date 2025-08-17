@@ -1,12 +1,3 @@
-/** this is a cli tool for generating a documentation site for your deno project, using [`typedoc`](https://github.com/TypeStrong/typedoc) under the hood. <br>
- * this tool reads your "deno.json" file and generates a equivalent "package.json" and "tsconfig.json" files, which can then be used by `TypeDoc` for generating the documentation site's html files.
- * this tool comes with a handful of useful preset configurations, so that you won't have to write lengthy cli args. <br>
- * take a look at {@link CliArgs} and {@link CliConfigJson} to see what configuration options are available. <br>
- * moreover, to use this document generator via javascript instead of the shell, use the {@link buildDocsFn | buildDocs} function from the [`docs.ts` file](../docs.ts) (or [`jsr:@oazmi/build-tools/docs`](https://jsr.io/@oazmi/build-tools) if using jsr).
- *
- * @module
-*/
-import "../_dnt.polyfills.js";
 import { type BuildDocsConfig } from "../docs.js";
 /** the cli args for generating the documentation of your deno project to via the {@link buildDocsFn | buildDocs} function. */
 export interface CliArgs {

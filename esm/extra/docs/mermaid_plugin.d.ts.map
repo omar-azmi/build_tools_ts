@@ -1,1 +1,1 @@
-{"version":3,"file":"mermaid_plugin.d.ts","sourceRoot":"","sources":["../../../src/extra/docs/mermaid_plugin.ts"],"names":[],"mappings":"AAAA;;;;;EAKE;AACF,OAAO,yBAAyB,CAAC;AAGjC,OAAO,KAAK,EAAE,WAAW,EAAqD,MAAM,SAAS,CAAA;AA6C7F,eAAO,MAAM,IAAI,QAAS,WAAW,KAAG,IA6BvC,CAAA"}
+{"version":3,"file":"mermaid_plugin.d.ts","sourceRoot":"","sources":["../../../src/extra/docs/mermaid_plugin.ts"],"names":[],"mappings":"AAAA;;;;;EAKE;AAEF,OAAO,KAAK,EAAE,WAAW,EAAqD,MAAM,SAAS,CAAA;AA6C7F,eAAO,MAAM,IAAI,QAAS,WAAW,KAAG,IA6BvC,CAAA"}

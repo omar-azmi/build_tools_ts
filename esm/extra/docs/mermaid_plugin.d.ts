@@ -4,7 +4,6 @@
  *
  * @module
 */
-import "../../_dnt.polyfills.js";
 import type { Application } from "typedoc";
 export declare const load: (app: Application) => void;
 //# sourceMappingURL=mermaid_plugin.d.ts.map

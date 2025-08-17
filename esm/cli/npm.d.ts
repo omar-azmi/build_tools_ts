@@ -1,11 +1,3 @@
-/** this is a cli tool for transforming your deno project to a node project using [`dnt`](https://jsr.io/@deno/dnt) under the hood. <br>
- * this tool reads your "deno.json" file to figure out most of what needs to be transformed, and comes with a handful of useful preset configurations, so that you won't have to write lengthy cli args. <br>
- * take a look at {@link CliArgs} and {@link CliConfigJson} to see what configuration options are available. <br>
- * moreover, to use this transformer via javascript instead of the shell, use the {@link buildNpmFn | buildNpm} function from [`npm.ts` file](../npm.ts) (or [`jsr:@oazmi/build-tools/npm`](https://jsr.io/@oazmi/build-tools) if using jsr).
- *
- * @module
-*/
-import "../_dnt.polyfills.js";
 import { type BuildNpmConfig } from "../npm.js";
 /** the cli args for transforming your deno project to a node based project via the {@link buildNpmFn | buildNpm} function. */
 export interface CliArgs {

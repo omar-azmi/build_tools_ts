@@ -6,12 +6,10 @@
  * @module
 */
 // TODO: allow for user-customization of `entryPoints`, using an approach similar to `/src/dist.ts`.
-import "./_dnt.polyfills.js";
-
 import * as dntShim from "./_dnt.shims.js";
 
 
-import { build as dntBuild, type BuildOptions as DntBuildOptions } from "./deps/jsr.io/@deno/dnt/0.41.3/mod.js"
+import { build as dntBuild, type BuildOptions as DntBuildOptions } from "./deps/jsr.io/@deno/dnt/0.42.1/mod.js"
 import type { CliArgs } from "./cli/npm.js"
 import { emptyDir, object_entries, pathResolve } from "./deps.js"
 import { copyAndCreateFiles, createPackageJson, createTsConfigJson, getDenoJson } from "./funcdefs.js"

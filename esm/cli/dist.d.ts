@@ -1,27 +1,3 @@
-/** this is a cli tool for generating distribution files for your deno project, using [`esbuild`](https://github.com/evanw/esbuild) + [esbuild-deno-loader](https://jsr.io/@luca/esbuild-deno-loader). <br>
- * to provide input file(s), list them as `--input="./path/to/file.ts"` (or `-i="./path/to/file.ts"` for shorthand), and do it for each input file that you have.
- * the paths that you provide must be relative to your configured "deno.json" file (which is also usually your working dir). <br>
- * if no input is provided, this tool reads your "deno.json" file to figure out the entry-points of your library (specified in the {@link DenoJson.exports | exports field}), and then runs esbuild to get your javascript distribution files ready.
- *
- * this tool comes with a handful of useful preset configurations, so that you won't have to write lengthy cli args. <br>
- * take a look at {@link CliArgs} and {@link CliConfigJson} to see what configuration options are available. <br>
- * moreover, to use this document generator via javascript instead of the shell, use the {@link buildDistFn | buildDist} function from the [`dist.ts` file](../dist.ts) (or [`jsr:@oazmi/build-tools/dist`](https://jsr.io/@oazmi/build-tools) if using jsr).
- *
- * @example
- * ```shell
- * # bundle the three files "./src/mod.ts", "./src/plugins/hello.ts", and "./src/plugins/world.ts" in the "./dist/" folder, with code-splitting and minification enabled.
- * deno run -A "jsr:@oazmi/build-tools/cli/dist" --dir="./dist/" --passes=2 --log="basic" --minify --split --input="./src/mod.ts" -i="./src/plugins/hello.ts" -i="./src/plugins/world.ts"
- * ```
- *
- * @example
- * ```shell
- * # do a mock-run (dryrun) of the bundling process of your "deno.json" exports in the "./dist/" folder, with code-splitting and minification enabled.
- * deno run -A "jsr:@oazmi/build-tools/cli/dist" --dir="./dist/" --passes=2 --log="verbose" --minify --split --dryrun
- * ```
- *
- * @module
-*/
-import "../_dnt.polyfills.js";
 import { type BuildDistConfig, type EsBuildOptions, type TransformationConfig } from "../dist.js";
 /** the cli args for generating the documentation of your deno project to via the {@link buildDistFn | buildDist} function. */
 export interface CliArgs {

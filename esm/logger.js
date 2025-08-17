@@ -3,7 +3,6 @@
  *
  * @module
 */
-import "./_dnt.polyfills.js";
 import { console_log } from "./deps.js";
 export { console_log, console_warn } from "./deps.js";
 // there are three logging level:

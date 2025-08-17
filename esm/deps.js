@@ -1,14 +1,14 @@
-import { getRuntimeCwd, identifyCurrentRuntime } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/crossenv.js";
-import { resolveAsUrl as _resolveAsUrl, ensureEndSlash, pathToPosixPath, resolvePathFactory } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/pathman.js";
-export { console_log, console_warn, object_assign, object_entries, object_keys, object_values } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/alias.js";
-export { detectReadableStreamType } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/browser.js";
-export { decode_str as decodeText, encode_str as encodeText } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/eightpack.js";
-export { memorize } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/lambda.js";
-export { ensureEndSlash, ensureStartDotSlash, ensureStartSlash, isAbsolutePath, joinPaths, parseFilepathInfo, relativePath, trimSlashes } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/pathman.js";
-export { isArray, isObject } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/struct.js";
-export { defaultStopwatch } from "./deps/jsr.io/@oazmi/kitchensink/0.9.10/src/timeman.js";
-export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob } from "./deps/jsr.io/@std/fs/1.0.13/mod.js";
-export { globToRegExp, isGlob as pathIsGlobPattern } from "./deps/jsr.io/@std/path/1.0.8/mod.js";
+import { getRuntimeCwd, identifyCurrentRuntime } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/crossenv.js";
+import { resolveAsUrl as _resolveAsUrl, ensureEndSlash, pathToPosixPath, resolvePathFactory } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/pathman.js";
+export { console_log, console_warn, object_assign, object_entries, object_keys, object_values } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/alias.js";
+export { detectReadableStreamType } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/browser.js";
+export { decode_str as decodeText, encode_str as encodeText } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/eightpack.js";
+export { memorize } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/lambda.js";
+export { ensureEndSlash, ensureStartDotSlash, ensureStartSlash, isAbsolutePath, joinPaths, parseFilepathInfo, relativePath, trimSlashes } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/pathman.js";
+export { isArray, isObject } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/struct.js";
+export { defaultStopwatch } from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/timeman.js";
+export { copy as copyDir, emptyDir, ensureDir, ensureFile, expandGlob } from "./deps/jsr.io/@std/fs/1.0.19/mod.js";
+export { globToRegExp, isGlob as pathIsGlobPattern } from "./deps/jsr.io/@std/path/1.1.2/mod.js";
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)
 // TODO: develop a more robust esbuild resolver and loader plugin for deno specific specifiers (such as `npm:` and `jsr:`), that does not interrupt other npm-based esbuild plugins.

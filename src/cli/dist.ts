@@ -1,4 +1,4 @@
-/** this is a cli tool for generating distribution files for your deno project, using [`esbuild`](https://github.com/evanw/esbuild) + [esbuild-deno-loader](https://jsr.io/@luca/esbuild-deno-loader). <br>
+/** this is a cli tool for generating distribution files for your deno project, using [`esbuild`](https://github.com/evanw/esbuild) + [@oazmi/esbuild-plugin-deno](https://jsr.io/@oazmi/esbuild-plugin-deno). <br>
  * to provide input file(s), list them as `--input="./path/to/file.ts"` (or `-i="./path/to/file.ts"` for shorthand), and do it for each input file that you have.
  * the paths that you provide must be relative to your configured "deno.json" file (which is also usually your working dir). <br>
  * if no input is provided, this tool reads your "deno.json" file to figure out the entry-points of your library (specified in the {@link DenoJson.exports | exports field}), and then runs esbuild to get your javascript distribution files ready.
@@ -21,8 +21,6 @@
  * 
  * @module
 */
-import "../_dnt.polyfills.js";
-
 import * as dntShim from "../_dnt.shims.js";
 
 
@@ -121,7 +119,7 @@ export interface CliDistConfig extends Omit<CliArgs, "config"> {
 	*/
 	transform?: Array<TransformationCliConfig>
 
-	// TODO: add plugin support via a built-in registry of pluins. for instance, "esbuild-deno-loader" would imply using "jsr:@luca/esbuild-deno-loader@0.10.3" (via dynamic import?), and "esbuild-plugin-css" would import "jsr:@oazmi/esbuild-plugin-css@0.1.1"
+	// TODO: add plugin support via a built-in registry of plugins. for instance, "@oazmi/esbuild-plugin-deno" would imply using "jsr:@oazmi/esbuild-plugin-deno@0.4.3" (via dynamic import?), and "esbuild-plugin-css" would import "jsr:@oazmi/esbuild-plugin-css@0.1.1"
 }
 
 /** the schema of a docs-generation configuration json file, which can be referenced in the {@link CliArgs}, by passing its file-path with the `--config` switch. <br>

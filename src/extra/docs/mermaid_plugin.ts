@@ -4,8 +4,6 @@
  * 
  * @module
 */
-import "../../_dnt.polyfills.js";
-
 
 import type { Application, CommentDisplayPart, Context, Converter, PageEvent } from "typedoc"
 

@@ -1,45 +1,7 @@
-/** create distribution file(s) for your deno project.
- *
- * the {@link buildDist} function in this module provides a convenient way for you to bundle your deno-project using [`esbuild`](https://github.com/evanw/esbuild).
- *
- * for more advanced bundling, use the {@link bundle} function, then proceed with additional transformations via the {@link transform} function,
- * and then finally write the output to your filesystem via the {@link createFiles} utility function.
- * @example
- * ```ts
- * import { bundle, transform, esStop } from "jsr:@oazmi/build-tools/dist"
- * import { createFiles } from "jsr:@oazmi/build-tools/funcdefs"
- *
- * const bundled_files = await bundle({
- * 	// when no input files are provided, the function reads your "deno.json" file to use its "exports" field as the input.
- * 	input: {
- * 		"my-lib.js": "./src/mod.ts",
- * 		"plugins/hello.js": "./src/plugins/hello.ts",
- * 		"plugins/world.js": "./src/plugins/world.ts",
- * 	},
- * 	deno: "./deno.json",
- * 	dir: "./dist/",
- * 	log: "verbose",
- * 	esbuild: { splitting: true }
- * })
- * const minified_files = await transform(bundled_files, [{}])
- * await createFiles(minified_files, {
- * 	dir: "./dist/", // this information is not really needed, as the file paths in `minified_files` are absolute.
- * 	dryrun: false,
- * 	log: "verbose",
- * })
- * // your output files are now saved to: "./dist/my-lib.js", "./dist/plugins/hello.js", and "./dist/plugins/world.js"
- *
- * // it is important that you stop esbuild manually, otherwise the deno process will not quit automatically.
- * await esStop()
- * ```
- *
- * @module
-*/
-import "./_dnt.polyfills.js";
 import { type BuildOptions as EsBuildOptions, type TransformOptions as EsTransformOptions } from "esbuild";
 import { type MaybePromise } from "./deps.js";
 import type { BaseBuildConfig, TemporaryFiles } from "./typedefs.js";
-export { denoPlugins } from "./deps/jsr.io/@luca/esbuild-deno-loader/0.11.1/mod.js";
+export { denoPlugins } from "./deps/jsr.io/@oazmi/esbuild-plugin-deno/0.4.4/src/mod.js";
 export { build as esBuild, stop as esStop, transform as esTransform, type BuildOptions as EsBuildOptions, type OutputFile as EsOutputFile, type Plugin as EsPlugin, type PluginBuild as EsPluginBuild, type TransformOptions as EsTransformOptions } from "esbuild";
 /** the configuration for in-memory bundling of your typescript code to javascript text, using the transformation function {@link bundle}. <br>
  * the {@link dir} you provide here shall point to a *virtual* path where you wish for your distribution files to exist.
@@ -74,7 +36,7 @@ export interface BuildDistConfig extends BaseBuildConfig {
     esbuild?: Omit<Partial<EsBuildOptions>, "outdir" | "outfile" | "plugins" | "entryPoints">;
     /** apply a collection of optional [`esbuild`](https://www.npmjs.com/package/esbuild) plugins.
      *
-     * @defaultValue {@link denoPlugins} (via [esbuild-deno-loader](https://jsr.io/@luca/esbuild-deno-loader))
+     * @defaultValue {@link denoPlugins} (via [@oazmi/esbuild-plugin-deno](https://jsr.io/@oazmi/esbuild-plugin-deno))
     */
     plugins?: EsBuildOptions["plugins"];
     /** stop running esbuild's wasm-service after compilation?
@@ -115,7 +77,7 @@ export type VirtualFileOutput = [destination: string, content: Uint8Array];
 /** the {@link bundle} function's returned value is an array of virtual in-memory files. */
 export type BundleOutput = Array<VirtualFileOutput>;
 /** this function bundles your deno-project's {@link DenoJson.exports | exports} in-memory, using the blazing fast [`esbuild`](https://github.com/evanw/esbuild) bundler,
- * along with the useful [`esbuild-deno-loader`](https://jsr.io/@luca/esbuild-deno-loader) default plugin. <br>
+ * along with the useful [`@oazmi/esbuild-plugin-deno`](https://jsr.io/@oazmi/esbuild-plugin-deno) default plugin. <br>
  * the output of this function is an array of {@link WritableFileConfig}, consisting of the destination path and the content of the bundled javascript/css code (as a binary `Uint8Array`).
  *
  * by default, this function reads your "deno.json" file's {@link DenoJson.exports | exports field},

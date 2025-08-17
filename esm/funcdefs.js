@@ -2,7 +2,6 @@
  *
  * @module
 */
-import "./_dnt.polyfills.js";
 import * as dntShim from "./_dnt.shims.js";
 import { copyDir, detectReadableStreamType, ensureDir, ensureFile, expandGlob, isArray, isObject, memorize, object_assign, object_keys, pathIsGlobPattern, pathResolve, resolveAsUrl, trimSlashes } from "./deps.js";
 import { logBasic, logVerbose, setLog } from "./logger.js";

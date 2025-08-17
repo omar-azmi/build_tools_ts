@@ -3,7 +3,6 @@
  *
  * @module
 */
-import "./_dnt.polyfills.js";
 import type { BaseBuildConfig } from "./typedefs.js";
 export { console_log, console_warn } from "./deps.js";
 /** a `string` for specifying the log level. */

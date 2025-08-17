@@ -3,7 +3,6 @@
  *
  * @module
 */
-import "../_dnt.polyfills.js";
 import type { CliConfigJson as DistCliConfigJson } from "./dist.js";
 import type { CliConfigJson as DocsCliConfigJson } from "./docs.js";
 import type { CliConfigJson as NpmCliConfigJson } from "./npm.js";

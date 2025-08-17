@@ -5,7 +5,6 @@
  *
  * @module
 */
-import "../_dnt.polyfills.js";
 import * as dntShim from "../_dnt.shims.js";
 import { setLog } from "../logger.js";
 import { buildNpm as buildNpmFn } from "../npm.js";

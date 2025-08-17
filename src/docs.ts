@@ -3,8 +3,6 @@
  * 
  * @module
 */
-import "./_dnt.polyfills.js";
-
 import * as dntShim from "./_dnt.shims.js";
 
 
@@ -294,7 +292,9 @@ const typedocPluginToDataUriScript = async (plugin_script_path: string, config?:
 			loader: "ts",
 		},
 		// entryPoints: [working_script_path],
-		plugins: [...denoPlugins()],
+		plugins: [...denoPlugins({
+			initialPluginData: { runtimePackage: "./" }
+		})],
 		outdir: "./virtual-dist/",
 		format: "esm",
 		platform: "node",
