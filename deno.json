@@ -1,6 +1,6 @@
 {
 	"name": "@oazmi/build-tools",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "general deno build tool scripts which I practically use in all of my typescript repos",
 	"author": "Omar Azmi",
 	"license": "Anti-Competition License",
@@ -13,13 +13,13 @@
 	},
 	"imports": {
 		"@deno/dnt": "jsr:@deno/dnt@0.42.1",
-		"@oazmi/esbuild-plugin-deno": "jsr:@oazmi/esbuild-plugin-deno@0.4.4",
-		"@oazmi/kitchensink": "jsr:@oazmi/kitchensink@0.9.14",
+		"@oazmi/esbuild-plugin-deno": "jsr:@oazmi/esbuild-plugin-deno@0.4.5",
+		"@oazmi/kitchensink": "jsr:@oazmi/kitchensink@0.9.16",
 		"@std/cli": "jsr:@std/cli@^1.0.21",
 		"@std/fs": "jsr:@std/fs@^1.0.19",
 		"@std/path": "jsr:@std/path@^1.1.2",
-		"esbuild": "npm:esbuild@0.25.0",
-		"typedoc": "npm:typedoc@0.28.10"
+		"esbuild": "npm:esbuild@0.27.0",
+		"typedoc": "npm:typedoc@0.28.15"
 	},
 	"exports": {
 		".": "./src/mod.ts",
@@ -60,23 +60,19 @@
 		"include": ["./src/", "./test/", "./*.md", "./*.json"]
 	},
 	"compilerOptions": {
-		"lib": [
-			"esnext",
-			"dom",
-			"deno.ns"
-		],
+		"lib": ["esnext", "dom", "deno.ns"],
 		"strict": true
 	},
 	"nodeModulesDir": "none",
 	"packageJson": {
 		"dependencies": {
-			"@oazmi/esbuild-plugin-deno": "0.4.4",
-			"@oazmi/kitchensink": "0.9.14"
+			"@oazmi/esbuild-plugin-deno": "0.4.5",
+			"@oazmi/kitchensink": "0.9.16"
 		},
 		"devDependencies": {
 			"typescript": "^5.7.0",
-			"esbuild": "0.25.0",
-			"typedoc": "0.28.10"
+			"esbuild": "0.27.0",
+			"typedoc": "0.28.15"
 		},
 		"scripts": {
 			"build-dist": "npm run build-esm -- --platform=node && npm run build-esm-minify -- --platform=node"
@@ -102,11 +98,7 @@
 		"esbuild": {
 			"chunkNames": "chunks/[hash]",
 			"platform": "node",
-			"external": [
-				"typedoc",
-				"esbuild",
-				"@deno/dnt"
-			]
+			"external": ["typedoc", "esbuild", "@deno/dnt"]
 		}
 	},
 	"buildDocs": {
@@ -118,9 +110,7 @@
 		"log": "verbose",
 		"install": "npm",
 		"dnt": {
-			"shims": {
-				"deno": true
-			}
+			"shims": { "deno": true }
 		}
 	},
 	"tasks": {
