@@ -138,6 +138,7 @@ export interface TransformationCliConfig extends TransformationConfig {
 const { input, i, ...cli_args } = parseArgs(Deno.args, {
 	collect: ["input"],
 	alias: { input: ["i"] },
+	negatable: ["log", "dryrun", "split", "minify"],
 }) as unknown as (CliArgs & { input?: string[], i?: string[] })
 const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path

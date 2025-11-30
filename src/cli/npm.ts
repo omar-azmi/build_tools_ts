@@ -65,7 +65,9 @@ export interface CliConfigJson {
 	buildNpm?: CliNpmConfig
 }
 
-const cli_args = parseArgs(Deno.args) as CliArgs
+const cli_args = parseArgs(Deno.args, {
+	negatable: ["log", "dryrun", "install"],
+}) as CliArgs
 const { config: config_path, ...rest_cli_args } = cli_args
 const config_file: CliConfigJson = config_path
 	? JSON.parse(await Deno.readTextFile(config_path))
