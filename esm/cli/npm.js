@@ -9,7 +9,9 @@ import * as dntShim from "../_dnt.shims.js";
 import { setLog } from "../logger.js";
 import { buildNpm as buildNpmFn } from "../npm.js";
 import { parseArgs } from "./deps.js";
-const cli_args = parseArgs(dntShim.Deno.args);
+const cli_args = parseArgs(dntShim.Deno.args, {
+    negatable: ["log", "dryrun", "install"],
+});
 const { config: config_path, ...rest_cli_args } = cli_args;
 const config_file = config_path
     ? JSON.parse(await dntShim.Deno.readTextFile(config_path))

@@ -2,8 +2,8 @@
 import * as dntShim from "../../../../../_dnt.shims.js";
 
 
-import { ensureDir } from "../../../@std/fs/1.0.19/ensure_dir.js";
-import { dirname, isAbsolute, join } from "../../../@std/path/1.1.2/mod.js";
+import { ensureDir } from "../../../@std/fs/1.0.20/ensure_dir.js";
+import { dirname, isAbsolute, join } from "../../../@std/path/1.1.3/mod.js";
 import { readAll, writeAll } from "../../../@std/io/0.225.2/mod.js";
 import { assert, CACHE_PERM } from "./util.js";
 import { instantiate } from "./lib/deno_cache_dir.generated.js";

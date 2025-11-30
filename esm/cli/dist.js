@@ -30,6 +30,7 @@ import { parseArgs } from "./deps.js";
 const { input, i, ...cli_args } = parseArgs(dntShim.Deno.args, {
     collect: ["input"],
     alias: { input: ["i"] },
+    negatable: ["log", "dryrun", "split", "minify"],
 });
 const { config: config_path, ...rest_cli_args } = cli_args;
 const config_file = config_path

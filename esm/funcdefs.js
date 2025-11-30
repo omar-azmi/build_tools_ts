@@ -73,8 +73,8 @@ export const createPackageJson = async (deno_json_path = default_deno_json_path,
 */
 export const createTsConfigJson = async (deno_json_path = default_deno_json_path, overrides = {}) => {
     const { compilerOptions = {} } = await getDenoJson(deno_json_path), { compilerOptions: overridden_compilerOptions, ...rest_overrides } = overrides;
-    // remove "deno.ns" from compiler options, as it breaks `dnt` (I think)
-    compilerOptions.lib = (compilerOptions.lib ?? []).filter((v) => v.toLowerCase() !== "deno.ns");
+    // remove all "deno" namespace libraries (such as "deno.ns", "deno.unstable", etc...).ns" from compiler options, as they break `dnt`.
+    compilerOptions.lib = (compilerOptions.lib ?? []).filter((v) => !v.toLowerCase().startsWith("deno."));
     object_assign(compilerOptions, {
         target: "ESNext",
         forceConsistentCasingInFileNames: true,

@@ -2,7 +2,7 @@
 import * as dntShim from "../../../../../_dnt.shims.js";
 
 
-import { isAbsolute } from "../../../@std/path/1.1.2/mod.js";
+import { isAbsolute } from "../../../@std/path/1.1.3/mod.js";
 import { assert } from "./util.js";
 import {
   type GlobalHttpCache,

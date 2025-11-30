@@ -3,7 +3,7 @@ import * as dntShim from "../../../../../_dnt.shims.js";
 
 
 import { AuthTokens } from "./auth_tokens.js";
-import { fromFileUrl } from "../../../@std/path/1.1.2/mod.js";
+import { fromFileUrl } from "../../../@std/path/1.1.3/mod.js";
 import * as colors from "../../../@std/fmt/1.0.8/colors.js";
 import type { LoadResponse } from "../../graph/0.86.9/mod.js";
 import type { HttpCache, HttpCacheGetOptions } from "./http_cache.js";

@@ -1,6 +1,6 @@
 // Copyright 2018-2025 the Deno authors. MIT license.
 import * as dntShim from "../../../../../_dnt.shims.js";
-import { isAbsolute } from "../../../@std/path/1.1.2/mod.js";
+import { isAbsolute } from "../../../@std/path/1.1.3/mod.js";
 import { assert } from "./util.js";
 import { instantiate, } from "./lib/deno_cache_dir.generated.js";
 export class HttpCache {

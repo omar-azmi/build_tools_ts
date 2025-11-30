@@ -36,12 +36,12 @@
  * @module
 */
 import * as dntShim from "./_dnt.shims.js";
-import { denoPlugins } from "./deps/jsr.io/@oazmi/esbuild-plugin-deno/0.4.4/src/mod.js";
+import { denoPlugins } from "./deps/jsr.io/@oazmi/esbuild-plugin-deno/0.4.5/src/mod.js";
 import { build as esBuild, stop as esStop, transform as esTransform, } from "esbuild";
 import { defaultStopwatch, emptyDir, encodeText, globToRegExp, object_values, pathResolve } from "./deps.js";
 import { copyAndCreateFiles, getDenoJson } from "./funcdefs.js";
 import { logBasic, logVerbose, setLog } from "./logger.js";
-export { denoPlugins } from "./deps/jsr.io/@oazmi/esbuild-plugin-deno/0.4.4/src/mod.js";
+export { denoPlugins } from "./deps/jsr.io/@oazmi/esbuild-plugin-deno/0.4.5/src/mod.js";
 export { build as esBuild, stop as esStop, transform as esTransform } from "esbuild";
 const defaultBundleConfig = {
     dir: "./dist/",

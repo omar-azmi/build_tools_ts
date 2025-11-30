@@ -3,7 +3,7 @@ import * as dntShim from "../../../../../../_dnt.shims.js";
 
 
 import { ts } from "../../../../@ts-morph/bootstrap/0.25.0/mod.js";
-import * as path from "../../../../@std/path/1.1.2/mod.js";
+import * as path from "../../../../@std/path/1.1.3/mod.js";
 import type { ScriptTarget } from "./types.js";
 
 export function outputDiagnostics(diagnostics: readonly ts.Diagnostic[]) {

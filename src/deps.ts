@@ -1,13 +1,13 @@
 import {
 	getRuntimeCwd,
 	identifyCurrentRuntime
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/crossenv.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/crossenv.js"
 import {
 	resolveAsUrl as _resolveAsUrl,
 	ensureEndSlash,
 	pathToPosixPath,
 	resolvePathFactory
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/pathman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/pathman.js"
 
 export type {
 	BuildOptions as DntBuildOptions,
@@ -20,17 +20,17 @@ export {
 	object_entries,
 	object_keys,
 	object_values
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/alias.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/alias.js"
 export {
 	detectReadableStreamType
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/browser.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/browser.js"
 export {
 	decode_str as decodeText,
 	encode_str as encodeText
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/eightpack.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/eightpack.js"
 export {
 	memorize
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/lambda.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/lambda.js"
 export {
 	ensureEndSlash,
 	ensureStartDotSlash,
@@ -40,29 +40,29 @@ export {
 	parseFilepathInfo,
 	relativePath,
 	trimSlashes
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/pathman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/pathman.js"
 export {
 	isArray,
 	isObject
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/struct.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/struct.js"
 export {
 	defaultStopwatch
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/timeman.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/timeman.js"
 export type {
 	MaybePromise,
 	Require
-} from "./deps/jsr.io/@oazmi/kitchensink/0.9.14/src/typedefs.js"
+} from "./deps/jsr.io/@oazmi/kitchensink/0.9.16/src/typedefs.js"
 export {
 	copy as copyDir,
 	emptyDir,
 	ensureDir,
 	ensureFile,
 	expandGlob
-} from "./deps/jsr.io/@std/fs/1.0.19/mod.js"
+} from "./deps/jsr.io/@std/fs/1.0.20/mod.js"
 export {
 	globToRegExp,
 	isGlob as pathIsGlobPattern
-} from "./deps/jsr.io/@std/path/1.1.2/mod.js"
+} from "./deps/jsr.io/@std/path/1.1.3/mod.js"
 
 // DONE: unify logging, by implementing a function that takes in what you wish to log, and then logs conditionally based on your gloal logging level setting.
 // TODO: also maybe unify writing text files and copying files in the same way (controlled by a global dryrun option)

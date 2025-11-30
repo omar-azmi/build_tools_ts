@@ -1,7 +1,7 @@
 // Copyright 2018-2024 the Deno authors. MIT license.
 import * as dntShim from "../../../../../../_dnt.shims.js";
-import { expandGlob } from "../../../../@std/fs/1.0.19/expand_glob.js";
-import * as path from "../../../../@std/path/1.1.2/mod.js";
+import { expandGlob } from "../../../../@std/fs/1.0.20/expand_glob.js";
+import * as path from "../../../../@std/path/1.1.3/mod.js";
 /** Gets the files found in the provided root dir path based on the glob. */
 export async function glob(options) {
     const paths = [];

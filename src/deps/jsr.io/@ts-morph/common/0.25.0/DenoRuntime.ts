@@ -1,7 +1,7 @@
 import * as dntShim from "../../../../../_dnt.shims.js";
-import { ensureDir, ensureDirSync } from "../../../@std/fs/1.0.19/ensure_dir.js";
-import { expandGlob, expandGlobSync } from "../../../@std/fs/1.0.19/expand_glob.js";
-import * as stdPath from "../../../@std/path/1.1.2/mod.js";
+import { ensureDir, ensureDirSync } from "../../../@std/fs/1.0.20/ensure_dir.js";
+import { expandGlob, expandGlobSync } from "../../../@std/fs/1.0.20/expand_glob.js";
+import * as stdPath from "../../../@std/path/1.1.3/mod.js";
 
 // deno-lint-ignore no-explicit-any
 

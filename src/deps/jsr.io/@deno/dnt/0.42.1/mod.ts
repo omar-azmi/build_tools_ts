@@ -3,7 +3,7 @@ import * as dntShim from "../../../../../_dnt.shims.js";
 
 
 import * as colors from "../../../@std/fmt/1.0.8/colors.js";
-import * as path from "../../../@std/path/1.1.2/mod.js";
+import * as path from "../../../@std/path/1.1.3/mod.js";
 import { createProjectSync, ts } from "../../../@ts-morph/bootstrap/0.25.0/mod.js";
 import {
   getCompilerLibOption,
@@ -29,7 +29,7 @@ import * as compilerTransforms from "./lib/compiler_transforms.js";
 import { getPackageJson } from "./lib/package_json.js";
 import { getTestRunnerCode } from "./lib/test_runner/get_test_runner_code.js";
 
-export { emptyDir } from "../../../@std/fs/1.0.19/empty_dir.js";
+export { emptyDir } from "../../../@std/fs/1.0.20/empty_dir.js";
 export type { PackageJson } from "./lib/types.js";
 export type { LibName, SourceMapOptions } from "./lib/compiler.js";
 export type { ShimOptions } from "./lib/shims.js";

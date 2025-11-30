@@ -3,7 +3,7 @@ import { type LibName, type SourceMapOptions } from "./lib/compiler.js";
 import { type ShimOptions } from "./lib/shims.js";
 import type { PackageJson, ScriptTarget } from "./lib/types.js";
 import { type SpecifierMappings } from "./transform.js";
-export { emptyDir } from "../../../@std/fs/1.0.19/empty_dir.js";
+export { emptyDir } from "../../../@std/fs/1.0.20/empty_dir.js";
 export type { PackageJson } from "./lib/types.js";
 export type { LibName, SourceMapOptions } from "./lib/compiler.js";
 export type { ShimOptions } from "./lib/shims.js";
